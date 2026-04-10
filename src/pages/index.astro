@@ -19,7 +19,6 @@ const id = 1;
 ---
 
 <Layout title="Quantia">
-  
   <div class="space-y-16">
     <section>
       <div class="flex justify-between items-end mb-8">
@@ -29,7 +28,7 @@ const id = 1;
           </h2>
         </div>
 
-        <a href={`/details/${id}`}>
+        <a href="./strategies/">
           <button
             class="px-6 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
           >
@@ -85,45 +84,47 @@ const id = 1;
           </h2>
         </div>
 
-        <button
-          class="px-6 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
-        >
-          Ver más carteras
-          <span class="material-symbols-outlined text-sm">folder_open</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <CarteraCard
-          title="Cartera 1"
-          market="DIVERSIFIED / TAIL RISK"
-          percent={12.4}
-          image="/images/chart-4.png"
-          profitFactor={12.4}
-          drawdown={-0.15}
-          points={strategy1Points}
-        />
-
-        <CarteraCard
-          title="Cartera 2"
-          market="EQUITY / GROWTH"
-          percent={31.9}
-          image="/images/chart-5.png"
-          profitFactor={31.9}
-          drawdown={0.85}
-          points={strategy1Points}
-        />
-
-        <CarteraCard
-          title="Cartera 3"
-          market="INCOME / STABLE"
-          percent={8.2}
-          image="/images/chart-6.png"
-          profitFactor={8.2}
-          drawdown={0.12}
-          points={strategy1Points}
-        />
+        <a href="./billeteras/">
+          <button
+            class="px-6 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
+          >
+            Ver más carteras
+            <span class="material-symbols-outlined text-sm">folder_open</span>
+          </button>
+        </a>
       </div>
     </section>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <CarteraCard
+        title="Cartera 1"
+        market="DIVERSIFIED / TAIL RISK"
+        percent={12.4}
+        image="/images/chart-4.png"
+        profitFactor={12.4}
+        drawdown={-0.15}
+        points={strategy1Points}
+      />
+
+      <CarteraCard
+        title="Cartera 2"
+        market="EQUITY / GROWTH"
+        percent={31.9}
+        image="/images/chart-5.png"
+        profitFactor={31.9}
+        drawdown={0.85}
+        points={strategy1Points}
+      />
+
+      <CarteraCard
+        title="Cartera 3"
+        market="INCOME / STABLE"
+        percent={8.2}
+        image="/images/chart-6.png"
+        profitFactor={8.2}
+        drawdown={0.12}
+        points={strategy1Points}
+      />
+    </div>
   </div>
 </Layout>
