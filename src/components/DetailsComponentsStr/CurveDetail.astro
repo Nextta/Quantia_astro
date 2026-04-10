@@ -1,0 +1,112 @@
+---
+const points = [
+  { time: "2025-01-01", value: 1000000 },
+  { time: "2025-01-10", value: 1020000 },
+  { time: "2025-01-20", value: 1015000 },
+  { time: "2025-02-01", value: 1060000 },
+  { time: "2025-02-10", value: 1085000 },
+  { time: "2025-02-20", value: 1078000 },
+  { time: "2025-03-01", value: 1120000 },
+  { time: "2025-03-10", value: 1180000 },
+  { time: "2025-03-20", value: 1210000 },
+  { time: "2025-04-01", value: 1280000 },
+  { time: "2025-04-10", value: 1335000 },
+  { time: "2025-04-20", value: 1424592 },
+];
+---
+
+<div class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden">
+  <div class="flex justify-between items-start mb-8">
+    <div>
+      <h3 class="text-on-surface-variant text-sm font-medium mb-1">
+        Curva de Equidad (Equity Curve)
+      </h3>
+      <p class="text-2xl font-bold font-headline text-slate-50 tracking-tight">
+        $1,424,592.00
+      </p>
+    </div>
+
+    <div class="flex gap-2">
+      <span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold">
+        +24.5% CAGR
+      </span>
+    </div>
+  </div>
+
+  <div class="equity-chart-root w-full" style="height: 256px;">
+    <div class="equity-chart w-full h-full"></div>
+
+    <script
+      type="application/json"
+      class="equity-chart-data"
+      set:html={JSON.stringify(points)}
+    ></script>
+  </div>
+</div>
+
+<script>
+  import { createChart, AreaSeries, ColorType } from "lightweight-charts";
+
+  function initEquityCharts() {
+    const roots = document.querySelectorAll<HTMLElement>(".equity-chart-root");
+
+    roots.forEach((root) => {
+      if (root.dataset.initialized === "true") return;
+
+      const container = root.querySelector<HTMLElement>(".equity-chart");
+      const dataTag = root.querySelector<HTMLScriptElement>(".equity-chart-data");
+
+      if (!container || !dataTag) return;
+
+      const points = JSON.parse(dataTag.textContent || "[]");
+
+      requestAnimationFrame(() => {
+        const chart = createChart(container, {
+          autoSize: true,
+          layout: {
+            background: {
+              type: ColorType.Solid,
+              color: "#1e293b",
+            },
+            textColor: "#cbd5e1",
+          },
+          grid: {
+            vertLines: { color: "rgba(148, 163, 184, 0.10)" },
+            horzLines: { color: "rgba(148, 163, 184, 0.10)" },
+          },
+          rightPriceScale: {
+            visible: false,
+            borderVisible: false,
+          },
+          leftPriceScale: {
+            visible: false,
+          },
+          timeScale: {
+            visible: false,
+            borderVisible: false,
+          },
+          handleScroll: false,
+          handleScale: false,
+        });
+
+        const series = chart.addSeries(AreaSeries, {
+          lineColor: "#4edea3",
+          topColor: "rgba(78, 222, 163, 0.30)",
+          bottomColor: "rgba(78, 222, 163, 0.03)",
+          lineWidth: 3,
+          priceLineVisible: false,
+          lastValueVisible: false,
+          crosshairMarkerVisible: false,
+        });
+
+        series.setData(points);
+        chart.timeScale().fitContent();
+
+        root.dataset.initialized = "true";
+      });
+    });
+  }
+
+  initEquityCharts();
+  document.addEventListener("astro:page-load", initEquityCharts);
+</script>

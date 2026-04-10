@@ -1,0 +1,94 @@
+---
+import MiniTVChart from './DetailsComponentsStr/MiniTVChart.astro';
+
+//Carteras.astro
+interface Props {
+  title?: string;
+  market?: string;
+  percent?: number;
+  image?: string;
+  profitFactor?: number;
+  drawdown?: number;
+  points: Point[];
+}
+
+interface Point {
+  time: number;
+  value: number;
+}
+
+const id = 1;
+
+const { title, market, percent, image, profitFactor, drawdown, points } = Astro.props as Props;
+---
+
+<article
+  class="bg-surface-container-high rounded-2xl p-6 transition-all duration-300 hover:bg-surface-container-highest"
+>
+  <div class="flex justify-between items-start gap-4 mb-5">
+    <div>
+      <h3
+        class="text-3xl font-bold leading-tight text-on-surface font-headline max-w-220px"
+      >
+        {title}
+      </h3>
+
+      <span
+        class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
+      >
+        {market}
+      </span>
+    </div>
+
+    <div
+      class="flex items-center gap-1 text-secondary font-bold text-4xl whitespace-nowrap"
+    >
+      <span
+        class="material-symbols-outlined text-xl"
+        style="font-variation-settings: 'FILL' 1;"
+      >
+        trending_up
+      </span>
+      <span>{percent}</span>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest rounded-xl p-4 mb-6">
+    <div class="rounded-2xl overflow-hidden bg-[#061020] mb-6">
+      <MiniTVChart points={points} height={240} />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 text-center">
+    <div>
+      <p
+        class="text-[11px] uppercase text-on-surface-variant tracking-wide mb-1"
+      >
+        Profit Factor
+      </p>
+      <p class="text-3xl font-bold text-on-surface">
+        {profitFactor}
+      </p>
+    </div>
+
+    <div>
+      <p
+        class="text-[11px] uppercase text-on-surface-variant tracking-wide mb-1"
+      >
+        Drawdown
+      </p>
+      <p class="text-3xl font-bold text-tertiary">
+        {drawdown}
+      </p>
+    </div>
+    <div class="flex items-center justify-center">
+      <a
+        href={`/strategies/${id}`}
+        class="flex items-center gap-1 bg-primary text-on-primary rounded-full p-3 hover:bg-primary/80 transition-colors"
+      >
+        Ver más...
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</article>
