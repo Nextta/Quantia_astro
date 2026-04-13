@@ -1,14 +1,121 @@
 ---
+import type { Trade } from "../../lib/types";
 
+interface Props {
+  id: number;
+  title?: string;
+  tradesPerPage: number;
+  trades: Trade[];
+}
+
+const { title = "Actividad Reciente de Ejecución", tradesPerPage, trades } =
+  Astro.props as Props;
+
+const totalDeTrades = trades.length;
+
+
+
+// const trades: Trade[] = [
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+//   {
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -4200,
+//     duration: "1d 2h",
+//   },
+// ];
 ---
 
 <div class="bg-surface-container-high rounded-xl overflow-hidden mb-8">
   <div class="px-6 py-4 flex justify-between items-center">
     <h3 class="text-lg font-bold font-headline">
-      Actividad Reciente de Ejecución
+      {title}
     </h3>
     <span class="text-xs text-on-surface-variant"
-      >Últimos 10 trades realizados</span
+      >Últimos {tradesPerPage} trades realizados</span
     >
   </div>
   <div class="overflow-x-auto">
@@ -39,106 +146,77 @@
           </th>
         </tr>
       </thead>
+
       <tbody class="divide-y divide-surface-container">
-        <tr class="hover:bg-surface-bright transition-colors">
-          <td class="px-6 py-4 font-medium">2023-11-24 14:22</td>
-          <td class="px-6 py-4"
-            ><span
-              class="px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded"
-              >LONG</span
-            ></td
-          >
-          <td class="px-6 py-4 text-right tabular-nums">42,452.12</td>
-          <td class="px-6 py-4 text-right tabular-nums">43,122.50</td>
-          <td class="px-6 py-4 text-center text-secondary font-bold">+1.58%</td>
-          <td class="px-6 py-4 text-right font-bold">+$12,420</td>
-          <td class="px-6 py-4 text-on-surface-variant">4h 12m</td>
-          <td class="px-3 py-4 w-12 text-center align-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
-              <path d="M4 2H2v19c0 .55.45 1 1 1h19v-2H4z"></path><path
-                d="M15.4 12.8c.4.3.96.26 1.31-.09l5-5L20.3 6.3l-4.39 4.39-3.31-2.48c-.4-.3-.96-.26-1.31.09l-6 6 1.41 1.41 5.39-5.39z"
-              ></path>
-            </svg>
-          </td>
-        </tr>
-        <tr class="hover:bg-surface-bright transition-colors">
-          <td class="px-6 py-4 font-medium">2023-11-23 09:15</td>
-          <td class="px-6 py-4"
-            ><span
-              class="px-2 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded"
-              >SHORT</span
-            ></td
-          >
-          <td class="px-6 py-4 text-right tabular-nums">41,200.00</td>
-          <td class="px-6 py-4 text-right tabular-nums">41,450.25</td>
-          <td class="px-6 py-4 text-center text-tertiary font-bold">-0.61%</td>
-          <td class="px-6 py-4 text-right font-bold text-tertiary">-$4,200</td>
-          <td class="px-6 py-4 text-on-surface-variant">1d 2h</td>
-          <td class="px-3 py-4 w-12 text-center align-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
-              <path d="M4 2H2v19c0 .55.45 1 1 1h19v-2H4z"></path><path
-                d="M15.4 12.8c.4.3.96.26 1.31-.09l5-5L20.3 6.3l-4.39 4.39-3.31-2.48c-.4-.3-.96-.26-1.31.09l-6 6 1.41 1.41 5.39-5.39z"
-              ></path>
-            </svg>
-          </td>
-        </tr>
-        <tr class="hover:bg-surface-bright transition-colors">
-          <td class="px-6 py-4 font-medium">2023-11-21 11:45</td>
-          <td class="px-6 py-4"
-            ><span
-              class="px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded"
-              >LONG</span
-            ></td
-          >
-          <td class="px-6 py-4 text-right tabular-nums">40,150.00</td>
-          <td class="px-6 py-4 text-right tabular-nums">40,920.00</td>
-          <td class="px-6 py-4 text-center text-secondary font-bold">+1.92%</td>
-          <td class="px-6 py-4 text-right font-bold">+$15,800</td>
-          <td class="px-6 py-4 text-on-surface-variant">8h 45m</td>
-          <td class="px-3 py-4 w-12 text-center align-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
-              <path d="M4 2H2v19c0 .55.45 1 1 1h19v-2H4z"></path><path
-                d="M15.4 12.8c.4.3.96.26 1.31-.09l5-5L20.3 6.3l-4.39 4.39-3.31-2.48c-.4-.3-.96-.26-1.31.09l-6 6 1.41 1.41 5.39-5.39z"
-              ></path>
-            </svg>
-          </td>
-        </tr>
-        <tr>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
-            <path d="M4 2H2v19c0 .55.45 1 1 1h19v-2H4z"></path><path
-              d="M15.4 12.8c.4.3.96.26 1.31-.09l5-5L20.3 6.3l-4.39 4.39-3.31-2.48c-.4-.3-.96-.26-1.31.09l-6 6 1.41 1.41 5.39-5.39z"
-            ></path>
-          </svg>
-        </tr>
+        {
+          trades.map((trade) => (
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="px-6 py-4 font-medium">{trade.date}</td>
+              <td class="px-6 py-4">
+                <span
+                  class={`px-2 py-1 text-[10px] font-bold rounded ${
+                    trade.side === "LONG"
+                      ? "bg-secondary/10 text-secondary"
+                      : "bg-tertiary/10 text-tertiary"
+                  }`}
+                >
+                  {trade.side}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right tabular-nums">
+                {trade.entryPrice.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                })}
+              </td>
+              <td class="px-6 py-4 text-right tabular-nums">
+                {trade.exitPrice.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                })}
+              </td>
+              <td
+                class={`px-6 py-4 text-center font-bold ${trade.resultPercentage >= 0 ? "text-secondary" : "text-tertiary"}`}
+              >
+                {trade.resultPercentage >= 0 ? "+" : ""}
+                {trade.resultPercentage}%
+              </td>
+              <td
+                class={`px-6 py-4 text-right font-bold ${trade.resultAmount >= 0 ? "" : "text-tertiary"}`}
+              >
+                {trade.resultAmount >= 0 ? "+" : ""}$
+                {Math.abs(trade.resultAmount).toLocaleString()}
+              </td>
+              <td class="px-6 py-4 text-on-surface-variant">
+                {trade.duration}
+              </td>
+            </tr>
+          ))
+        }
       </tbody>
     </table>
+
+    <!-- Paginación -->
+    <div
+      class="px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-3 border-t border-surface-container"
+    >
+      <span class="text-xs text-on-surface-variant">
+        <span class="font-bold text-on-surface">{`1-${tradesPerPage}`}</span> de <span
+          class="font-bold text-on-surface">{totalDeTrades}</span
+        > trades
+      </span>
+      <div class="flex items-center gap-1">
+        <button
+          class="px-3 py-1.5 text-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-30"
+          disabled
+        >
+          <span class="material-symbols-outlined text-sm">chevron_left</span>
+        </button>
+
+        <button
+          class="px-3 py-1.5 text-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors"
+        >
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
