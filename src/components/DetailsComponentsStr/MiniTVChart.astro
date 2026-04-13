@@ -1,0 +1,113 @@
+---
+interface Point {
+  time: number;
+  value: number;
+}
+
+interface Props {
+  points: Point[];
+  height?: number;
+}
+
+const { points, height = 220 } = Astro.props as Props;
+---
+
+<div class="mini-equity-root">
+  <div class="mini-equity-chart" style={`height:${height}px; width:100%;`}>
+  </div>
+  <script
+    type="application/json"
+    class="mini-equity-data"
+    set:html={JSON.stringify(points)}
+  />
+</div>
+
+<script>
+  type ChartPoint = {
+    time: number;
+    value: number;
+  };
+  import {
+    createChart,
+    LineSeries,
+    type UTCTimestamp,
+  } from "lightweight-charts";
+
+  const roots = document.querySelectorAll(".mini-equity-root");
+
+  roots.forEach((root) => {
+    const container = root.querySelector(".mini-equity-chart");
+    const dataScript = root.querySelector(".mini-equity-data");
+
+    if (
+      !(container instanceof HTMLDivElement) ||
+      !(dataScript instanceof HTMLScriptElement)
+    ) {
+      return;
+    }
+
+    const rawPoints = dataScript.textContent ?? "[]";
+    const parsedPoints: ChartPoint[] = JSON.parse(rawPoints);
+
+    const chart = createChart(container, {
+      width: container.clientWidth,
+      height: container.clientHeight,
+      layout: {
+        background: { color: "transparent" },
+        textColor: "#94a3b8",
+      },
+      grid: {
+        vertLines: { color: "transparent" },
+        horzLines: { color: "transparent" },
+      },
+      rightPriceScale: {
+        visible: false,
+        borderVisible: false,
+      },
+      leftPriceScale: {
+        visible: false,
+        borderVisible: false,
+      },
+      timeScale: {
+        visible: false,
+        borderVisible: false,
+      },
+      crosshair: {
+        vertLine: {
+          visible: false,
+          labelVisible: false,
+        },
+        horzLine: {
+          visible: false,
+          labelVisible: false,
+        },
+      },
+      handleScroll: false,
+      handleScale: false,
+    });
+
+    const series = chart.addSeries(LineSeries, {
+      color: "#22d3ee",
+      lineWidth: 2,
+      priceLineVisible: false,
+      lastValueVisible: false,
+      crosshairMarkerVisible: false,
+    });
+
+    series.setData(
+      parsedPoints.map((point) => ({
+        time: point.time as UTCTimestamp,
+        value: point.value,
+      })),
+    );
+
+    const resizeObserver = new ResizeObserver(() => {
+      chart.applyOptions({
+        width: container.clientWidth,
+        height: container.clientHeight,
+      });
+    });
+
+    resizeObserver.observe(container);
+  });
+</script>

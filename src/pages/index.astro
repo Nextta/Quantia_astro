@@ -1,11 +1,130 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import StrategyCard from "../components/StrategyCard.astro";
+import CarteraCard from "../components/CarteraCard.astro";
+
+const strategy1Points = [
+  { time: 1717200000, value: 100000 },
+  { time: 1717286400, value: 101500 },
+  { time: 1717372800, value: 100900 },
+  { time: 1717459200, value: 103200 },
+  { time: 1717545600, value: 104600 },
+  { time: 1717632000, value: 106300 },
+  { time: 1717718400, value: 105700 },
+  { time: 1717804800, value: 107900 },
+];
+
+const id = 1;
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Quantia">
+  <div class="space-y-16">
+    <section>
+      <div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8">
+        <div>
+          <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
+            Top 3 Estrategias de Trading
+          </h2>
+        </div>
+
+        <a href="./strategies/">
+          <button
+            class="px-6 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
+          >
+            Ver más estrategias
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none">
+        <StrategyCard
+          title="Estrategia 1"
+          market="HFT / FOREX"
+          percent={24.8}
+          image="/images/chart-1.png"
+          profitFactor={1.84}
+          drawdown={4.2}
+          points={strategy1Points}
+        />
+
+        <StrategyCard
+          title="Estrategia 2"
+          market="TREND / CRYPTO"
+          percent={41.2}
+          image="/images/chart-2.png"
+          profitFactor={2.45}
+          drawdown={12.5}
+          points={strategy1Points}
+        />
+
+        <StrategyCard
+          title="Estrategia 3"
+          market="VOL / OPTIONS"
+          percent={15.5}
+          image="/images/chart-3.png"
+          profitFactor={1.62}
+          drawdown={2.1}
+          points={strategy1Points}
+        />
+      </div>
+    </section>
+
+    <section>
+      <div class="grid grid-cols-1 lg:grid-cols-2 min-[1400px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none">
+        <div>
+          <span
+            class="text-secondary text-xs font-bold tracking-[0.2em] uppercase mb-2 block"
+          >
+            Systematic Aggregation
+          </span>
+          <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
+            Top 3 Carteras
+          </h2>
+        </div>
+
+        <a href="./billeteras/">
+          <button
+            class="px-6 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
+          >
+            Ver más carteras
+            <span class="material-symbols-outlined text-sm">folder_open</span>
+          </button>
+        </a>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none">
+      <CarteraCard
+        title="Cartera 1"
+        market="DIVERSIFIED / TAIL RISK"
+        percent={12.4}
+        image="/images/chart-4.png"
+        profitFactor={12.4}
+        drawdown={-0.15}
+        points={strategy1Points}
+      />
+
+      <CarteraCard
+        title="Cartera 2"
+        market="EQUITY / GROWTH"
+        percent={31.9}
+        image="/images/chart-5.png"
+        profitFactor={31.9}
+        drawdown={0.85}
+        points={strategy1Points}
+      />
+
+      <CarteraCard
+        title="Cartera 3"
+        market="INCOME / STABLE"
+        percent={8.2}
+        image="/images/chart-6.png"
+        profitFactor={8.2}
+        drawdown={0.12}
+        points={strategy1Points}
+      />
+    </div>
+  </div>
 </Layout>

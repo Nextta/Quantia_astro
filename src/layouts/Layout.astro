@@ -1,23 +1,171 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import "../styles/global.css";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title?: string;
+  showExportPdf?: boolean;
+}
+
+const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
+---
+
+<!doctype html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* The "No-Line" Rule - Tonal background shifts instead of borders */
+      body {
+        background-color: #0b1326;
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body text-on-surface selection:bg-primary/30">
+    <!-- TopNavBar -->
+    <header
+      class="fixed top-0 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center px-8 h-16"
+    >
+      <div class="flex items-center gap-8 flex-1 min-w-0">
+        <span
+          class="text-xl font-bold text-slate-50 dark:text-slate-50 tracking-tighter font-headline"
+          >Quantia</span
+        >
+        <nav class="hidden md:flex items-center flex-1 min-w-0">
+          <!-- //pendiente -->
+          <!-- Mod1 -->
+          <!-- TopNavBar Integration -->
+          <form class="flex-1 min-w-0 max-w-2xl" role="search">
+            <div class="relative">
+              <span
+                aria-hidden="true"
+                class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm"
+              >
+                search
+              </span>
+
+              <label for="global-search" class="sr-only">
+                Buscar estrategias, carteras o activos
+              </label>
+
+              <input
+                id="global-search"
+                name="search"
+                type="search"
+                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-[#7bd0ff]/40 transition-all font-body"
+                placeholder="Buscar estrategias, carteras o activos..."
+                autocomplete="off"
+              />
+            </div>
+          </form>
+          <!--  Mod1-->
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        {
+          showExportPdf && (
+            <button class="bg-surface-container-high hover:bg-slate-800/50 transition-colors text-slate-200 px-4 py-2 rounded text-sm font-medium active:scale-95 duration-150">
+              Export PDF
+            </button>
+          )
+        }
+        <!-- <button
+          class="bg-primary text-on-primary px-4 py-2 rounded text-sm font-bold active:scale-95 duration-150"
+          >Execute Trade</button
+        > -->
+        <div class="flex gap-2 ml-4">
+          <span
+            class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-sky-400"
+            >notifications</span
+          >
+          <span
+            class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-sky-400"
+            >settings</span
+          >
+        </div>
+        <img
+          alt="User Profile Avatar"
+          class="w-8 h-8 rounded-full border border-primary/20"
+          data-alt="Professional portrait of a financial analyst in dark studio lighting with blue accents"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNkzEjBRRR_UwE82X5DH1DQYJaIHBPGT5sTJEK4ZV_aSPAUxNOJyuiUVTiNXRCf9RGXY1jmjbs0vr1JPYkkpDrodGATVLh9t2ImLZ6ATkKJ52GxwgCJOcciRM_mCzNdOQv6JNhGVJOuuEYDe4LaRQgGslqQmQNa7o-VlF8aKoN2xqlMWO4ElDyTEsBqOIe285hrAHk1G9XowOqWIhDfsffZf7TXkzfo01kb_QvHHP5UpdV9LsSZoGbiEmodrjX3aVSz3INNRq7YHZ"
+        />
+      </div>
+    </header>
+    <!-- SideNavBar (Suppressed on details screens but rendered here as secondary utility) -->
+    <aside
+      class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-16 min-[900px]:w-64 z-40 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
+    >
+      <div class="hidden min-[900px]:flex flex-col mb-8 px-2">
+        <span class="text-lg font-black text-sky-400 font-headline"
+          >Quantia</span
+        >
+        <span
+          class="text-[10px] uppercase tracking-widest text-slate-500 font-bold"
+          >Trading</span
+        >
+      </div>
+      <div class="flex flex-col gap-1">
+        <div
+          class="flex items-center gap-3 px-3 py-2 text-sky-400 bg-slate-800/80 rounded-lg cursor-pointer"
+        >
+          <span class="material-symbols-outlined">query_stats</span>
+          <span class="hidden min-[900px]:inline font-manrope text-sm font-medium"
+            >Dashboard</span
+          >
+        </div>
+        <div
+          class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-all rounded-lg cursor-pointer active:translate-x-1 duration-200"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="hidden min-[900px]:inline font-manrope text-sm font-medium"
+            >Reports</span
+          >
+        </div>
+      </div>
+      <div class="mt-auto px-2">
+        <button
+          class="hidden min-[900px]:block w-full bg-secondary text-on-secondary-container py-2 rounded-xl text-xs font-bold uppercase tracking-wider mb-6"
+          >New Strategy</button
+        >
+        <div class="flex flex-col gap-2">
+          <div
+            class="flex items-center gap-3 px-2 py-1 text-slate-500 text-xs hover:text-slate-300 transition-all cursor-pointer"
+          >
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="pt-20 pl-20 min-[900px]:pl-72 pr-6 pb-6 min-h-screen">
+      <slot />
+    </main>
+    <!-- System Footer -->
+
+    <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
+    <!-- Suppressed: Shell Visibility Rule -->
+  </body>
+</html>

@@ -1,0 +1,93 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CurveDetail from "../../components/DetailsComponentsStr/CurveDetail.astro";
+import InfoBoxDetail from "../../components/DetailsComponentsStr/InfoBoxDetail.astro";
+import FactorBox from "../../components/DetailsComponentsStr/FactorBox.astro";
+import FourMetrics from "../../components/DetailsComponentsStr/FourMetrics.astro";
+import HeatMap from "../../components/DetailsComponentsStr/HeatMap.astro";
+import BarGraph from "../../components/DetailsComponentsStr/BarGraph.astro";
+import ReturnDistribution from "../../components/DetailsComponentsStr/ReturnDistribution.astro";
+import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
+import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
+import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props as Props;
+---
+
+<Layout>
+  <!-- Main Content -->
+  <!-- <main class="pt-24 pb-12 ml-16 md:ml-64 px-8 min-h-screen"> -->
+    <!-- Header Info -->
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+      <div>
+        <nav class="flex text-xs text-on-surface-variant mb-2 gap-2 font-label">
+          <span>Performance Report</span>
+          <span>/</span>
+          <span class="text-primary">Quantia Obsidian v4.2</span>
+        </nav>
+        <h1
+          class="text-4xl font-extrabold font-headline tracking-tighter text-slate-50"
+        >
+          Reporte de Desempeño
+        </h1>
+      </div>
+      <div class="flex gap-4">
+        <div class="bg-surface-container-low px-4 py-2 rounded-xl">
+          <span
+            class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
+            >Estado del Sistema</span
+          >
+          <div class="flex items-center gap-2">
+            <div
+              class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4edea3]"
+            >
+            </div>
+            <span class="text-sm font-semibold">ACTIVO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Hero Section: Bento Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+      <!-- Equity Curve -->
+      <CurveDetail />
+
+      <!-- Key Ratios -->
+      <div class="md:col-span-4 flex flex-col gap-6">
+        <InfoBoxDetail />
+        <InfoBoxDetail />
+        <FactorBox />
+      </div>
+    </div>
+    <!-- Detailed Metrics Grids -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      <FourMetrics />
+      <FourMetrics />
+      <FourMetrics />
+      <FourMetrics />
+    </div>
+    <!-- Heatmap Section -->
+    <HeatMap />
+    <!-- Comparative Charts & Histograms -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <BarGraph />
+      <ReturnDistribution />
+      <StrVSBench />
+    </div>
+    <!-- Recent Activity Log Table -->
+    <TradesList />
+    <!-- System Footer -->
+    <footer
+      class="mt-12 pt-8 border-t border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
+    >
+    <GlosaryDetail />
+    
+    </footer>
+  <!-- </main> -->
+  <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
+  <!-- Suppressed: Shell Visibility Rule -->
+</Layout>
+
