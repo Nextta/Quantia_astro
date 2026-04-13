@@ -13,3 +13,14 @@ export interface PaginatedTrades {
   total: number;
   perPage: number;
 }
+
+export interface Trade { //Trade para TradesList
+  id: number;
+  date: string;
+  side: TradeSide;
+  entryPrice: number;
+  exitPrice: number;
+  resultPercentage: number;
+  resultAmount: number;
+  duration: string;
+}
