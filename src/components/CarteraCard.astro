@@ -26,8 +26,14 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
 <article
   class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0"
 >
+<!-- First -->
   <div
-    class="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"
+    class="
+    mb-5 flex 
+    flex-col gap-3 
+    min-[800px]:flex-row
+    min-[800px]:items-start 
+    min-[800px]:justify-between"
   >
     <div class="min-w-0 lg:max-w-[65%]">
       <h3
@@ -55,15 +61,15 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
       <span>{percent}</span>
     </div>
   </div>
-
+<!-- First -->
   <div class="bg-surface-container-lowest rounded-xl p-3 sm:p-4 mb-6">
     <div class="rounded-2xl overflow-hidden bg-[#061020]">
       <MiniTVChart points={points} height={110} />
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left">
+  <div class="flex flex-col min-[400px]:flex-row gap-3 min-[400px]:items-end min-[400px]:justify-between">
+    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end">
       <div class="min-w-0">
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
@@ -91,7 +97,7 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
       </div>
     </div>
 
-    <div class="self-start sm:self-auto sm:shrink-0">
+    <div class="shrink-0">
       <a
         href={`/strategies/${id}`}
         aria-label="Ver más"
@@ -103,3 +109,4 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
     </div>
   </div>
 </article>
+
