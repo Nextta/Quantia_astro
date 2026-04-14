@@ -6,7 +6,7 @@ import ExecutionTiming from "../../components/DetailsCompTrade/ExecutionTiming.a
 import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
 import ContextStr from "../../components/DetailsCompTrade/ContextStr.astro";
-
+import BackFidelity from "../../components/DetailsCompTrade/BackFidelity.astro";
 
 const { id } = Astro.params;
 ---
@@ -55,28 +55,7 @@ const { id } = Astro.params;
         <ContextStr />
          <!-- Placeholder for Future Expansion -->
         <div class="col-span-12 lg:col-span-5 flex flex-col gap-4">
-          <div
-            class="bg-primary/5 rounded-xl p-6 border border-primary/10 flex items-center justify-between"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center"
-              >
-                <span class="material-symbols-outlined text-primary"
-                  >verified</span
-                >
-              </div>
-              <div>
-                <h6 class="font-headline font-bold text-white">
-                  Backtest Fidelity
-                </h6>
-                <p class="text-xs text-on-surface-variant">
-                  Order Book Depth Simulation Active
-                </p>
-              </div>
-            </div>
-            <span class="text-xs font-black text-primary">98% Accuracy</span>
-          </div>
+          <BackFidelity />
           <div class="flex gap-4">
             <button
               class="flex-1 bg-surface-container-high hover:bg-surface-bright text-white font-bold py-4 rounded-xl border border-white/5 flex items-center justify-center gap-2 transition-all"
