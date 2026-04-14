@@ -1,4 +1,17 @@
 ---
+interface Props {
+  title?: string;
+  totalReturn?: string;
+  bestMonth?: string;
+  worstMonth?: string;
+  timeInMarket?: string;
+  parametro1?: string;
+  parametro2?: string;
+  parametro3?: string;
+  parametro4?: string;
+}
+
+const { totalReturn = "42.4%", bestMonth = "+8.2%", worstMonth = "-4.1%", timeInMarket = "68.2%", parametro1 = "Retorno Total", parametro2 = "Mejor Mes", parametro3 = "Peor Mes", parametro4 = "Tiempo en Mercado", title = "Análisis de Retornos" } = Astro.props as Props;
 
 ---
 
@@ -6,36 +19,36 @@
   <!-- Returns Analytics -->
   <div class="bg-surface-container-low rounded-xl p-5">
     <h4 class="text-primary text-xs font-black uppercase tracking-widest mb-4">
-      Análisis de Retornos
+      {title}
     </h4>
     <div class="space-y-3">
       <div class="flex justify-between items-center group/item cursor-default">
         <span
           class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >Retorno Total</span
+          >{parametro1}</span
         >
-        <span class="text-sm font-bold text-secondary">42.4%</span>
+        <span class="text-sm font-bold text-secondary">{totalReturn}</span>
       </div>
       <div class="flex justify-between items-center group/item cursor-default">
         <span
           class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >Mejor Mes</span
+          >{parametro2}</span
         >
-        <span class="text-sm font-bold">+8.2%</span>
+        <span class="text-sm font-bold">{bestMonth}</span>
       </div>
       <div class="flex justify-between items-center group/item cursor-default">
         <span
           class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >Peor Mes</span
+          >{parametro3}</span
         >
-        <span class="text-sm font-bold text-tertiary">-4.1%</span>
+        <span class="text-sm font-bold text-tertiary">{worstMonth}</span>
       </div>
       <div class="flex justify-between items-center group/item cursor-default gap-2">
         <span
           class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors min-w-0"
-          >Tiempo en Mercado</span
+          >{parametro4}</span
         >
-        <span class="text-sm font-bold whitespace-nowrap shrink-0">68.2%</span>
+        <span class="text-sm font-bold whitespace-nowrap shrink-0">{timeInMarket}</span>
       </div>
     </div>
   </div>

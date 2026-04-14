@@ -13,29 +13,36 @@ const points = [
   { time: "2025-04-10", value: 1335000 },
   { time: "2025-04-20", value: 1424592 },
 ];
+
+interface Props{
+  title?: string;
+  moneyTotal?: number;
+  porcentaje?: number;
+}
+
+const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcentaje = 24.5 } = Astro.props as Props;
 ---
 
 <div class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden">
   <div class="flex justify-between items-start mb-8">
     <div>
       <h3 class="text-on-surface-variant text-sm font-medium mb-1">
-        Curva de Equidad (Equity Curve)
+        {title}
       </h3>
       <p class="text-2xl font-bold font-headline text-slate-50 tracking-tight">
-        $1,424,592.00
+        ${moneyTotal.toLocaleString()}
       </p>
     </div>
 
     <div class="flex gap-2">
       <span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold">
-        +24.5% CAGR
+        +{porcentaje}% CAGR
       </span>
     </div>
   </div>
 
   <div class="equity-chart-root w-full" style="height: 256px;">
     <div class="equity-chart w-full h-full"></div>
-
     <script
       type="application/json"
       class="equity-chart-data"

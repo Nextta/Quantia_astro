@@ -1,11 +1,42 @@
 ---
+interface Props {
+  title?: string;
+  PercentM1Y1?: number;
+  PercentM1Y2?: number;
+  PercentM2Y1?: number;
+  PercentM2Y2?: number;
+  PercentM3Y1?: number;
+  PercentM3Y2?: number;
+  PercentM4Y1?: number;
+  PercentM4Y2?: number;
+  PercentM5Y1?: number;
+  PercentM5Y2?: number;
+  PercentM6Y1?: number;
+  PercentM6Y2?: number;
+  PercentM7Y1?: number;
+  PercentM7Y2?: number;
+  PercentM8Y1?: number;
+  PercentM8Y2?: number;
+  PercentM9Y1?: number;
+  PercentM9Y2?: number;
+  PercentM10Y1?: number;
+  PercentM10Y2?: number;
+  PercentM11Y1?: number;
+  PercentM11Y2?: number;
+  PercentM12Y1?: number;
+  PercentM12Y2?: number;
+  YTDYear1?: number;
+  YTDYear2?: number;
+}
+
+const { title = "Mapa de Calor de Rendimiento Mensual", PercentM1Y1=-1.2, PercentM1Y2=3.2, PercentM2Y1=2.4, PercentM2Y2=1.1, PercentM3Y1=5.8, PercentM3Y2=-2.4, PercentM4Y1=3.9, PercentM4Y2=4.5, PercentM5Y1=1.5, PercentM5Y2=0.0, PercentM6Y1=6, PercentM6Y2=2.1, PercentM7Y1=0.5, PercentM7Y2=0.8, PercentM8Y1=-0.2, PercentM8Y2=-0.5, PercentM9Y1=4.4, PercentM9Y2=5.2, PercentM10Y1=-1.5, PercentM10Y2=1.8, PercentM11Y1=0.9, PercentM11Y2=0.4, PercentM12Y1=2.2, PercentM12Y2=2.9, YTDYear1= 20, YTDYear2=22} = Astro.props as Props;
 
 ---
 
 <div class="bg-surface-container-high rounded-xl p-6 mb-8">
   <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6">
     <h3 class="text-lg font-bold font-headline">
-      Mapa de Calor de Rendimiento Mensual
+      {title}
     </h3>
     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-on-surface-variant">
       <div class="flex items-center gap-1">
@@ -40,95 +71,95 @@
           <td class="p-2 text-primary font-bold">2023</td>
           <td
             class="bg-secondary/80 text-on-secondary p-3 rounded-lg text-center"
-            >+3.2</td
+            >+{PercentM1Y2}</td
           >
           <td class="bg-secondary/40 text-secondary p-3 rounded-lg text-center"
-            >+1.1</td
+            >+{PercentM2Y2}</td
           >
           <td class="bg-tertiary/60 text-on-tertiary p-3 rounded-lg text-center"
-            >-2.4</td
+            >{PercentM3Y2}</td
           >
           <td
             class="bg-secondary/90 text-on-secondary p-3 rounded-lg text-center"
-            >+4.5</td
+            >+{PercentM4Y2}</td
           >
           <td
             class="bg-surface-container-lowest p-3 rounded-lg text-center text-on-surface-variant"
-            >0.0</td
+            >{PercentM5Y2}</td
           >
           <td
             class="bg-secondary/60 text-on-secondary p-3 rounded-lg text-center"
-            >+2.1</td
+            >+{PercentM6Y2}</td
           >
           <td class="bg-secondary/30 text-secondary p-3 rounded-lg text-center"
-            >+0.8</td
+            >+{PercentM7Y2}</td
           >
           <td class="bg-tertiary/20 text-tertiary p-3 rounded-lg text-center"
-            >-0.5</td
+            >{PercentM8Y2}</td
           >
           <td class="bg-secondary text-on-secondary p-3 rounded-lg text-center"
-            >+5.2</td
+            >+{PercentM9Y2}</td
           > 
           <td
             class="bg-secondary/50 text-on-secondary p-3 rounded-lg text-center"
-            >+1.8</td
+            >+{PercentM10Y2}</td
           >
           <td class="bg-secondary/20 text-secondary p-3 rounded-lg text-center"
-            >+0.4</td
+            >+{PercentM11Y2}</td
           >
           <td
             class="bg-secondary/70 text-on-secondary p-3 rounded-lg text-center"
-            >+2.9</td
+            >+{PercentM12Y2}</td
           >
           <td
             class="p-2 bg-surface-container-highest rounded text-center font-bold text-secondary"
-            >+21.2%</td
+            >+{YTDYear2}%</td
           >
         </tr>
         <tr>
           <td class="p-2 text-primary font-bold">2022</td>
           <td class="bg-tertiary/40 text-on-tertiary p-3 rounded-lg text-center"
-            >-1.2</td
+            >{PercentM1Y1}</td
           >
           <td
             class="bg-secondary/60 text-on-secondary p-3 rounded-lg text-center"
-            >+2.4</td
+            >+{PercentM2Y1}</td
           >
           <td class="bg-secondary text-on-secondary p-3 rounded-lg text-center"
-            >+5.8</td
+            >+{PercentM3Y1}</td
           >
           <td class="bg-tertiary/80 text-on-tertiary p-3 rounded-lg text-center"
-            >-3.9</td
+            >+{PercentM4Y1}</td
           >
           <td class="bg-secondary/40 text-secondary p-3 rounded-lg text-center"
-            >+1.5</td
+            >+{PercentM5Y1}</td
           >
           <td class="bg-tertiary/20 text-tertiary p-3 rounded-lg text-center"
-            >-0.2</td
+            >+{PercentM6Y1}</td
           >
           <td class="bg-secondary/20 text-secondary p-3 rounded-lg text-center"
-            >+0.6</td
+            >+{PercentM7Y1}</td
           >
           <td class="bg-secondary/40 text-secondary p-3 rounded-lg text-center"
-            >+1.1</td
+            >{PercentM8Y1}</td
           >
           <td
             class="bg-secondary/90 text-on-secondary p-3 rounded-lg text-center"
-            >+4.4</td
+            >+{PercentM9Y1}</td
           >
           <td class="bg-tertiary/40 text-on-tertiary p-3 rounded-lg text-center"
-            >-1.5</td
+            >{PercentM10Y1}</td
           >
           <td class="bg-secondary/30 text-secondary p-3 rounded-lg text-center"
-            >+0.9</td
+            >+{PercentM11Y1}</td
           >
           <td
             class="bg-secondary/60 text-on-secondary p-3 rounded-lg text-center"
-            >+2.2</td
+            >+{PercentM12Y1}</td
           >
           <td
             class="p-2 bg-surface-container-highest rounded text-center font-bold text-secondary"
-            >+12.8%</td
+            >+{YTDYear1}%</td
           >
         </tr>
       </tbody>

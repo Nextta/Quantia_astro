@@ -1,9 +1,19 @@
 ---
+interface Props {
+  title?: string;
+  ratioValue1?: number;
+  ratioValue2?: number;
+}
 
+const {
+  title = "Ratio de Sharpe",
+  ratioValue1 = -5,
+  ratioValue2 = 5,
+} = Astro.props as Props;
 ---
 
 <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
-  <h4 class="text-sm font-bold mb-6">Distribución de Retornos</h4>
+  <h4 class="text-sm font-bold mb-6">{title}</h4>
   <div class="flex-1 flex items-end gap-1">
     <div class="flex-1 bg-tertiary/40 h-[10%] rounded-t-sm"></div>
     <div class="flex-1 bg-tertiary/60 h-[25%] rounded-t-sm"></div>
@@ -16,6 +26,6 @@
   <div
     class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold"
   >
-    <span>-5%</span><span>0%</span><span>+5%</span>
+    <span>{ratioValue1}%</span><span>0%</span><span>{ratioValue2}%</span>
   </div>
 </div>
