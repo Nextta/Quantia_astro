@@ -1,17 +1,25 @@
 ---
+interface Props {
+  factor1?: string;
+  factor2?: string;
+  recoveryFactor?: number;
+  profitFactor?: number;
+}
+
+const { recoveryFactor = 3.24, profitFactor = 1.65, factor1 = "Factor 1", factor2 = "Factor 2" } = Astro.props as Props;
 
 ---
 <div class="bg-surface-container-low rounded-xl p-6 grid grid-cols-2 gap-4">
   <div>
     <span class="block text-[10px] text-on-surface-variant font-bold"
-      >Recovery Factor</span
+      >{factor1}</span
     >
-    <span class="text-lg font-bold">3.24</span>
+    <span class="text-lg font-bold">{recoveryFactor}</span>
   </div>
   <div>
     <span class="block text-[10px] text-on-surface-variant font-bold"
-      >Profit Factor</span
+      >{factor2}</span
     >
-    <span class="text-lg font-bold">1.65</span>
+    <span class="text-lg font-bold">{profitFactor}</span>
   </div>
 </div>
