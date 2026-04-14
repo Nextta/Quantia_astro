@@ -7,6 +7,8 @@ import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
 import ContextStr from "../../components/DetailsCompTrade/ContextStr.astro";
 import BackFidelity from "../../components/DetailsCompTrade/BackFidelity.astro";
+import ButtonReturn from "../../components/DetailsCompTrade/ButtonReturn.astro";
+import ButtonRetest from "../../components/DetailsCompTrade/ButonRetest.astro";
 
 const { id } = Astro.params;
 ---
@@ -57,18 +59,8 @@ const { id } = Astro.params;
         <div class="col-span-12 lg:col-span-5 flex flex-col gap-4">
           <BackFidelity />
           <div class="flex gap-4">
-            <button
-              class="flex-1 bg-surface-container-high hover:bg-surface-bright text-white font-bold py-4 rounded-xl border border-white/5 flex items-center justify-center gap-2 transition-all"
-            >
-              <span class="material-symbols-outlined">ios_share</span>
-              <span>Export Data</span>
-            </button>
-            <button
-              class="flex-1 bg-secondary text-on-secondary font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-secondary/10"
-            >
-              <span class="material-symbols-outlined">replay</span>
-              <span>Re-run Test</span>
-            </button>
+            <ButtonReturn />
+            <ButtonRetest />
           </div>
         </div>
       </div>
