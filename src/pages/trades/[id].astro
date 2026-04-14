@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-
+import MnPer from "../../components/DetailsCompTrade/MnPer.astro";
 
 
 const { id } = Astro.params;
@@ -30,30 +30,7 @@ const { id } = Astro.params;
             Strategy: Neural Momentum v4 • BTC-USD-PERP • Oct 14, 2023
           </p>
         </div>
-        <div
-          class="col-span-4 bg-surface-container-high rounded-xl p-6 flex justify-between items-center shadow-xl shadow-black/20"
-        >
-          <div>
-            <p
-              class="text-on-surface-variant text-xs uppercase font-bold tracking-widest mb-1"
-            >
-              Total PnL
-            </p>
-            <h4 class="text-2xl font-headline font-black text-secondary">
-              +$1,429.50
-            </h4>
-          </div>
-          <div class="text-right">
-            <p
-              class="text-on-surface-variant text-xs uppercase font-bold tracking-widest mb-1"
-            >
-              Return (%)
-            </p>
-            <h4 class="text-2xl font-headline font-black text-secondary">
-              +4.25%
-            </h4>
-          </div>
-        </div>
+        <MnPer />
       </div>
       <!-- Candlestick Chart Area -->
       <section
