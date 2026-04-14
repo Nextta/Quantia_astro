@@ -48,18 +48,14 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
   <body class="bg-surface font-body text-on-surface selection:bg-primary/30">
     <!-- TopNavBar -->
     <header
-      class="fixed top-0 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center px-8 h-16"
+      class="fixed top-0 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center pl-20 min-[900px]:pl-72 pr-8 h-16"
     >
       <div class="flex items-center gap-8 flex-1 min-w-0">
-        <span
-          class="text-xl font-bold text-slate-50 dark:text-slate-50 tracking-tighter font-headline"
-          >Quantia</span
-        >
-        <nav class="hidden md:flex items-center flex-1 min-w-0">
+        <nav class="hidden min-[400px]:flex items-center flex-1 min-w-0">
           <!-- //pendiente -->
           <!-- Mod1 -->
           <!-- TopNavBar Integration -->
-          <form class="flex-1 min-w-0 max-w-2xl" role="search">
+          <form class="block flex-1 min-w-0 max-w-2xl" role="search">
             <div class="relative">
               <span
                 aria-hidden="true"
@@ -67,11 +63,9 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
               >
                 search
               </span>
-
               <label for="global-search" class="sr-only">
                 Buscar estrategias, carteras o activos
               </label>
-
               <input
                 id="global-search"
                 name="search"
@@ -84,8 +78,16 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
           </form>
           <!--  Mod1-->
         </nav>
+        <button
+          type="button"
+          aria-label="Buscar"
+          class="min-[400px]:hidden text-slate-400 hover:text-sky-400 transition-colors"
+        >
+          <span class="material-symbols-outlined">search</span>
+        </button>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 shrink-0">
+        <!-- change -->
         {
           showExportPdf && (
             <button class="bg-surface-container-high hover:bg-slate-800/50 transition-colors text-slate-200 px-4 py-2 rounded text-sm font-medium active:scale-95 duration-150">
@@ -117,31 +119,37 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
     </header>
     <!-- SideNavBar (Suppressed on details screens but rendered here as secondary utility) -->
     <aside
-      class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-16 min-[900px]:w-64 z-40 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
+      class="fixed left-0 top-0 h-screen w-16 min-[900px]:w-64 z-50 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
     >
-      <div class="hidden min-[900px]:flex flex-col mb-8 px-2">
-        <span class="text-lg font-black text-sky-400 font-headline"
-          >Quantia</span
-        >
-        <span
-          class="text-[10px] uppercase tracking-widest text-slate-500 font-bold"
-          >Trading</span
-        >
-      </div>
-      <div class="flex flex-col gap-1">
-        <div
-          class="flex items-center gap-3 px-3 py-2 text-sky-400 bg-slate-800/80 rounded-lg cursor-pointer"
-        >
-          <span class="material-symbols-outlined">query_stats</span>
-          <span class="hidden min-[900px]:inline font-manrope text-sm font-medium"
-            >Dashboard</span
+      <a href="/">
+        <div class="hidden min-[900px]:flex flex-col mb-8 px-2">
+          <span class="text-lg font-black text-sky-400 font-headline"
+            >Quantia</span
+          >
+          <span
+            class="text-[10px] uppercase tracking-widest text-slate-500 font-bold"
+            >Trading</span
           >
         </div>
+      </a>
+      <div class="flex flex-col gap-1">
+        <a href="/">
+          <div
+            class="flex items-center gap-3 px-3 py-2 text-sky-400 bg-slate-800/80 rounded-lg cursor-pointer"
+          >
+            <span class="material-symbols-outlined">query_stats</span>
+            <span
+              class="hidden min-[900px]:inline font-manrope text-sm font-medium"
+              >Dashboard</span
+            >
+          </div>
+        </a>
         <div
           class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-all rounded-lg cursor-pointer active:translate-x-1 duration-200"
         >
           <span class="material-symbols-outlined">dashboard</span>
-          <span class="hidden min-[900px]:inline font-manrope text-sm font-medium"
+          <span
+            class="hidden min-[900px]:inline font-manrope text-sm font-medium"
             >Reports</span
           >
         </div>

@@ -7,6 +7,8 @@ interface Props {
   market?: string;
   percent?: number;
   image?: string;
+  parameter1?: string;
+  parameter2?: string;
   profitFactor?: number;
   drawdown?: number;
   points: Point[];
@@ -19,7 +21,7 @@ interface Point {
 
 const id = 1;
 
-const { title, market, percent, image, profitFactor, drawdown, points } =
+const { title, market, percent, image, parameter1="PROFIT FACTOR", parameter2="DRAWDOWN", profitFactor, drawdown, points } =
   Astro.props as Props;
 ---
 
@@ -74,7 +76,7 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          Profit Factor
+          {parameter1}
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface leading-none"
@@ -87,7 +89,7 @@ const { title, market, percent, image, profitFactor, drawdown, points } =
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          Drawdown
+          {parameter2}
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none"

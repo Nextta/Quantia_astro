@@ -1,34 +1,28 @@
 ---
+interface Props {
+  title?: string;
+}
 
+const { title = "Rendimiento por Día" } = Astro.props as Props;
 ---
 
-
-  <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
-    <h4 class="text-sm font-bold mb-6">Rendimiento por Día</h4>
-    <div class="flex-1 flex items-end gap-2 px-2">
-      <div
-        class="flex-1 bg-surface-container-highest h-[40%] rounded-t-sm relative group"
-      >
-        <div
-          class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] hidden group-hover:block"
-        >
-          Lun
-        </div>
-      </div>
-      <div class="flex-1 bg-secondary h-[75%] rounded-t-sm relative group">
-      </div>
-      <div class="flex-1 bg-secondary h-[95%] rounded-t-sm relative group">
-      </div>
-      <div class="flex-1 bg-secondary h-[60%] rounded-t-sm relative group">
-      </div>
-      <div class="flex-1 bg-tertiary h-[30%] rounded-t-sm relative group"></div>
-    </div>
+<div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
+  <h4 class="text-sm font-bold mb-6">{title}</h4>
+  <div class="flex-1 flex items-end gap-2 px-2">
     <div
-      class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold uppercase tracking-widest"
+      class="flex-1 bg-surface-container-highest h-[40%] rounded-t-sm relative group"
     >
-      <span>Lun</span><span>Mar</span><span>Mie</span><span>Jue</span><span
-        >Vie</span
-      >
     </div>
+    <div class="flex-1 bg-secondary h-[75%] rounded-t-sm relative group"></div>
+    <div class="flex-1 bg-secondary h-[95%] rounded-t-sm relative group"></div>
+    <div class="flex-1 bg-secondary h-[60%] rounded-t-sm relative group"></div>
+    <div class="flex-1 bg-tertiary h-[30%] rounded-t-sm relative group"></div>
   </div>
-
+  <div
+    class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold uppercase tracking-widest"
+  >
+    <span>Lun</span><span>Mar</span><span>Mie</span><span>Jue</span><span
+      >Vie</span
+    >
+  </div>
+</div>
