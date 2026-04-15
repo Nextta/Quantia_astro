@@ -1,4 +1,14 @@
 ---
+interface Props {
+  side?: string;
+  size?: string;
+  value?: string;
+  commissions?: string;
+  slippage?: string;
+  exitReason?: string;
+}
+
+const { side = "LONG (10x Lev)", size = "1.25 BTC", value = "$34,312.50", commissions = "-$14.50", slippage = "-$4.20 (0.12 bps)", exitReason = "Signal: Momentum Fade" } = Astro.props;
 
 ---
 
@@ -18,31 +28,31 @@
       <span class="text-[10px] text-on-surface-variant uppercase font-bold"
         >Side</span
       >
-      <span class="text-xs font-bold text-secondary-fixed">LONG (10x Lev)</span>
+      <span class="text-xs font-bold text-secondary-fixed">{side}</span>
     </div>
     <div class="flex justify-between">
       <span class="text-[10px] text-on-surface-variant uppercase font-bold"
         >Size</span
       >
-      <span class="text-xs font-bold text-on-surface">1.25 BTC</span>
+      <span class="text-xs font-bold text-on-surface">{size}</span>
     </div>
     <div class="flex justify-between">
       <span class="text-[10px] text-on-surface-variant uppercase font-bold"
         >Value</span
       >
-      <span class="text-xs font-bold text-on-surface">$34,312.50</span>
+      <span class="text-xs font-bold text-on-surface">{value}</span>
     </div>
     <div class="flex justify-between">
       <span class="text-[10px] text-on-surface-variant uppercase font-bold"
         >Commissions</span
       >
-      <span class="text-xs font-bold text-tertiary">-$14.50</span>
+      <span class="text-xs font-bold text-tertiary">{commissions}</span>
     </div>
     <div class="flex justify-between">
       <span class="text-[10px] text-on-surface-variant uppercase font-bold"
         >Slippage</span
       >
-      <span class="text-xs font-bold text-tertiary">-$4.20 (0.12 bps)</span>
+      <span class="text-xs font-bold text-tertiary">{slippage}</span>
     </div>
     <div class="pt-2">
       <div
@@ -53,7 +63,7 @@
         >
           Exit Reason
         </p>
-        <p class="text-xs font-semibold text-primary">Signal: Momentum Fade</p>
+        <p class="text-xs font-semibold text-primary">{exitReason}</p>
       </div>
     </div>
   </div>

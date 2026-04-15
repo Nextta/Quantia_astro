@@ -1,4 +1,14 @@
 ---
+interface Props {
+  title?: string;
+  entryTimestamp?: string;
+  exitTimestamp?: string;
+  entryPrice?: number;
+  exitPrice?: number;
+  tradeDuration?: string;
+}
+
+const { title = "Execution Timing", entryTimestamp = "2023-10-14 08:30:00", exitTimestamp = "2023-10-14 14:45:12", entryPrice = 27450.00, exitPrice = 28620.50, tradeDuration = "6h 15m 12s" } = Astro.props;
 
 ---
 
@@ -10,7 +20,7 @@
     <h5
       class="font-headline font-extrabold uppercase tracking-widest text-xs text-on-surface-variant"
     >
-      Execution Timing
+      {title}
     </h5>
   </div>
   <div class="grid grid-cols-2 gap-y-6">
@@ -20,7 +30,7 @@
       >
         Entry Timestamp
       </p>
-      <p class="text-sm font-semibold text-on-surface">2023-10-14 08:30:00</p>
+      <p class="text-sm font-semibold text-on-surface">{entryTimestamp}</p>
     </div>
     <div>
       <p
@@ -28,7 +38,7 @@
       >
         Exit Timestamp
       </p>
-      <p class="text-sm font-semibold text-on-surface">2023-10-14 14:45:12</p>
+      <p class="text-sm font-semibold text-on-surface">{exitTimestamp}</p>
     </div>
     <div>
       <p
@@ -36,7 +46,7 @@
       >
         Entry Price
       </p>
-      <p class="text-sm font-bold text-on-surface">$27,450.00</p>
+      <p class="text-sm font-bold text-on-surface">${entryPrice.toLocaleString()}</p>
     </div>
     <div>
       <p
@@ -44,7 +54,7 @@
       >
         Exit Price
       </p>
-      <p class="text-sm font-bold text-on-surface">$28,620.50</p>
+      <p class="text-sm font-bold text-on-surface">${exitPrice.toLocaleString()}</p>
     </div>
     <div
       class="col-span-2 p-3 bg-surface-container-low rounded-lg flex items-center justify-between"
@@ -53,7 +63,7 @@
         class="text-[10px] text-on-surface-variant uppercase font-black tracking-tighter"
         >Trade Duration</span
       >
-      <span class="text-primary font-bold">6h 15m 12s</span>
+      <span class="text-primary font-bold">{tradeDuration}</span>
     </div>
   </div>
 </div>

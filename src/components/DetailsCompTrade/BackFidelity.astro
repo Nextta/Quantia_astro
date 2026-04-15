@@ -1,4 +1,9 @@
 ---
+interface Props {
+  title?: string;
+}
+
+const { title = "Backtest Fidelity" } = Astro.props;
 
 ---
 
@@ -12,7 +17,7 @@
       <span class="material-symbols-outlined text-primary">verified</span>
     </div>
     <div>
-      <h6 class="font-headline font-bold text-white">Backtest Fidelity</h6>
+      <h6 class="font-headline font-bold text-white">{title}</h6>
       <p class="text-xs text-on-surface-variant">
         Order Book Depth Simulation Active
       </p>
