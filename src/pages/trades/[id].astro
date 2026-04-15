@@ -7,7 +7,7 @@ import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
 import ContextStr from "../../components/DetailsCompTrade/ContextStr.astro";
 import BackFidelity from "../../components/DetailsCompTrade/BackFidelity.astro";
-import ButtonReturn from "../../components/DetailsCompTrade/ButtonReturn.astro";
+import ButtonExpData from "../../components/DetailsCompTrade/ButtonExpData.astro";
 import ButtonRetest from "../../components/DetailsCompTrade/ButonRetest.astro";
 
 const { id } = Astro.params;
@@ -59,7 +59,7 @@ const { id } = Astro.params;
         <div class="col-span-12 lg:col-span-5 flex flex-col gap-4">
           <BackFidelity />
           <div class="flex gap-4">
-            <ButtonReturn />
+            <ButtonExpData />
             <ButtonRetest />
           </div>
         </div>

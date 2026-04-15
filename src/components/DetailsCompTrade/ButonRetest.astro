@@ -2,10 +2,16 @@
 
 ---
 
-
 <button
-  class="flex-1 bg-secondary text-on-secondary font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-secondary/10"
+  class="flex-1 bg-secondary text-on-secondary font-bold
+         text-xs min-[470px]:text-base
+         py-3 min-[470px]:py-4
+         gap-1 min-[470px]:gap-2
+         rounded-xl flex items-center justify-center
+         transition-transform active:scale-95 shadow-lg shadow-secondary/10"
 >
-  <span class="material-symbols-outlined">replay</span>
+  <span class="material-symbols-outlined text-base min-[470px]:text-xl"
+    >replay</span
+  >
   <span>Re-run Test</span>
 </button>
