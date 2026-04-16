@@ -10,7 +10,7 @@ import BackFidelity from "../../components/DetailsCompTrade/BackFidelity.astro";
 import ButtonExpData from "../../components/DetailsCompTrade/ButtonExpData.astro";
 import ButtonRetest from "../../components/DetailsCompTrade/ButtonRetest.astro";
 
-// Estos datos vendrían de tu API, base de datos, o archivo
+
 const candles = [
   {
         time: { year: 2018, month: 9, day: 22 },
@@ -722,7 +722,7 @@ const candles = [
   // ...
 ];
 
-// Opción rápida para probar con solo 2 velas:
+// 
 const markers = [
   {
     time: { year: 2018, month: 9, day: 22 },
@@ -745,7 +745,7 @@ const { id } = Astro.params;
 
 <Layout title={`Trade Detail - Trade #${id}`}>
   <!-- Main Workspace -->
-  <!-- <main
+  <!--
     class="ml-64 flex-1 flex flex-col h-screen relative bg-surface overflow-y-auto"
   > -->
   <!-- TopNavBar -->

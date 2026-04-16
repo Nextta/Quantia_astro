@@ -31,7 +31,7 @@ const {
 <section
   class="bg-surface-container-low rounded-xl overflow-hidden border-t border-white/5 shadow-2xl"
 >
-  <!-- El puente: datos del servidor → atributos del HTML → script del cliente -->
+  
   <div
     id="trade-chart"
     class="w-full"
@@ -55,7 +55,7 @@ const {
 
   const container = document.getElementById("trade-chart");
   if (container) {
-    // Leer los datos del data-* (lo que el servidor dejó en el HTML)
+    // Leer los datos del data-
     const candles = JSON.parse(container.dataset.candles || "[]");
     const markers = JSON.parse(container.dataset.markers || "[]");
     const upColor = container.dataset.upColor || "#26a69a";
