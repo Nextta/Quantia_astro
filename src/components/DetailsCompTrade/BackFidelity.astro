@@ -8,15 +8,20 @@ const { title = "Backtest Fidelity" } = Astro.props;
 ---
 
 <div
-  class="bg-primary/5 rounded-xl p-6 border border-primary/10 flex items-center justify-between"
+  class="bg-primary/5 rounded-xl
+         p-4 min-[470px]:p-6
+         border border-primary/10
+         flex flex-col items-center gap-3
+         min-[470px]:flex-row min-[470px]:justify-between"
 >
-  <div class="flex items-center gap-4">
+  <div class="flex flex-col items-center gap-2
+           min-[470px]:flex-row min-[470px]:items-center min-[470px]:gap-4">
     <div
       class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center"
     >
       <span class="material-symbols-outlined text-primary">verified</span>
     </div>
-    <div>
+    <div class="text-center min-[470px]:text-left">
       <h6 class="font-headline font-bold text-white">{title}</h6>
       <p class="text-xs text-on-surface-variant">
         Order Book Depth Simulation Active
