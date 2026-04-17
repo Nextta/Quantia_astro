@@ -17,5 +17,8 @@
     "astro": "^6.0.8",
     "lightweight-charts": "^5.1.0",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi-light": "^1.2.2"
   }
 }
