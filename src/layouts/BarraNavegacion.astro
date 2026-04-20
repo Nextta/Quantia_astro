@@ -7,11 +7,11 @@
 >
   <!-- lado izquierdo -->
   <div class="flex min-w-0 flex-1 items-center gap-2">
-    <div class="flex items-center gap-2 px-3 py-2">
+    <div class="flex items-center gap-2 px-3 py-2 max-[370px]:w-[90px] max-[370px]:mr-auto">
       <button
         type="button"
         aria-label="Atrás"
-        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/70 hover:bg-white/10"
+        class="flex h-9 w-9 shrink-1 items-center justify-center rounded-full text-white/70 hover:bg-white/10"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@
     <button
       type="button"
       aria-label="Mostrar opciones"
-      class="flex h-10 w-10 shrink-1 items-center justify-center rounded-xl bg-gray-500 text-white/80 hover:bg-[#353535]"
+      class="flex h-10 w-10 shrink-1 items-center justify-center rounded-xl bg-gray-500 text-white/80 hover:bg-[#353535] max-[340px]:w-[20px]"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -80,12 +80,12 @@
   </div>
 
   <!-- cerrar,minimizar,maximizar -->
-  <div class="ml-auto flex shrink-2 items-center">
+  <div class="ml-auto flex shrink-4 items-center">
     <button
       id="titlebar-minimize"
       type="button"
       aria-label="Minimizar"
-      class="flex h-8 w-12 mt-2 items-center justify-center text-blue-300/80 hover:bg-white/10 shrink-1"
+      class="flex h-8 w-12 mt-2 items-center justify-center text-blue-300/80 hover:bg-white/10 shrink-4"
     >
       <svg
         fill="currentColor"
