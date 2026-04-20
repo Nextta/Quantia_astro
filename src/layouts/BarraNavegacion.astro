@@ -1,0 +1,150 @@
+---
+
+---
+
+<div
+  class="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 bg-[#2f2f2f] px-2"
+>
+  <!-- lado izquierdo -->
+  <div class="flex min-w-0 flex-1 items-center gap-2">
+    <div class="flex items-center gap-2 px-3 py-2 max-[370px]:w-[90px] max-[370px]:mr-auto">
+      <button
+        type="button"
+        aria-label="Atrás"
+        class="flex h-9 w-9 shrink-1 items-center justify-center rounded-full text-white/70 hover:bg-white/10"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        aria-label="Adelante"
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/40 hover:bg-white/10"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M9 18l6-6-6-6"></path>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        aria-label="Recargar"
+        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/70 hover:bg-white/10"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M20 11a8 8 0 10-2.34 5.66"></path>
+          <path d="M20 4v7h-7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <button
+      type="button"
+      aria-label="Mostrar opciones"
+      class="flex h-10 w-10 shrink-1 items-center justify-center rounded-xl bg-gray-500 text-white/80 hover:bg-[#353535] max-[340px]:w-[20px]"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M6 9l6 6 6-6"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- cerrar,minimizar,maximizar -->
+  <div class="ml-auto flex shrink-4 items-center">
+    <button
+      id="titlebar-minimize"
+      type="button"
+      aria-label="Minimizar"
+      class="flex h-8 w-12 mt-2 items-center justify-center text-blue-300/80 hover:bg-white/10 shrink-4"
+    >
+      <svg
+        fill="currentColor"
+        viewBox="0 0 2550 2550"
+        xmlns="http://www.w3.org/2000/svg"
+        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+          <path
+            d="M960 0c529.468 0 960 430.645 960 960s-430.532 960-960 960C430.645 1920 0 1489.355 0 960S430.645 0 960 0Zm508.235 903.53H451.765v112.94h1016.47V903.53Z"
+            fill-rule="evenodd"></path>
+        </g></svg
+      >
+     
+    </button>
+
+    <button
+      id="titlebar-maximize"
+      type="button"
+      aria-label="Maximizar"
+      class="flex h-10 w-12 mt-1 items-center justify-center text-blue-500/80 hover:bg-white/10 shrink-2"
+    >
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"
+        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+          <path
+            d="M14 10L20 4M20 4H15.5M20 4V8.5M4 4L10 10M4 4V8.5M4 4H8.5M14 14L20 20M20 20V15.5M20 20H15.5M10 14L4 20M4 20H8.5M4 20L4 15.5"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </g></svg
+      >
+    </button>
+
+    <button
+      id="titlebar-close"
+      type="button"
+      aria-label="Cerrar"
+      class="flex h-10 w-12 mt-1 items-center justify-center text-red-500 hover:bg-red-500 shrink-2"
+    >
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"
+        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+          id="SVGRepo_tracerCarrier"
+          stroke-linecap="round"
+          stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+          <path
+            d="M8.00191 9.41621C7.61138 9.02569 7.61138 8.39252 8.00191 8.002C8.39243 7.61147 9.0256 7.61147 9.41612 8.002L12.0057 10.5916L14.5896 8.00771C14.9801 7.61719 15.6133 7.61719 16.0038 8.00771C16.3943 8.39824 16.3943 9.0314 16.0038 9.42193L13.4199 12.0058L16.0039 14.5897C16.3944 14.9803 16.3944 15.6134 16.0039 16.004C15.6133 16.3945 14.9802 16.3945 14.5896 16.004L12.0057 13.42L9.42192 16.0038C9.03139 16.3943 8.39823 16.3943 8.00771 16.0038C7.61718 15.6133 7.61718 14.9801 8.00771 14.5896L10.5915 12.0058L8.00191 9.41621Z"
+            fill="currentColor"></path>
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z"
+            fill="currentColor"></path>
+        </g></svg
+      >
+    </button>
+  </div>
+</div>
