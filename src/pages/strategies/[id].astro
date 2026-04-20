@@ -15,94 +15,189 @@ interface Props {
 }
 import type { Trade } from "../../lib/types";
 
-
 const { id } = Astro.props as Props;
 
 const allTrades: Trade[] = [
-  { id: 1, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 2, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 3, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 4, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 5, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 6, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 7, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 8, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 9, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
-  { id: 10, date: "2023-11-23 09:15", side: "SHORT", entryPrice: 41200.00, exitPrice: 41450.25, resultPercentage: -0.61, resultAmount: -4200, duration: "1d 2h" },
+  {
+    id: 1,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 2,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 3,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 4,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 5,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 6,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 7,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 8,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 9,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
+  {
+    id: 10,
+    date: "2023-11-23 09:15",
+    side: "SHORT",
+    entryPrice: 41200.0,
+    exitPrice: 41450.25,
+    resultPercentage: -0.61,
+    resultAmount: -4200,
+    duration: "1d 2h",
+  },
 ];
 ---
 
 <Layout>
   <!-- Main Content -->
   <!-- <main class="pt-24 pb-12 ml-16 md:ml-64 px-8 min-h-screen"> -->
-    <!-- Header Info -->
-    <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
-      <div>
-        <nav class="flex text-xs text-on-surface-variant mb-2 gap-2 font-label">
-          <span>Performance Report</span>
-          <span>/</span>
-          <span class="text-primary">Quantia Obsidian v4.2</span>
-        </nav>
-        <h1
-          class="text-4xl font-extrabold font-headline tracking-tighter text-slate-50"
+  <!-- Header Info -->
+  <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+    <div>
+      <nav class="flex text-xs text-on-surface-variant mb-2 gap-2 font-label">
+        <span>Performance Report</span>
+        <span>/</span>
+        <span class="text-primary">Quantia Obsidian v4.2</span>
+      </nav>
+      <h1
+        class="text-4xl font-extrabold font-headline tracking-tighter text-slate-50"
+      >
+        Reporte de Desempeño
+      </h1>
+    </div>
+    <div class="flex gap-4">
+      <div class="bg-surface-container-low px-4 py-2 rounded-xl">
+        <span
+          class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
+          >Descargar</span
         >
-          Reporte de Desempeño
-        </h1>
-      </div>
-      <div class="flex gap-4">
-        <div class="bg-surface-container-low px-4 py-2 rounded-xl">
-          <span
-            class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
-            >Estado del Sistema</span
-          >
-          <div class="flex items-center gap-2">
-            <div
-              class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4edea3]"
+        <div class="mt-1 flex items-center gap-2">
+          <span class="text-sm font-semibold">Reporte</span>
+          <div class="flex">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              ><path
+                fill="currentColor"
+                d="M12 4v12.25L17.25 11l.75.66l-6.5 6.5l-6.5-6.5l.75-.66L11 16.25V4zM3 19h1v2h15v-2h1v3H3z"
+              ></path></svg
             >
-            </div>
-            <span class="text-sm font-semibold">ACTIVO</span>
           </div>
         </div>
       </div>
     </div>
-    <!-- Hero Section: Bento Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
-      <!-- Equity Curve -->
-      <CurveDetail />
+  </div>
+  <!-- Hero Section: Bento Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+    <!-- Equity Curve -->
+    <CurveDetail />
 
-      <!-- Key Ratios -->
-      <div class="md:col-span-4 flex flex-col gap-6">
-        <InfoBoxDetail />
-        <InfoBoxDetail />
-        <FactorBox />
-      </div>
+    <!-- Key Ratios -->
+    <div class="md:col-span-4 flex flex-col gap-6">
+      <InfoBoxDetail />
+      <InfoBoxDetail />
+      <FactorBox />
     </div>
-    <!-- Detailed Metrics Grids -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-      <FourMetrics />
-      <FourMetrics />
-      <FourMetrics />
-      <FourMetrics />
-    </div>
-    <!-- Heatmap Section -->
-    <HeatMap />
-    <!-- Comparative Charts & Histograms -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <BarGraph />
-      <ReturnDistribution />
-      <StrVSBench />
-    </div>
-    <!-- Recent Activity Log Table -->
-    <TradesList tradesPerPage={10} trades={allTrades} id={1}/>
-    <!-- System Footer -->
-    <footer
-      class="mt-12 pt-8 border-t border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
-    >
+  </div>
+  <!-- Detailed Metrics Grids -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    <FourMetrics />
+    <FourMetrics />
+    <FourMetrics />
+    <FourMetrics />
+  </div>
+  <!-- Heatmap Section -->
+  <HeatMap />
+  <!-- Comparative Charts & Histograms -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <BarGraph />
+    <ReturnDistribution />
+    <StrVSBench />
+  </div>
+  <!-- Recent Activity Log Table -->
+  <TradesList tradesPerPage={10} trades={allTrades} id={1} />
+  <!-- System Footer -->
+  <footer
+    class="mt-12 pt-8 border-t border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
+  >
     <GlosaryDetail />
-    
-    </footer>
+  </footer>
   <!-- </main> -->
   <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
   <!-- Suppressed: Shell Visibility Rule -->
 </Layout>
-

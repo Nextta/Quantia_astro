@@ -1,0 +1,124 @@
+---
+interface Props {
+  title?: string;
+  entryTimestamp?: string;
+  exitTimestamp?: string;
+  entryPrice?: number;
+  exitPrice?: number;
+  tradeDuration?: string;
+}
+
+const {
+  title = "Execution Timing",
+  entryTimestamp = "2023-10-14 08:30:00",
+  exitTimestamp = "2023-10-14 14:45:12",
+  entryPrice = 27450,
+  exitPrice = 28620.5,
+  tradeDuration = "6h 15m 12s",
+} = Astro.props;
+
+// Dividir el timestamp en fecha y hora
+const [entryDate, entryTime] = entryTimestamp.split(" ");
+const [exitDate, exitTime] = exitTimestamp.split(" ");
+---
+
+<div
+  class="col-span-1 md:col-span-2 bg-surface-container-high rounded-xl
+         p-4 min-[470px]:p-6
+         shadow-lg border border-white/5"
+>
+  <!-- Header -->
+  <div
+    class="flex flex-col items-center gap-2 mb-6
+           min-[470px]:flex-row min-[470px]:gap-3"
+  >
+    <span class="material-symbols-outlined text-primary">schedule</span>
+    <h5
+      class="font-headline font-extrabold uppercase
+             text-[11px] min-[470px]:text-xs
+             tracking-wider min-[470px]:tracking-widest
+             text-on-surface-variant
+             text-center min-[470px]:text-left"
+    >
+      {title}
+    </h5>
+  </div>
+
+  <!-- Grid de campos -->
+  <div
+    class="grid grid-cols-1 min-[470px]:grid-cols-2
+           gap-y-5 gap-x-4
+           text-center min-[470px]:text-left"
+  >
+    <div>
+      <p
+        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1"
+      >
+        Entry Timestamp
+      </p>
+      <p class="text-sm font-semibold text-on-surface leading-tight">
+        <span class="block min-[470px]:inline">{entryDate}</span>
+        <span class="block min-[470px]:inline min-[470px]:ml-1"
+          >{entryTime}</span
+        >
+      </p>
+    </div>
+    <div>
+      <p
+        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1"
+      >
+        Exit Timestamp
+      </p>
+      <p class="text-sm font-semibold text-on-surface leading-tight">
+        <span class="block min-[470px]:inline">{exitDate}</span>
+        <span class="block min-[470px]:inline min-[470px]:ml-1">{exitTime}</span
+        >
+      </p>
+    </div>
+    <div>
+      <p
+        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1"
+      >
+        Entry Price
+      </p>
+      <p class="text-sm font-bold text-on-surface">
+        ${
+          entryPrice.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }
+      </p>
+    </div>
+    <div>
+      <p
+        class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1"
+      >
+        Exit Price
+      </p>
+      <p class="text-sm font-bold text-on-surface">
+        ${
+          exitPrice.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        }
+      </p>
+    </div>
+
+    <!-- Trade Duration -->
+    <div
+      class="col-span-1 min-[470px]:col-span-2
+             p-3 bg-surface-container-low rounded-lg
+             flex flex-col items-center gap-1
+             min-[470px]:flex-row min-[470px]:justify-between min-[470px]:gap-3"
+    >
+      <span
+        class="text-[10px] text-on-surface-variant uppercase font-black tracking-tighter"
+      >
+        Trade Duration
+      </span>
+      <span class="text-primary font-bold">{tradeDuration}</span>
+    </div>
+  </div>
+</div>

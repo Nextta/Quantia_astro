@@ -1,0 +1,60 @@
+---
+interface Props {
+  title?: string;
+}
+ 
+const { title = "Strategy Context" } = Astro.props;
+---
+
+<div
+  class="col-span-11 lg:col-span-7 bg-surface-container-high rounded-xl
+         p-4 min-[470px]:p-6
+         border border-white/5"
+>
+  <div
+    class="flex flex-col items-center gap-2 mb-4
+           min-[470px]:flex-row min-[470px]:justify-between min-[470px]:gap-3"
+  >
+    <h5
+      class="font-headline font-extrabold text-white text-center min-[470px]:text-left"
+    >
+      {title}
+    </h5>
+
+    <button
+      class="text-xs text-primary font-bold hover:underline whitespace-nowrap"
+    >
+      View Journal
+    </button>
+  </div>
+
+  <p
+    class="text-on-surface-variant text-sm leading-relaxed italic break-words
+           text-center min-[470px]:text-left"
+  >
+    "The entry was triggered by a 15-minute bullish engulfing candle coupled
+    with an RSI breakout above 55. High volume confirm on Binance Spot data.
+    Price held above VWAP throughout the duration. Exit triggered by MACD
+    bearish crossover on the 5-minute timeframe. Manual intervention: None."
+  </p>
+
+  <div class="flex flex-wrap gap-2 mt-4 justify-center min-[470px]:justify-start">
+    <span
+      class="px-3 py-1 bg-surface-container-lowest text-xs font-bold rounded-full text-on-surface-variant whitespace-nowrap"
+    >
+      #HighVolume
+    </span>
+
+    <span
+      class="px-3 py-1 bg-surface-container-lowest text-xs font-bold rounded-full text-on-surface-variant whitespace-nowrap"
+    >
+      #BullishEngulfing
+    </span>
+
+    <span
+      class="px-3 py-1 bg-surface-container-lowest text-xs font-bold rounded-full text-on-surface-variant whitespace-nowrap"
+    >
+      #Scalp
+    </span>
+  </div>
+</div>

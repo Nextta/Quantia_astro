@@ -1,0 +1,104 @@
+---
+interface Props {
+  candles?: {
+    time: { year: number; month: number; day: number };
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+  }[];
+  markers?: {
+    time: { year: number; month: number; day: number };
+    position: string;
+    color: string;
+    shape: string;
+    text: string;
+  }[];
+  height?: number;
+  upColor?: string;
+  downColor?: string;
+}
+
+const {
+  candles,
+  markers = [],
+  height = 450,
+  upColor = "#26a69a",
+  downColor = "#ef5350",
+} = Astro.props;
+---
+
+<section
+  class="bg-surface-container-low rounded-xl overflow-hidden border-t border-white/5 shadow-2xl"
+>
+  
+  <div
+    id="trade-chart"
+    class="w-full"
+    style={`height: ${height}px`}
+    data-candles={JSON.stringify(candles)}
+    data-markers={JSON.stringify(markers)}
+    data-up-color={upColor}
+    data-down-color={downColor}
+  >
+  </div>
+</section>
+
+<script>
+  import {
+    createChart,
+    CandlestickSeries,
+    createSeriesMarkers,
+    ColorType,
+  } from "lightweight-charts";
+
+
+  const container = document.getElementById("trade-chart");
+  if (container) {
+    // Leer los datos del data-
+    const candles = JSON.parse(container.dataset.candles || "[]");
+    const markers = JSON.parse(container.dataset.markers || "[]");
+    const upColor = container.dataset.upColor || "#26a69a";
+    const downColor = container.dataset.downColor || "#ef5350";
+
+    const chart = createChart(container, {
+      layout: {
+        textColor: "#c6c6cd",
+        background: { type: ColorType.Solid, color: "#0b1326" },
+      },
+      grid: {
+        vertLines: { color: "rgba(34, 42, 61, 0.4)" },
+        horzLines: { color: "rgba(34, 42, 61, 0.4)" },
+      },
+      rightPriceScale: { borderColor: "rgba(34, 42, 61, 0.8)" },
+      timeScale: { borderColor: "rgba(34, 42, 61, 0.8)" },
+      width: container.clientWidth,
+      height: container.clientHeight,
+    });
+
+    const series = chart.addSeries(CandlestickSeries, {
+      upColor,
+      downColor,
+      borderVisible: false,
+      wickUpColor: upColor,
+      wickDownColor: downColor,
+    });
+
+    series.setData(candles);
+
+    if (markers.length > 0) {
+      createSeriesMarkers(series, markers);
+    }
+
+    chart.timeScale().fitContent();
+
+    // Responsive
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (entries.length === 0 || entries[0].target !== container) return;
+      const { width, height } = entries[0].contentRect;
+      chart.applyOptions({ width, height });
+    });
+    resizeObserver.observe(container);
+  }
+</script>
+
