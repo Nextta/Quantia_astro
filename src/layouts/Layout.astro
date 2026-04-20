@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import BarraNavegacion from "./BarraNavegacion.astro";
 
 interface Props {
   title?: string;
@@ -47,9 +48,13 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
   </head>
   <body class="bg-surface font-body text-on-surface selection:bg-primary/30">
     <!-- TopNavBar -->
+     <BarraNavegacion title={title} url="/" />
     <header
-      class="fixed top-0 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center pl-20 min-[900px]:pl-72 pr-8 h-16"
+      class="fixed top-14 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center pl-20 min-[900px]:pl-72 pr-8 h-16
+      "
     >
+      
+    
       <div class="flex items-center gap-8 flex-1 min-w-0">
         <nav class="hidden min-[400px]:flex items-center flex-1 min-w-0">
           <!-- //pendiente -->
@@ -113,9 +118,9 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
         />
       </div>
     </header>
-    <!-- SideNavBar (Suppressed on details screens but rendered here as secondary utility) -->
+    <!-- SideNavBar utility) -->
     <aside
-      class="fixed left-0 top-0 h-screen w-16 min-[900px]:w-64 z-50 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
+      class="fixed left-0 top-14 h-screen w-16 min-[900px]:w-64 z-50 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
     >
       <a href="/">
         <div class="hidden min-[900px]:flex flex-col mb-8 px-2">
@@ -164,7 +169,7 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
       </div>
     </aside>
     <!-- Main Content -->
-    <main class="pt-20 pl-20 min-[900px]:pl-72 pr-6 pb-6 min-h-screen">
+    <main class="pt-[7.5rem] pl-20 min-[900px]:pl-72 pr-6 pb-6 min-h-screen">
       <slot />
     </main>
     <!-- System Footer -->
