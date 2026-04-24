@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import BarraNavegacion from "./BarraNavegacion.astro";
+import TopBar from "../components/MainDesing/TopBar.astro";
+import SideBar from "../components/MainDesing/SideBar.astro";
 
 interface Props {
   title?: string;
@@ -46,143 +48,31 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
       }
     </style>
   </head>
-  <body class="h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary/30 ">
-    <!-- TopNavBar -->
-     <BarraNavegacion title={title} url="/" />
-    <!-- <header
-      class="fixed top-14 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center pl-20 min-[900px]:pl-72 pr-8 h-14 
-      "
-    > -->
-    <header
-      class="fixed top-7 w-full z-50 bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10 flex justify-between items-center pl-20 min-[900px]:pl-72 pr-8 h-14 
-      "
-    >
-      
-    
-      <div class="flex items-center gap-8 flex-1 min-w-0 " >
-        <nav class="hidden min-[400px]:flex items-center flex-1 min-w-0">
-          <!-- //pendiente -->
-          <!-- Mod1 -->
-          <!-- TopNavBar Integration -->
-          <form class="block flex-1 min-w-0 max-w-2xl" role="search">
-            <div class="relative">
-              <span
-                aria-hidden="true"
-                class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm"
-              >
-                search
-              </span>
-              <label for="global-search" class="sr-only">
-                Buscar estrategias, carteras o activos
-              </label>
-              <input
-                id="global-search"
-                name="search"
-                type="search"
-                class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-[#7bd0ff]/40 transition-all font-body"
-                placeholder="Buscar estrategias, carteras o activos..."
-                autocomplete="off"
-              />
-            </div>
-          </form>
-          <!--  Mod1-->
-        </nav>
-        <button
-          type="button"
-          aria-label="Buscar"
-          class="min-[400px]:hidden text-slate-400 hover:text-sky-400 transition-colors"
-        >
-          <span class="material-symbols-outlined">search</span>
-        </button>
+  <body
+    class="h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary/30"
+  >
+    <!-- Grid principal -->
+    <div
+      class="grid h-screen grid-cols-[250px_minmax(0,1fr)] grid-rows-[28px_80px_minmax(0,1fr)] max-[700px]:grid-cols-[80px_minmax(0,1fr)]"
+    >   <!-- Grid principal -->
+      <div class="border-0 border-red-500 col-span-2">  
+        <!-- vacio por el momento -->
+        <BarraNavegacion title={title} url="/" />
       </div>
-      <div class="flex items-center gap-4 shrink-0">
-        <!-- change -->
-        {
-          showExportPdf && (
-            <button class="bg-surface-container-high hover:bg-slate-800/50 transition-colors text-slate-200 px-4 py-2 rounded text-sm font-medium active:scale-95 duration-150">
-              Export PDF
-            </button>
-          )
-        }
-        <div class="flex gap-2 ml-4">
-          <span
-            class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-sky-400"
-            >notifications</span
-          >
-          <span
-            class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-sky-400"
-            >settings</span
-          >
-        </div>
-        <img
-          alt="User Profile Avatar"
-          class="w-8 h-8 rounded-full border border-primary/20"
-          data-alt="Professional portrait of a financial analyst in dark studio lighting with blue accents"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNkzEjBRRR_UwE82X5DH1DQYJaIHBPGT5sTJEK4ZV_aSPAUxNOJyuiUVTiNXRCf9RGXY1jmjbs0vr1JPYkkpDrodGATVLh9t2ImLZ6ATkKJ52GxwgCJOcciRM_mCzNdOQv6JNhGVJOuuEYDe4LaRQgGslqQmQNa7o-VlF8aKoN2xqlMWO4ElDyTEsBqOIe285hrAHk1G9XowOqWIhDfsffZf7TXkzfo01kb_QvHHP5UpdV9LsSZoGbiEmodrjX3aVSz3INNRq7YHZ"
-        />
+      <aside class="row-span-2 border-0 border-pink-500">
+        <SideBar />
+      </aside>
+      <div class="border-0 border-orange-500" >
+        <!-- <BarraNavegacion title={title} url="/" /> -->
+        <TopBar />
       </div>
-    </header>
-    <!-- SideNavBar utility) -->
-     <!-- <aside
-      class="fixed left-0 top-14 h-screen w-16 min-[900px]:w-64 z-50 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
-    > -->
-    <aside
-      class="fixed left-0 top-14 w-16 h-[calc(100vh-3.5rem)] min-[900px]:w-64 z-50 bg-slate-900 flex flex-col py-6 px-3 min-[900px]:px-4 gap-2 transition-all"
-    >
-      <a href="/">
-        <div class="hidden min-[900px]:flex flex-col mb-8 px-2">
-          <span class="text-lg font-black text-sky-400 font-headline"
-            >Quantia</span
-          >
-          <span
-            class="text-[10px] uppercase tracking-widest text-slate-500 font-bold"
-            >Trading</span
-          >
-        </div>
-      </a>
-      <div class="flex flex-col gap-1">
-        <a href="/">
-          <div
-            class="flex items-center gap-3 px-3 py-2 text-sky-400 bg-slate-800/80 rounded-lg cursor-pointer"
-          >
-            <span class="material-symbols-outlined">query_stats</span>
-            <span
-              class="hidden min-[900px]:inline font-manrope text-sm font-medium"
-              >Dashboard</span
-            >
-          </div>
-        </a>
-        <div
-          class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-all rounded-lg cursor-pointer active:translate-x-1 duration-200"
-        >
-          <span class="material-symbols-outlined">dashboard</span>
-          <span
-            class="hidden min-[900px]:inline font-manrope text-sm font-medium"
-            >Reports</span
-          >
-        </div>
-      </div>
-      <div class="mt-auto px-2">
-        <button
-          class="hidden min-[900px]:block w-full bg-secondary text-on-secondary-container py-2 rounded-xl text-xs font-bold uppercase tracking-wider mb-6"
-          >New Strategy</button
-        >
-        <div class="flex flex-col gap-2">
-          <div
-            class="flex items-center gap-3 px-2 py-1 text-slate-500 text-xs hover:text-slate-300 transition-all cursor-pointer"
-          >
-          </div>
-        </div>
-      </div>
-    </aside>
-    <!-- Main Content -->
-    <!-- <main class="pt-[7.5rem] pl-20 min-[900px]:pl-72 pr-6 pb-6 min-h-screen"> -->
-     <main class="no-scrollbar fixed top-27 bottom-0 left-20 right-0 min-[900px]:left-70 overflow-y-auto pr-6 pb-6">
-      <slot />
-    </main>
-    <!-- System Footer -->
 
-    <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
-    <!-- Suppressed: Shell Visibility Rule -->
+      <main
+        class="min-w-0 overflow-y-auto overflow-x-auto no-scrollbar mt-1 mx-2 border-0 border-green-600"
+      >
+        <slot />
+      </main>
+    </div>
   </body>
 </html>
+
