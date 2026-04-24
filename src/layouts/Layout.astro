@@ -64,11 +64,11 @@ const { title = "Quantia", showExportPdf = false } = Astro.props as Props;
       </aside>
       <div class="border-0 border-orange-500" >
         <!-- <BarraNavegacion title={title} url="/" /> -->
-        <TopBar showExportPdf={showExportPdf} />
+        <TopBar />
       </div>
 
       <main
-        class=" min-w-0 overflow-y-auto overflow-x-auto no-scrollbar mt-1 mx-2 border-0 border-green-600"
+        class="min-w-0 overflow-y-auto overflow-x-auto no-scrollbar mt-1 mx-2 border-0 border-green-600"
       >
         <slot />
       </main>
