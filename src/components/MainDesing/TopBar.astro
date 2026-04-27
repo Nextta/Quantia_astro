@@ -6,12 +6,11 @@
   class="w-full bg-slate-900/60 backdrop-blur-xl shadow-xl shadow-sky-900/10
   flex justify-between items-center pr-4 h-16 w-full gap-10 pl-[15px] border-0 max-[830px]:pl-[10px] h-full border-0"
 >
-  
   <form
     class="block flex-1 min-w-0 w-full border-0 basis-0 grow-3 max-[530px]:hidden"
     role="search"
   >
-    <div class="flex border-0">
+    <!-- <div class="flex border-0">
       <span
         aria-hidden="true"
         class="material-symbols-outlined text-on-surface-variant text-sm 
@@ -36,21 +35,27 @@
         placeholder="Buscar estrategias, carteras o activos..."
         autocomplete="off"
       />
+    </div> -->
+    <div class="relative group">
+      <span
+        class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm"
+        >search</span
+      >
+      <input
+        class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-[#7bd0ff]/40 transition-all font-body"
+        placeholder="Buscar estrategias, carteras o activos..."
+        type="text"
+      />
     </div>
   </form>
   <!-- Search - mobile -->
-  <svg
-    class="min-[530px]:hidden"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 24 24"
-    ><!-- Icon from Material Symbols by Google - https://github.com/google/material-design-icons/blob/master/LICENSE -->
-    <path
-      fill="#9d8585"
-      d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"
-    ></path></svg
-  >
+  <div class="flex items-center justify-center border-0 min-[530px]:hidden">
+    <span
+      class=" material-symbols-outlined text-on-surface-variant text-sm min-[530px]:hidden"
+      >search</span
+    >
+  </div>
+
   <!-- form-->
   <!-- </div> -->
 
