@@ -1,18 +1,12 @@
 ---
 import "../styles/global.css";
 import BarraNavegacion from "./BarraNavegacion.astro";
-import TopBar from "../components/MainDesing/TopBar.astro";
-import SideBar from "../components/MainDesing/SideBar.astro";
 
 interface Props {
   title?: string;
-  showSidebar?: boolean;
-  showTopBar?: boolean;
 }
 
-const { title = "Quantia", showSidebar = true, showTopBar = true } = Astro.props as Props;
-
-
+const { title = "Quantia" } = Astro.props as Props;
 ---
 
 <!doctype html>
@@ -52,30 +46,21 @@ const { title = "Quantia", showSidebar = true, showTopBar = true } = Astro.props
     </style>
   </head>
   <body
-    class="h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary/30"
+    class="h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary/30 border-0"
   >
-    <!-- Grid principal -->
-    <div
-      class="grid h-screen grid-cols-[250px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)] max-[700px]:grid-cols-[47px_minmax(0,1fr)]"
-    >   <!-- Grid principal -->
-      <div class="border-5 border-red-500 col-span-2">  
-        <!-- vacio por el momento -->
-        <BarraNavegacion title={title} url="/" />
-      </div>
-      {showSidebar && (<aside class="row-span-2 border-0 border-pink-500">
-        <SideBar />
-      </aside>)}
-      
-      {showTopBar && (<div class="border-0 border-orange-500" >
-                <TopBar />
-      </div>)}
-
-      <main
-        class="min-w-0 overflow-y-auto overflow-x-auto no-scrollbar p-5 border-0 border-green-600"
-      >
-        <slot />
-      </main>
-    </div>
+  <!-- overflow-y-auto overflow-x-auto -->
+    <!-- <main class="min-w-0  no-scrollbar p-0 border-0 border-green-600 h-full"> -->
+      <!-- <div class="grid h-full grid-rows-[30px_minmax(0,1fr)]  border-0 border-purple-500 w-full ">
+        <div class="border-0 w-full h-full"> -->
+            
+            <BarraNavegacion />
+        
+        <!-- </div> -->
+        <main class="w-full border-0 border-pink-500 h-full overflow-y-auto overflow-x-auto no-scrollbar">
+            <slot />
+        </main>
+        
+      <!-- </div> -->
+    <!-- </main> -->
   </body>
 </html>
-
