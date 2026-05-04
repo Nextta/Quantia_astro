@@ -12,7 +12,12 @@ import global from "../../styles/global.css";
     <!-- Ambient Decorative Elements -->
     <!-- overflow-y-auto -->
     <div
-      class="min-h-0 grid place-items-center overflow-hidden border-0 border-blue-700 px-4 max-[520px]:px-0"
+      class="min-h-0 grid place-items-center overflow-hidden px-4 max-[520px]:px-0
+      rounded-3xl border border-white/10
+      shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+         ring-1 ring-white/10
+         backdrop-blur-xl
+      "
     >
       <div
         class="w-full max-w-[480px] glass-panel p-5 md:p-6 rounded-xl shadow-2xl border-0 border-outline-variant/10"
@@ -151,7 +156,6 @@ import global from "../../styles/global.css";
           border
           border-outline-variant/20
           hover:bg-surface-bright
-          
           transition-colors
           text-on-surface
           font-body font-medium
