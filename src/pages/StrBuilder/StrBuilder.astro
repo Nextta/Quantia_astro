@@ -1,0 +1,374 @@
+---
+import LayoutOnlyBar from "../../layouts/LayoutOnlyBar.astro"
+
+---
+<LayoutOnlyBar>
+<div
+  class="grid grid-cols-[250px_1fr] bg-background text-on-background font-body selection:bg-primary/30 
+  border-0
+  "
+>
+  <!-- Sidebar Navigation Shell -->
+   <!-- border-slate-800/50 -->
+  <aside
+    class="w-64 bg-slate-900 flex flex-col p-4 border-8 border-amber-500  h-full"
+  >
+    <div class="mb-6">
+      <h2 class="text-lg font-black text-white font-headline">
+        Strategy Library
+      </h2>
+      <p class="text-xs text-slate-500 font-label">Alpha-v1 Builder</p>
+    </div>
+    <div class="relative mb-6">
+      <span
+        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"
+        >search</span
+      >
+      <input
+        class="w-full bg-surface-container-lowest border-none text-sm py-2 pl-10 pr-4 rounded-md focus:ring-1 focus:ring-primary/40 placeholder:text-slate-600"
+        placeholder="Search modules..."
+        type="text"
+      />
+    </div>
+    <div class="flex flex-col gap-1 overflow-y-auto flex-1">
+      <div class="group">
+        <button
+          class="w-full flex items-center justify-between p-2 text-slate-300 hover:bg-slate-800 rounded-md transition-colors"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-emerald-400"
+              >database</span
+            >
+            <span class="text-sm font-medium">Market Data</span>
+          </div>
+          <span class="material-symbols-outlined text-xs">expand_more</span>
+        </button>
+      </div>
+      <div class="mt-2 flex flex-col gap-1">
+        <div
+          class="flex items-center gap-3 p-2 text-emerald-400 font-bold bg-emerald-500/10 rounded-md cursor-pointer"
+        >
+          <span class="material-symbols-outlined" data-icon="account_tree"
+            >account_tree</span
+          >
+          <span class="text-sm">Nodes</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="show_chart"
+            >show_chart</span
+          >
+          <span class="text-sm">Indicators</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span
+            class="material-symbols-outlined"
+            data-icon="settings_input_component">settings_input_component</span
+          >
+          <span class="text-sm">Logic</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+          <span class="text-sm">Actions</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="history"
+            >history</span
+          >
+          <span class="text-sm">History</span>
+        </div>
+      </div>
+    </div>
+    <button
+      class="mt-4 w-full py-3 bg-primary/10 text-primary border border-primary/20 font-bold text-sm rounded-md hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
+    >
+      <span class="material-symbols-outlined text-sm">add</span>
+      New Node
+    </button>
+  </aside>
+  <!-- Main Workspace Canvas -->
+  <main
+    class="ml-0 mt-0 canvas-grid bg-background overflow-hidden border-4 border-red-400"
+  >
+    <!-- Canvas Connections (SVG Overlay) -->
+    <svg class="absolute inset-0 w-full h-full pointer-events-none">
+      <path class="connection-line" d="M 320 200 C 400 200, 400 280, 480 280"
+      ></path>
+      <path class="connection-line" d="M 680 280 C 760 280, 760 360, 840 360"
+      ></path>
+      <path class="connection-line" d="M 680 440 C 760 440, 760 380, 840 380"
+      ></path>
+      <path
+        class="connection-line"
+        d="M 1040 370 C 1120 370, 1120 370, 1200 370"></path>
+    </svg>
+    <!-- Node 1: Input -->
+    <div
+      class="absolute left-80 top-40 w-60 node-glass rounded-xl overflow-hidden border border-orange-500/30 shadow-2xl shadow-orange-500/5"
+    >
+      <div
+        class="bg-orange-500/20 px-4 py-2 border-b border-orange-500/30 flex justify-between items-center"
+      >
+        <span
+          class="text-[10px] font-bold uppercase tracking-widest text-orange-400"
+          >Market Input</span
+        >
+        <span class="material-symbols-outlined text-orange-400 text-sm"
+          >sensors</span
+        >
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="text-sm font-headline font-bold text-white">
+          BTC/USD Market Data
+        </div>
+        <div class="flex flex-col gap-1">
+          <div
+            class="flex justify-between text-[10px] text-slate-500 uppercase font-label"
+          >
+            <span>Feed</span>
+            <span class="text-orange-400">Binance Pro</span>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 py-2 bg-slate-800/30 flex justify-end">
+        <div
+          class="w-3 h-3 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.5)]"
+        >
+        </div>
+      </div>
+    </div>
+    <!-- Node 2: Indicator -->
+    <div
+      class="absolute left-[480px] top-[240px] w-60 node-glass rounded-xl overflow-hidden border border-sky-500/30 shadow-2xl shadow-sky-500/5"
+    >
+      <div
+        class="bg-sky-500/20 px-4 py-2 border-b border-sky-500/30 flex justify-between items-center"
+      >
+        <span
+          class="text-[10px] font-bold uppercase tracking-widest text-sky-400"
+          >Technical</span
+        >
+        <span class="material-symbols-outlined text-sky-400 text-sm"
+          >show_chart</span
+        >
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <div class="w-3 h-3 rounded-full bg-sky-400/50 mt-1"></div>
+          <div class="text-sm font-headline font-bold text-white text-right">
+            RSI (14)
+          </div>
+        </div>
+        <div
+          class="p-2 bg-surface-container-lowest rounded text-[11px] font-mono text-sky-300"
+        >
+          Period: 14<br />Source: Close
+        </div>
+      </div>
+      <div class="px-4 py-2 bg-slate-800/30 flex justify-end">
+        <div
+          class="w-3 h-3 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(123,208,255,0.5)]"
+        >
+        </div>
+      </div>
+    </div>
+    <!-- Node 3: Constant -->
+    <div
+      class="absolute left-[480px] top-[400px] w-60 node-glass rounded-xl overflow-hidden border border-slate-500/30 shadow-2xl shadow-slate-500/5"
+    >
+      <div
+        class="bg-slate-700/20 px-4 py-2 border-b border-slate-500/30 flex justify-between items-center"
+      >
+        <span
+          class="text-[10px] font-bold uppercase tracking-widest text-slate-400"
+          >Parameter</span
+        >
+        <span class="material-symbols-outlined text-slate-400 text-sm">pin</span
+        >
+      </div>
+      <div class="p-4">
+        <div class="text-sm font-headline font-bold text-white">
+          Constant (70)
+        </div>
+        <div class="text-[10px] text-slate-500 mt-1 uppercase font-label">
+          Overbought Threshold
+        </div>
+      </div>
+      <div class="px-4 py-2 bg-slate-800/30 flex justify-end">
+        <div class="w-3 h-3 rounded-full bg-slate-400"></div>
+      </div>
+    </div>
+    <!-- Node 4: Logic -->
+    <div
+      class="absolute left-[840px] top-[320px] w-60 node-glass rounded-xl overflow-hidden border border-tertiary/30 shadow-2xl shadow-tertiary/5"
+    >
+      <div
+        class="bg-tertiary/20 px-4 py-2 border-b border-tertiary/30 flex justify-between items-center"
+      >
+        <span
+          class="text-[10px] font-bold uppercase tracking-widest text-tertiary"
+          >Comparison</span
+        >
+        <span class="material-symbols-outlined text-tertiary text-sm"
+          >alt_route</span
+        >
+      </div>
+      <div class="p-4 space-y-3">
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-sky-400/50"></div>
+            <span class="text-[11px] text-slate-400 uppercase">Input A</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-slate-400/50"></div>
+            <span class="text-[11px] text-slate-400 uppercase">Input B</span>
+          </div>
+        </div>
+        <div
+          class="text-center py-1 border-y border-outline-variant/10 font-bold text-white text-sm italic"
+        >
+          Cross Above
+        </div>
+      </div>
+      <div class="px-4 py-2 bg-slate-800/30 flex justify-end">
+        <div
+          class="w-3 h-3 rounded-full bg-tertiary shadow-[0_0_8px_rgba(255,178,185,0.5)]"
+        >
+        </div>
+      </div>
+    </div>
+    <!-- Node 5: Action -->
+    <div
+      class="absolute left-[1200px] top-[330px] w-64 node-glass rounded-xl overflow-hidden border border-secondary/30 shadow-2xl shadow-secondary/5"
+    >
+      <div
+        class="bg-secondary/20 px-4 py-2 border-b border-secondary/30 flex justify-between items-center"
+      >
+        <span
+          class="text-[10px] font-bold uppercase tracking-widest text-secondary"
+          >Execution</span
+        >
+        <span class="material-symbols-outlined text-secondary text-sm"
+          >bolt</span
+        >
+      </div>
+      <div class="p-4 space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-3 h-3 rounded-full bg-tertiary mt-1"></div>
+          <div>
+            <div class="text-sm font-headline font-bold text-white">
+              Execute Market Sell
+            </div>
+            <div class="text-[10px] text-slate-500 font-label mt-0.5">
+              Asset: BTC/USD
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-surface-container-lowest p-2 rounded">
+            <div class="text-[9px] text-slate-500 uppercase font-label">
+              Size
+            </div>
+            <div class="text-xs text-secondary font-bold">100% Equity</div>
+          </div>
+          <div class="bg-surface-container-lowest p-2 rounded">
+            <div class="text-[9px] text-slate-500 uppercase font-label">
+              TIF
+            </div>
+            <div class="text-xs text-white font-bold">GTC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Toolbar Overlay (Floating) -->
+    <div
+      class="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-1.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-outline-variant/20 shadow-2xl"
+    >
+      <button
+        class="flex items-center gap-2 px-4 py-1.5 hover:bg-slate-800 rounded-full text-xs font-bold transition-all"
+      >
+        <span class="material-symbols-outlined text-sm">auto_fix_high</span>
+        Auto-Layout
+      </button>
+      <div class="h-4 w-px bg-outline-variant/20"></div>
+      <button
+        class="flex items-center gap-2 px-4 py-1.5 hover:bg-slate-800 rounded-full text-xs font-bold transition-all text-secondary"
+      >
+        <span
+          class="material-symbols-outlined text-sm"
+          style="font-variation-settings: 'FILL' 1;">play_arrow</span
+        >
+        Quick Backtest
+      </button>
+    </div>
+    <!-- Bottom Right Widgets -->
+    <!-- <div class="absolute bottom-6 right-6 flex flex-col gap-4 items-end">
+      Mini Map 
+      <div
+        class="w-48 h-32 bg-slate-900/90 border border-outline-variant/20 rounded-xl overflow-hidden shadow-2xl backdrop-blur-sm relative group"
+      >
+        <div
+          class="absolute inset-0 opacity-20 canvas-grid pointer-events-none"
+        >
+        </div>
+         Mini Nodes Visualization 
+        <div class="absolute top-4 left-6 w-8 h-4 bg-orange-500/40 rounded-sm">
+        </div>
+        <div class="absolute top-10 left-12 w-8 h-4 bg-sky-500/40 rounded-sm">
+        </div>
+        <div class="absolute top-18 left-12 w-8 h-4 bg-slate-500/40 rounded-sm">
+        </div>
+        <div class="absolute top-14 left-24 w-8 h-4 bg-tertiary/40 rounded-sm">
+        </div>
+        <div class="absolute top-14 left-36 w-8 h-4 bg-secondary/40 rounded-sm">
+        </div>
+        Viewport Rectangle 
+        <div
+          class="absolute inset-2 border border-primary/40 rounded bg-primary/5"
+        >
+        </div>
+      </div>
+     Zoom Controls 
+      <div
+        class="flex items-center bg-slate-900/90 border border-outline-variant/20 rounded-lg p-1 shadow-2xl backdrop-blur-sm"
+      >
+        <button
+          class="p-2 hover:bg-slate-800 rounded-md transition-all text-slate-400"
+        >
+          <span class="material-symbols-outlined text-base">remove</span>
+        </button>
+        <div
+          class="px-3 text-xs font-mono font-bold text-white border-x border-outline-variant/10"
+        >
+          100%
+        </div>
+        <button
+          class="p-2 hover:bg-slate-800 rounded-md transition-all text-slate-400"
+        >
+          <span class="material-symbols-outlined text-base">add</span>
+        </button>
+        <button
+          class="p-2 hover:bg-slate-800 rounded-md transition-all text-primary ml-1"
+        >
+          <span class="material-symbols-outlined text-base"
+            >fullscreen_exit</span
+          >
+        </button>
+      </div>
+    </div> -->
+    <!-- Background Asset Labeling (Invisible accessibility cues) -->
+    <div
+      class="hidden"
+      data-alt="Technical professional UI for a no-code trading strategy builder, dark grid background, glowing colored nodes, emerald and sky blue accents, high precision futuristic aesthetic."
+    >
+    </div>
+  </main>
+</div>
+</LayoutOnlyBar>
