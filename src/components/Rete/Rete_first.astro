@@ -1,0 +1,18 @@
+---
+import { createEditor } from "../../lib/reteF"
+
+---
+
+<div id="rete-editor" class="h-screen w-screen overflow-hidden bg-slate-950"></div>
+
+<script>
+  import { createEditor } from "../../lib/reteF";
+
+  const container = document.querySelector("#rete-editor");
+
+  if (!(container instanceof HTMLElement)) {
+    throw new Error("No se encontró el contenedor #rete-editor");
+  }
+
+  createEditor(container);
+</script>
