@@ -8,9 +8,10 @@ interface Props {
   title?: string;
   showSidebar?: boolean;
   showTopBar?: boolean;
+  Hidding?: boolean;
 }
 
-const { title = "Quantia", showSidebar = true, showTopBar = true } = Astro.props as Props;
+const { title = "Quantia", showSidebar = true, showTopBar = true, Hidding = false } = Astro.props as Props;
 
 
 ---
@@ -56,14 +57,22 @@ const { title = "Quantia", showSidebar = true, showTopBar = true } = Astro.props
   >
     <!-- Grid principal -->
     <div
-      class="grid h-screen grid-cols-[250px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)] max-[700px]:grid-cols-[47px_minmax(0,1fr)] border-2"
+      class:list={[
+        "grid h-screen ",
+        "max-[700px]:grid-cols-[47px_minmax(0,1fr)]",
+        Hidding 
+        ? "grid-cols-[55px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)]" 
+
+        : "grid-cols-[250px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)]",
+      ]}
+      
     >   <!-- Grid principal -->
       <div class="border-0 border-red-500 col-span-2">  
         <!-- vacio por el momento -->
         <BarraNavegacion title={title} url="/" />
       </div>
       {showSidebar && (<aside class="row-span-2 border-0 border-pink-500">
-        <SideBar />
+        <SideBar wid={true} hiddenQuantia={true}/>
       </aside>)}
       
       {showTopBar && (<div class="border-0 border-orange-500" >
