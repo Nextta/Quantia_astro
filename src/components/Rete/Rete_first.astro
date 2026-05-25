@@ -1,9 +1,10 @@
 ---
-import { createEditor } from "../../lib/reteF"
-
+// import { createEditor } from "../../lib/reteF";
+import ReteEditor from "../../components/Rete/ReteEditor";
 ---
 
-<div id="rete-editor" class="h-screen w-screen overflow-hidden bg-slate-950"></div>
+<!-- <div id="rete-editor" class="h-screen w-screen overflow-hidden bg-slate-950">
+</div>
 
 <script>
   import { createEditor } from "../../lib/reteF";
@@ -14,5 +15,32 @@ import { createEditor } from "../../lib/reteF"
     throw new Error("No se encontró el contenedor #rete-editor");
   }
 
-  createEditor(container);
+  createEditor(container).catch((error) => {
+    console.error("Error creando Rete:", error);
+});
 </script>
+
+<style is:global>
+  #rete-editor {
+    background-color: #1e173b;
+  }
+
+
+</style> -->
+
+
+<ReteEditor client:only="react" />
+
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #rete-editor {
+    background-color: #3f0a56;
+  }
+</style>
