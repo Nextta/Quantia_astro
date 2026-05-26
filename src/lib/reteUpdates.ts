@@ -42,7 +42,7 @@ export function updateBuyLimitOrder(
       ...patch,
     });
   }
-
+//-------
   console.log("El array BuyLimit:", buyLimitOrders);
 }
 
