@@ -62,7 +62,7 @@
 
 import { NodeEditor, ClassicPreset } from "rete";
 import type { GetSchemes } from "rete";
-
+import { DockPlugin, DockPresets } from "rete-dock-plugin";
 import { createRoot } from "react-dom/client";
 
 import { AreaPlugin, AreaExtensions } from "rete-area-plugin";
@@ -72,12 +72,16 @@ import { ReactPlugin, Presets } from "rete-react-plugin";
 import type { ReactArea2D } from "rete-react-plugin";
 
 import {
+  buildConnectedOrders,
   buyLimitOrders,
+  updateSellLimitOrder,
   updateBuyLimitOrder,
   buildConnectedBuyLimitOrders,
   updateRSINode,
   updateParNode,
-  clearReteArrays
+  clearReteArrays,
+  buildConnectedSellLimitOrders,
+  updateStrategyNode,
 } from "../lib/reteUpdates"; //Arreglo
 //Función para actualizar el arreglo
 
@@ -91,8 +95,6 @@ import {
 } from "rete-connection-plugin";
 import { RSINode } from "../components/Nodes/RSI_Node";
 // import { updateBuyLimitOrder, updateParNode } from './reteUpdates';
-
-
 
 export type Schemes = GetSchemes<
   ClassicPreset.Node,
@@ -138,9 +140,28 @@ export async function createEditor(container: HTMLElement) {
 
   connection.addPreset(ConnectionPresets.classic.setup());
 
+  //Drop---------------------------------------->
+  const dock = new DockPlugin<Schemes>();
+  dock.addPreset(
+    DockPresets.classic.setup({
+      area,
+      size: 120,
+      scale: 0.6,
+    }),
+  );
+
+  //Drop----------------------------------------||>
+
   editor.use(area); //conectamos el área visual con el editor lógico.
   area.use(connection);
   area.use(render);
+  area.use(dock); //drop
+
+  AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
+    accumulating: AreaExtensions.accumulateOnCtrl(),
+  });
+
+  AreaExtensions.simpleNodesOrder(area);
 
   //Basic settings
   class sBuyLimit extends ClassicPreset.Socket {
@@ -199,14 +220,17 @@ export async function createEditor(container: HTMLElement) {
     constructor(socket: ClassicPreset.Socket, init: string = "Node---") {
       super("Buy Limit");
 
-      updateBuyLimitOrder(this.id, {
+      updateStrategyNode({
+        nodeId: this.id,
+        kind: "ORDER",
+        nodeType: "BUY_LIMIT",
         price: 0,
         percentageRisk: 0,
       });
 
       this.addInput(
         "buyLimitInput",
-        new ClassicPreset.Input(flowSocket, "=>Receive"),
+        new ClassicPreset.Input(socketFlow, "=>Receive"),
       );
 
       this.addControl(
@@ -214,7 +238,13 @@ export async function createEditor(container: HTMLElement) {
         new ClassicPreset.InputControl("text", {
           initial: "Precio",
           change: (value) => {
-            updateBuyLimitOrder(this.id, { price: Number(value) });
+            updateStrategyNode({
+              nodeId: this.id,
+              kind: "ORDER",
+              nodeType: "BUY_LIMIT",
+              price: Number(value),
+              percentageRisk: 0,
+            });
           },
         }),
       );
@@ -224,9 +254,14 @@ export async function createEditor(container: HTMLElement) {
         new ClassicPreset.InputControl("text", {
           initial: "Porcentaje de riesgo %",
           change: (value) => {
-            const cleanPercentValue = String(value).replace("%","");
+            const cleanPercentValue = String(value).replace("%", "");
             const risk = Number(cleanPercentValue);
-            updateBuyLimitOrder(this.id, { percentageRisk: Number.isNaN(risk) ? 0 : risk,
+            updateStrategyNode({
+              nodeId: this.id,
+              kind: "ORDER",
+              nodeType: "BUY_LIMIT",
+              price: 0,
+              percentageRisk: Number.isNaN(risk) ? 0 : risk,
             });
           },
         }),
@@ -238,9 +273,11 @@ export async function createEditor(container: HTMLElement) {
     }
   }
 
-  const BuyLimit = new NodeBuyLimit(socketFlow, "Node Buy Limit");
-  await editor.addNode(BuyLimit);
-  console.log("Nodos en el editor:", editor.getNodes());
+  // dock.add(()=> new NodeBuyLimit(socketFlow, "Buy Limit"));
+
+  // const BuyLimit = new NodeBuyLimit(socketFlow, "Node Buy Limit");
+  // await editor.addNode(BuyLimit);
+  // console.log("Nodos en el editor:", editor.getNodes());
 
   //Nodo sell limit
 
@@ -248,17 +285,23 @@ export async function createEditor(container: HTMLElement) {
     constructor(socket: ClassicPreset.Socket, init: string = "Node---") {
       super("Sell Limit");
 
-      this.addControl(
-        "symbol",
-        new ClassicPreset.InputControl("text", {
-          initial: "EU",
-        }),
+      updateSellLimitOrder(this.id, {
+        price: 0,
+        percentageRisk: 0,
+      });
+
+      this.addInput(
+        "sellLimitInput",
+        new ClassicPreset.Input(socketFlow, "=>Receive"),
       );
 
       this.addControl(
         "entryPrice",
         new ClassicPreset.InputControl("text", {
           initial: "100",
+          change: (value) => {
+            updateSellLimitOrder(this.id, { price: Number(value) });
+          },
         }),
       );
 
@@ -266,19 +309,26 @@ export async function createEditor(container: HTMLElement) {
         "risk",
         new ClassicPreset.InputControl("text", {
           initial: "1%",
+          change: (value) => {
+            const cleanPercentValue = String(value).replace("%", "");
+            const risk = Number(cleanPercentValue);
+            updateSellLimitOrder(this.id, {
+              percentageRisk: Number.isNaN(risk) ? 0 : risk,
+            });
+          },
         }),
       );
 
       this.addOutput(
         "sellLimitOutput",
-        new ClassicPreset.Output(socketSellLimit, "Send->"),
+        new ClassicPreset.Output(socketFlow, "Send->"),
       );
     }
   }
 
-  const SellLimit = new NodeSellLimit(socketSellLimit, "Node Sell Limit");
-  await editor.addNode(SellLimit);
-  console.log("Nodos en el editor:", editor.getNodes());
+  // const SellLimit = new NodeSellLimit(socketSellLimit, "Node Sell Limit");
+  // await editor.addNode(SellLimit);
+  // console.log("Nodos en el editor:", editor.getNodes());
 
   class NodeRSI extends ClassicPreset.Node {
     constructor(socket: ClassicPreset.Socket, init: string = "Node---") {
@@ -321,8 +371,8 @@ export async function createEditor(container: HTMLElement) {
     }
   }
 
-  const RSI = new NodeRSI(socketFlow, "Node RSI");
-  await editor.addNode(RSI);
+  // const RSI = new NodeRSI(socketFlow, "Node RSI");
+  // await editor.addNode(RSI);
 
   class ParNode extends ClassicPreset.Node {
     constructor(socket: ClassicPreset.Socket, init: string = "EURUSD") {
@@ -349,8 +399,25 @@ export async function createEditor(container: HTMLElement) {
     }
   }
 
-  const PAR = new ParNode(socketFlow, "NAS100");
-  await editor.addNode(PAR);
+  // const PAR = new ParNode(socketFlow, "NAS100");
+  // await editor.addNode(PAR);
+
+  // const BuyLimit = new NodeBuyLimit(socketFlow, "Node Buy Limit");
+  // await editor.addNode(BuyLimit);
+
+  // const SellLimit = new NodeSellLimit(socketSellLimit, "Node Sell Limit");
+  // await editor.addNode(SellLimit);
+
+  // const RSI = new NodeRSI(socketFlow, "Node RSI");
+  // await editor.addNode(RSI);
+
+  // const PAR = new ParNode(socketFlow, "NAS100");
+  // await editor.addNode(PAR);
+
+  dock.add(() => new NodeBuyLimit(socketFlow, "Node Buy Limit"));
+  dock.add(() => new NodeSellLimit(socketFlow, "Node Sell Limit"));
+  dock.add(() => new NodeRSI(socketFlow, "Node RSI"));
+  dock.add(() => new ParNode(socketFlow, "NAS100"));
 
   console.log("Nodos en el editor:", editor.getNodes());
   await area.translate(BuyLimit.id, {
@@ -380,13 +447,28 @@ export async function createEditor(container: HTMLElement) {
   (window as any).debugOrders = () => {
     console.log("Conexiones reales:", editor.getConnections());
     console.log("Nodos reales:", editor.getNodes());
-    console.log("Órdenes conectadas:", buildConnectedBuyLimitOrders(editor));
+    console.log(
+      "Órdenes conectadas:",
+      buildConnectedBuyLimitOrders(editor),
+      buildConnectedSellLimitOrders(editor),
+    );
   };
+
+  function generateOrders() {
+    const buyLimitOrdersConnected = buildConnectedBuyLimitOrders(editor);
+    const sellLimitOrdersConnected = buildConnectedSellLimitOrders(editor);
+
+    const orders = [...buyLimitOrdersConnected, ...sellLimitOrdersConnected];
+
+    console.log("Órdenes generadas:", orders);
+    return orders;
+  }
 
   return {
     editor,
     area,
     render,
     connection,
+    generateOrders,
   };
 }
