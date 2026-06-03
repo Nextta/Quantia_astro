@@ -1,7 +1,7 @@
 import { Activo } from "../enums/activo";
 import { GestionStrategy } from "../enums/gestionStrategy";
 import type { GestionParams } from "./gestionParams";
-import type { Trades } from "./Trades";
+import type { Trades } from "./trades";
 import type { Strategy } from "./strategy";
 export interface Backtest {
     id: number;
