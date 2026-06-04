@@ -1,29 +1,33 @@
 ---
 const points = [
-  { time: "2025-01-01", value: 1000000 },
-  { time: "2025-01-10", value: 1020000 },
-  { time: "2025-01-20", value: 1015000 },
-  { time: "2025-02-01", value: 1060000 },
-  { time: "2025-02-10", value: 1085000 },
-  { time: "2025-02-20", value: 1078000 },
-  { time: "2025-03-01", value: 1120000 },
-  { time: "2025-03-10", value: 1180000 },
-  { time: "2025-03-20", value: 1210000 },
-  { time: "2025-04-01", value: 1280000 },
-  { time: "2025-04-10", value: 1335000 },
-  { time: "2025-04-20", value: 1424592 },
+  { time: "2025-01-01", value: 10 },
+  { time: "2025-01-10", value: 10 },
+  { time: "2025-01-20", value: -5},
 ];
 
-interface Props{
+
+const total = points.reduce((total: number, point: { value: number }) => {
+  return (total += point.value);
+}, 0);
+
+interface Props {
   title?: string;
   moneyTotal?: number;
   porcentaje?: number;
+  CAGR?: string;
 }
 
-const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcentaje = 24.5 } = Astro.props as Props;
+const {
+  title = "Curva de Equidad (Equity Curve)",
+  moneyTotal = total,
+  porcentaje = 24.5,
+  CAGR = "CAGR",
+} = Astro.props as Props;
 ---
 
-<div class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden">
+<div
+  class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden"
+>
   <div class="flex justify-between items-start mb-8">
     <div>
       <h3 class="text-on-surface-variant text-sm font-medium mb-1">
@@ -35,8 +39,10 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
     </div>
 
     <div class="flex gap-2">
-      <span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold">
-        +{porcentaje}% CAGR
+      <span
+        class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold"
+      >
+        +{porcentaje}% {CAGR}
       </span>
     </div>
   </div>
@@ -47,7 +53,7 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
       type="application/json"
       class="equity-chart-data"
       set:html={JSON.stringify(points)}
-    ></script>
+    />
   </div>
 </div>
 
@@ -61,11 +67,29 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
       if (root.dataset.initialized === "true") return;
 
       const container = root.querySelector<HTMLElement>(".equity-chart");
-      const dataTag = root.querySelector<HTMLScriptElement>(".equity-chart-data");
+      const dataTag =
+        root.querySelector<HTMLScriptElement>(".equity-chart-data");
 
       if (!container || !dataTag) return;
 
       const points = JSON.parse(dataTag.textContent || "[]");
+      let acumulado: number = 0;
+      const equityPoints = points.map(
+        (point: { time: string; value: number }) => {
+          acumulado += point.value;
+          return {
+            time: point.time,
+            value: acumulado,
+          };
+        },
+      );
+
+      
+      const total = points.reduce((total: number, point: { value: number }) => {
+        return (acumulado += point.value);
+      }, 0);
+
+      console.log("Total:", total);
 
       requestAnimationFrame(() => {
         const chart = createChart(container, {
@@ -97,7 +121,7 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
         });
 
         const series = chart.addSeries(AreaSeries, {
-          lineColor: "#4edea3",
+          lineColor: total > 0 ? "#4edea3" : "#ef4444",
           topColor: "rgba(78, 222, 163, 0.30)",
           bottomColor: "rgba(78, 222, 163, 0.03)",
           lineWidth: 3,
@@ -106,7 +130,7 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
           crosshairMarkerVisible: false,
         });
 
-        series.setData(points);
+        series.setData(equityPoints);
         chart.timeScale().fitContent();
 
         root.dataset.initialized = "true";
