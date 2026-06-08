@@ -33,6 +33,23 @@ const {
 
 const totalDeTrades = trades.length;
 console.log(trades);
+let InitialBalance = 10000;
+let balanceActual = 0;
+
+var amountTrade: number;
+
+// function calculateBalance(trades: Trade[]) {
+//   let newBalance =trades.map((trade) => trade.resultAmount).reduce((total, amount) => total + amount, 0);
+  
+//   console.log(newBalance);
+
+//    return newBalance;
+// }
+// balanceActual = calculateBalance(trades);
+// console.log(balanceActual); 
+
+
+
 
 // const id = 1;
 
@@ -183,15 +200,20 @@ console.log(trades);
                 })}
               </td>
               <td
-                class={`px-6 py-4 text-center font-bold ${trade.resultPercentage >= 0 ? "text-secondary" : "text-tertiary"}`}
+                class={`px-6 py-4 text-center font-bold ${trade.resultAmount >= 0 ? "text-secondary" : "text-tertiary"}`}
               >
-                {trade.resultPercentage >= 0 ? "+" : ""}
-                {trade.resultPercentage}%
+
+                {trade.resultAmount > 0 ? "+" : ""}
+                {((trade.resultAmount * 100) / InitialBalance).toFixed(2)}%
+             
               </td>
+             
               <td
-                class={`px-6 py-4 text-right font-bold ${trade.resultAmount >= 0 ? "" : "text-tertiary"}`}
+                
+                 class={`px-6 py-4 text-right font-bold ${trade.resultAmount >= 0 ? "text-secondary" : "text-tertiary"}`}
+                
               >
-                {trade.resultAmount >= 0 ? "+" : ""}$
+                {trade.resultAmount >= 0 ? "+" : "-"}$
                 {Math.abs(trade.resultAmount).toLocaleString()}
               </td>
               <td class="px-6 py-4 text-on-surface-variant">
