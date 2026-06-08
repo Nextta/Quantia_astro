@@ -1,14 +1,44 @@
 ---
+var balanceInitial: number = 10000;
+var balanceTotal: number = balanceInitial;
+
 const points = [
-  { time: "2025-01-01", value: 10 },
-  { time: "2025-01-10", value: 10 },
-  { time: "2025-01-20", value: -5},
+  { time: "2025-01-01", value: balanceTotal },
+  // { time: "2025-01-10", value: 0 },
+  // { time: "2025-01-20", value: 0 },
 ];
 
+//Balance actual
+//PLN
+function addProfit(pln: number, date: string) {
+  // let total = balance + pln;
+  balanceTotal += pln;
+  points.push({ time: date, value: balanceTotal });
+}
+
+addProfit(40, "2025-01-02");
+addProfit(40, "2025-01-03");
+addProfit(40, "2025-01-04");
+addProfit(-400, "2025-01-05");
+addProfit(80, "2025-01-06");
+addProfit(100, "2025-01-07");
+addProfit(140, "2025-01-08");
+addProfit(-50, "2025-01-09");
+
+const tradeNumberF = new Map(
+  points.map((point: { time: string; value: number }, index: number) => {
+    return [point.time, index + 1];
+  }),
+);
+
+
+console.log(points);
 
 const total = points.reduce((total: number, point: { value: number }) => {
   return (total += point.value);
 }, 0);
+
+const TradeNumber = points.length - 1;
 
 interface Props {
   title?: string;
@@ -19,7 +49,7 @@ interface Props {
 
 const {
   title = "Curva de Equidad (Equity Curve)",
-  moneyTotal = total,
+  moneyTotal = balanceTotal,
   porcentaje = 24.5,
   CAGR = "CAGR",
 } = Astro.props as Props;
@@ -47,7 +77,11 @@ const {
     </div>
   </div>
 
-  <div class="equity-chart-root w-full" style="height: 256px;">
+  <div class="equity-chart-root w-full" style="height: 256px;"
+  data-balance-total={balanceTotal}
+  data-balance-initial={balanceInitial}
+  data-trade-number={TradeNumber}
+  >
     <div class="equity-chart w-full h-full"></div>
     <script
       type="application/json"
@@ -55,6 +89,12 @@ const {
       set:html={JSON.stringify(points)}
     />
   </div>
+  <!-- <div 
+    class="equity-chart-root"
+    data-balance-total={balanceTotal}
+  >
+    <div class="equity-chart"></div>
+  </div> -->
 </div>
 
 <script>
@@ -74,24 +114,26 @@ const {
 
       const points = JSON.parse(dataTag.textContent || "[]");
       let acumulado: number = 0;
-      const equityPoints = points.map(
-        (point: { time: string; value: number }) => {
-          acumulado += point.value;
-          return {
-            time: point.time,
-            value: acumulado,
-          };
-        },
-      );
+      // const equityPoints = points.map(
+      //   (point: { time: string; value: number }) => {
+      //     acumulado += point.value;
+      //     return {
+      //       time: point.time,
+      //       value: acumulado,
+      //     };
+      //   },
+      // );
 
-      
-      const total = points.reduce((total: number, point: { value: number }) => {
-        return (acumulado += point.value);
-      }, 0);
+      // const total = points.reduce((total: number, point: { value: number }) => {
+      //   return (acumulado += point.value);
+      // }, 0);
 
-      console.log("Total:", total);
+      // console.log("Total:", total);
+
+
 
       requestAnimationFrame(() => {
+        const trade_Number = Number(root.dataset.tradeNumber);
         const chart = createChart(container, {
           autoSize: true,
           layout: {
@@ -106,22 +148,38 @@ const {
             horzLines: { color: "rgba(148, 163, 184, 0.10)" },
           },
           rightPriceScale: {
-            visible: false,
+            visible: true ,
             borderVisible: false,
           },
           leftPriceScale: {
             visible: false,
           },
           timeScale: {
-            visible: false,
+            visible: true,
             borderVisible: false,
-          },
+            ticksVisible: true,
+            tickMarkFormatter: (time: number) => {
+              
+              return `|  ${time}  |`;
+            },},
+            localization: {
+              priceFormatter: (price: number) => {
+                return `$${price.toLocaleString()}`;
+              },
+            },
+          
           handleScroll: false,
           handleScale: false,
         });
 
+        const balance_Total = Number(root.dataset.balanceTotal);
+        const balance_Initial = Number(root.dataset.balanceInitial);
+        
+
+        console.log("Balance Initial:", balance_Initial);
+
         const series = chart.addSeries(AreaSeries, {
-          lineColor: total > 0 ? "#4edea3" : "#ef4444",
+          lineColor: balance_Total > balance_Initial ? "#4edea3" : "#ef4444",
           topColor: "rgba(78, 222, 163, 0.30)",
           bottomColor: "rgba(78, 222, 163, 0.03)",
           lineWidth: 3,
@@ -129,8 +187,8 @@ const {
           lastValueVisible: false,
           crosshairMarkerVisible: false,
         });
-
-        series.setData(equityPoints);
+        console.log(points);
+        series.setData(points);
         chart.timeScale().fitContent();
 
         root.dataset.initialized = "true";
