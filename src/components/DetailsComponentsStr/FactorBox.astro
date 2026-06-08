@@ -6,7 +6,7 @@ interface Props {
   profitFactor?: number;
 }
 
-const { recoveryFactor = 3.24, profitFactor = 1.65, factor1 = "Factor 1", factor2 = "Factor 2" } = Astro.props as Props;
+const { recoveryFactor = -3.24, profitFactor = 1.65, factor1 = "Factor 1", factor2 = "Factor 2" } = Astro.props as Props;
 
 ---
 <div class="bg-surface-container-low rounded-xl p-6 grid grid-cols-2 gap-4">
@@ -14,12 +14,12 @@ const { recoveryFactor = 3.24, profitFactor = 1.65, factor1 = "Factor 1", factor
     <span class="block text-[10px] text-on-surface-variant font-bold"
       >{factor1}</span
     >
-    <span class="text-lg font-bold">{recoveryFactor}</span>
+    <span class={recoveryFactor > 0 ? "text-lg font-bold text-primary" : "text-lg font-bold text-tertiary"}>{recoveryFactor}</span>
   </div>
   <div>
     <span class="block text-[10px] text-on-surface-variant font-bold"
       >{factor2}</span
     >
-    <span class="text-lg font-bold">{profitFactor}</span>
+    <span class={profitFactor > 0 ? "text-lg font-bold text-primary" : "text-lg font-bold text-tertiary"}>{profitFactor}</span>
   </div>
 </div>
