@@ -14,6 +14,14 @@ const strategy1Points = [
   { time: 1717804800, value: 107900 },
 ];
 
+let initialBalance = 10000;
+
+let cardsArray = [
+  {titulo: "", balance: 2000, tipo: "Acciones"},
+  {titulo: "", balance: 2000, tipo: "INDICES"},
+  {titulo: "", balance: 2000, tipo: "forex"},
+]
+
 const id = 1;
 ---
 <Layout title="Quantia">
@@ -40,21 +48,26 @@ const id = 1;
 
     <div
       class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
-    >
+    >{cardsArray.map((card)=>{
+
+    return(
       <StrategyCard
-        title="Estrategia 1"
-        market="HFT / FOREX"
-        percent={24.8}
+
+        title={card.titulo}
+        market={card.tipo}
+        percent={`${card.balance * 100 / initialBalance}%` }
         image="/images/chart-1.png"
         profitFactor={1.84}
         drawdown={4.2}
         points={strategy1Points}
       />
+    )
+      })}
 
-      <StrategyCard
+      <!-- <StrategyCard
         title="Estrategia 2"
         market="TREND / CRYPTO"
-        percent={41.2}
+        percent="{41.2}"
         image="/images/chart-2.png"
         profitFactor={2.45}
         drawdown={12.5}
@@ -64,12 +77,12 @@ const id = 1;
       <StrategyCard
         title="Estrategia 3"
         market="VOL / OPTIONS"
-        percent={15.5}
+        percent="{15.5}"
         image="/images/chart-3.png"
         profitFactor={1.62}
         drawdown={2.1}
         points={strategy1Points}
-      />
+      /> -->
     </div>
   </section>
 
