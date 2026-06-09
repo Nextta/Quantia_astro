@@ -1,10 +1,29 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-
-
+import StrategyCard from "../../components/StrategyCard.astro";
+import { cardsArray } from "../main/Home.astro";
+import { initialBalance } from "../main/Home.astro";
+import { strategy1Points } from "../main/Home.astro";
 ---
 
-
 <Layout>
-    
+  <div class="grid grid-cols-3 gap-3">
+    {
+      cardsArray.map((card) => {
+        return (
+          <div class="">
+            <StrategyCard
+              title={card.titulo}
+              market={card.tipo}
+              percent={`${(card.balance * 100) / initialBalance}%`}
+              image="/images/chart-1.png"
+              profitFactor={1.84}
+              drawdown={4.2}
+              points={strategy1Points}
+            />
+          </div>
+        );
+      })
+    }
+  </div>
 </Layout>

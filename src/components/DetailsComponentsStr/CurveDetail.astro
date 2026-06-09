@@ -31,7 +31,6 @@ const tradeNumberF = new Map(
   }),
 );
 
-
 console.log(points);
 
 const total = points.reduce((total: number, point: { value: number }) => {
@@ -77,10 +76,12 @@ const {
     </div>
   </div>
 
-  <div class="equity-chart-root w-full" style="height: 256px;"
-  data-balance-total={balanceTotal}
-  data-balance-initial={balanceInitial}
-  data-trade-number={TradeNumber}
+  <div
+    class="equity-chart-root w-full"
+    style="height: 256px;"
+    data-balance-total={balanceTotal}
+    data-balance-initial={balanceInitial}
+    data-trade-number={TradeNumber}
   >
     <div class="equity-chart w-full h-full"></div>
     <script
@@ -130,10 +131,13 @@ const {
 
       // console.log("Total:", total);
 
-
-
       requestAnimationFrame(() => {
-        const trade_Number = Number(root.dataset.tradeNumber);
+        var tradeNumber = new Map<string, number>(
+          points.slice(1).map((point: { time: string }, index: number) => {
+            return [point.time, index + 1];
+          }),
+        );
+
         const chart = createChart(container, {
           autoSize: true,
           layout: {
@@ -148,7 +152,7 @@ const {
             horzLines: { color: "rgba(148, 163, 184, 0.10)" },
           },
           rightPriceScale: {
-            visible: true ,
+            visible: true,
             borderVisible: false,
           },
           leftPriceScale: {
@@ -158,23 +162,26 @@ const {
             visible: true,
             borderVisible: false,
             ticksVisible: true,
-            tickMarkFormatter: (time: number) => {
-              
-              return `|  ${time}  |`;
-            },},
-            localization: {
-              priceFormatter: (price: number) => {
-                return `$${price.toLocaleString()}`;
-              },
+            tickMarkFormatter: (time: string) => {
+              const tradeN = tradeNumber.get(String(time));
+
+              if (!tradeN) return "Initial Balance";
+
+              return `| #${tradeN} - ${time} |`;
             },
-          
+          },
+          localization: {
+            priceFormatter: (price: number) => {
+              return `$${price.toLocaleString()}`;
+            },
+          },
+
           handleScroll: false,
           handleScale: false,
         });
 
         const balance_Total = Number(root.dataset.balanceTotal);
         const balance_Initial = Number(root.dataset.balanceInitial);
-        
 
         console.log("Balance Initial:", balance_Initial);
 

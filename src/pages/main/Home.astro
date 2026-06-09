@@ -3,7 +3,13 @@ import StrategyCard from "../../components/StrategyCard.astro";
 import CarteraCard from "../../components/CarteraCard.astro";
 import Layout from "../../layouts/Layout.astro";
 
-const strategy1Points = [
+type CardItem = {
+  titulo: string;
+  balance: number;
+  tipo: string;
+};
+
+export const strategy1Points = [
   { time: 1717200000, value: 100000 },
   { time: 1717286400, value: 101500 },
   { time: 1717372800, value: 100900 },
@@ -14,12 +20,14 @@ const strategy1Points = [
   { time: 1717804800, value: 107900 },
 ];
 
-let initialBalance = 10000;
+export let initialBalance = 10000;
 
-let cardsArray = [
-  {titulo: "", balance: 2000, tipo: "Acciones"},
-  {titulo: "", balance: 2000, tipo: "INDICES"},
-  {titulo: "", balance: 2000, tipo: "forex"},
+export let cardsArray : CardItem[] = [
+  {titulo: "Estrategia NVIDIA", balance: 2000, tipo: "Acciones"},
+  {titulo: "Estrategia NASDAQ", balance: 2000, tipo: "INDICES"},
+  {titulo: "Estrategia USDJPY", balance: 2000, tipo: "forex"},
+  {titulo: "Estrategia Retail", balance: 2000, tipo: "forex"},
+  {titulo: "Estrategia EURUSD", balance: 2000, tipo: "forex"},
 ]
 
 const id = 1;
@@ -48,7 +56,9 @@ const id = 1;
 
     <div
       class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
-    >{cardsArray.map((card)=>{
+    >{
+    
+    cardsArray.slice(0,3).map((card)=>{
 
     return(
       <StrategyCard
@@ -62,7 +72,9 @@ const id = 1;
         points={strategy1Points}
       />
     )
-      })}
+      })
+
+    }
     </div>
   </section>
 
