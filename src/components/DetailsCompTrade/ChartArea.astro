@@ -1,5 +1,6 @@
 ---
 import { dataFrame } from "../../datos/dataFrame";
+import type {StrategyIndicator} from "../../interfaces/strategyIndicator"
 import type {
   LineData,
   UTCTimestamp,
@@ -51,14 +52,29 @@ console.log(dataEMABefore);
 
 //Para la ema--------:
 
-const dataEmaFromDF: Ema50Point[] = dataFrame.map((dt) => ({
-  time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-  value: dt.ema_50,
-}));
+// const dataEmaFromDF: EmaPoint[] = dataFrame.map((dt) => ({
+//   time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
+//   value: dt.ema_50,
+// }));
 
-const dataEma =
-  dataEMABefore && dataEMABefore.length > 0 ? dataEMABefore : dataEmaFromDF;
+// const dataEma =
+//   dataEMABefore && dataEMABefore.length > 0 ? dataEMABefore : dataEmaFromDF;
+const dataEmaFromDF: EmaConfig = {
+  name: "EMA 50",
+  color: "#dd00ff",
+  data: dataFrame.map((dt) => ({
+    time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
+    value: dt.ema_50,
+  })),
+};
 
+const dataEma: EmaConfig[] = dataEMABefore
+  ? Array.isArray(dataEMABefore)
+    ? dataEMABefore
+    : [dataEMABefore]
+  : [dataEmaFromDF];
+
+  console.log(dataEma);
   //Ema 200
 
 // const dataEma200FromDF: Ema200Point[] = dataFrame.map((dt) => ({
@@ -130,15 +146,24 @@ const chartCandles = candlesFromDF;
   type Candle = CandlestickData<UTCTimestamp>;
 
 
-  type Ema50Point = LineData<UTCTimestamp>;
-  type Ema200Point = LineData<UTCTimestamp>;
+  // type Ema50Point = LineData<UTCTimestamp>;
+  // type Ema200Point = LineData<UTCTimestamp>;
+    type EmaConfig = {
+  name: string;
+  color: string;
+  data: LineData<UTCTimestamp>[];
+};
+
+
 
   const container = document.getElementById("trade-chart");
   if (container) {
     // Leer los datos del data-
     // const candles = JSON.parse(container.dataset.candles || "[]") as Candle[];
     const markers = JSON.parse(container.dataset.markers || "[]");
-    const rawEma = JSON.parse(container.dataset.ema || "[]") as Ema50Point[];
+    // const rawEma = JSON.parse(container.dataset.ema || "[]") as Ema50Point[];
+    const rawEma = JSON.parse(container.dataset.ema || "[]") as EmaConfig[];
+    console.log(rawEma);
     // const rawEma200 = JSON.parse(container.dataset.ema200 || "[]") as Ema200Point[];
 
     //Candles ----
@@ -179,15 +204,25 @@ const chartCandles = candlesFromDF;
 
 
     console.log(rawEma);
-    // console.log(rawEma200);
+    // // console.log(rawEma200);
 
-    if (rawEma.length > 0) {
-      const emaSeries = chart.addSeries(LineSeries, {
-        color: "#facc15",
-        lineWidth: 2,
-      });
-      emaSeries.setData(rawEma);
-    }
+    // if (rawEma.length > 0) {
+    //   const emaSeries = chart.addSeries(LineSeries, {
+    //     color: "#facc15",
+    //     lineWidth: 2,
+    //   });
+    //   emaSeries.setData(rawEma);
+    // }
+    rawEma.forEach((ema) => {
+  if (ema.data.length > 0) {
+    const emaSeries = chart.addSeries(LineSeries, {
+      color: ema.color,
+      lineWidth: 2,
+    });
+
+    emaSeries.setData(ema.data);
+  }
+});
     // if (rawEma200.length > 0) {
     //   const emaSeries = chart.addSeries(LineSeries, {
     //     color: "#ff0000",
