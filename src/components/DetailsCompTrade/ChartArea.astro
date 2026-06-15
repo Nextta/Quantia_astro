@@ -1,23 +1,31 @@
 ---
 import { dataFrame } from "../../datos/dataFrame";
-import type {StrategyIndicator} from "../../interfaces/strategyIndicator"
-import type {
-  LineData,
-  UTCTimestamp,
-  CandlestickData,
-} from "lightweight-charts";
+import strategies from "../../datos/strategies.json";
+
+import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
+import type { Strategy } from "../../interfaces/strategy";
+import type { StrategyAction } from "../../interfaces/strategyAction";
+import type { StrategyOptions } from "../../interfaces/strategyOptions";
+import type { StopLoss } from "../../interfaces/stopLoss";
+import type { TakeProfit } from "../../interfaces/takeProfit";
+import { TradingDirection } from "../../enums/tradingDirection";
+import { Action } from "../../enums/action";
 
 type EmaPoint = LineData<UTCTimestamp>;
-// type Ema200Point = LineData<UTCTimestamp>;
-type CandlePoint = CandlestickData<UTCTimestamp>;
 
 type EmaConfig = {
   name: string;
   color: string;
   data: EmaPoint[];
-}
-
+};
 type EmaInput = EmaConfig | EmaConfig[];
+
+import type {
+  LineData,
+  UTCTimestamp,
+  CandlestickData,
+} from "lightweight-charts";
+import { undefined } from "astro:schema";
 
 interface Props {
   candles?: CandlePoint[];
@@ -31,12 +39,10 @@ interface Props {
   height?: number;
   upColor?: string;
   downColor?: string;
-  
+
   dataEMABefore?: EmaInput;
   // dataEMA200Before: Ema200Point[];
 }
-
-
 
 const {
   candles = [],
@@ -50,40 +56,200 @@ const {
 
 console.log(dataEMABefore);
 
-//Para la ema--------:
+let data = dataFrame[0];
+console.log(data);
 
-// const dataEmaFromDF: EmaPoint[] = dataFrame.map((dt) => ({
-//   time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-//   value: dt.ema_50,
-// }));
+let indicator: StrategyIndicator[] = [
+  {
+    id: 1,
+    nombre: "ema_50",
+    parametros: '{"timeperiod":50}',
+    strategy_id: 1,
+    tipo: "EMA",
+  },
+  {
+    id: 2,
+    nombre: "ema_200",
+    parametros: '{"timeperiod":200}',
+    strategy_id: 1,
+    tipo: "EMA",
+  },
+  {
+    id: 3,
+    nombre: "atr",
+    parametros: '{"timeperiod":14, "multiplier":2.5}',
+    strategy_id: 1,
+    tipo: "ATR",
+  },
+  {
+    id: 4,
+    nombre: "atr_tp",
+    parametros: '{"timeperiod":14, "multiplier":6}',
+    strategy_id: 1,
+    tipo: "ATR",
+  },
+];
+console.log(indicator);
 
-// const dataEma =
-//   dataEMABefore && dataEMABefore.length > 0 ? dataEMABefore : dataEmaFromDF;
-const dataEmaFromDF: EmaConfig = {
-  name: "EMA 50",
-  color: "#dd00ff",
-  data: dataFrame.map((dt) => ({
-    time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-    value: dt.ema_50,
-  })),
+let acciones: StrategyAction[] = [
+  {
+    id: 1,
+    parametro: "{}",
+    strategy_id: 1,
+    tipo: Action.Buy,
+    tipo_signal: "Entry",
+  },
+  {
+    id: 2,
+    parametro: "{}",
+    strategy_id: 1,
+    tipo: Action.Sell,
+    tipo_signal: "Entry",
+  },
+];
+
+let TP: TakeProfit = {
+  tipo: "atr",
+  nombre_col: "atr_tp",
+  shift: 0,
+  valor: 0.0,
+};
+let SL: StopLoss = { tipo: "atr", nombre_col: "atr", shift: 0, valor: 0.0 };
+
+let options: StrategyOptions = {
+  activar_cierre_numero_velas: false,
+  cerrar_fin_de_dia: false,
+  cerrar_fin_rango_operativo: false,
+  cerrar_viernes: false,
+  cierre_limite_hora: false,
+  id: 1,
+  multiples_trades: false,
+  numero_velas_cierre: 0,
+  operar_finde: false,
+  parametros_stoploss: SL,
+  parametros_takeprofit: TP,
+  rango_operativo: false,
+  strategy_id: 1,
+  trading_direccion: TradingDirection.Both,
 };
 
-const dataEma: EmaConfig[] = dataEMABefore
-  ? Array.isArray(dataEMABefore)
-    ? dataEMABefore
-    : [dataEMABefore]
-  : [dataEmaFromDF];
+let strategy: Strategy = {
+  activa: true,
+  creada_en: "2020/05/20",
+  descripcion: "Esto es una prueba para el tets unitario.",
+  id: 1,
+  id_user: 1,
+  nombre: "Cruce de medias",
+  indicadores: [
+    {
+      id: 1,
+      nombre: "ema_50",
+      parametros: '{"timeperiod":50}',
+      strategy_id: 1,
+      tipo: "EMA",
+    },
+    {
+      id: 2,
+      nombre: "ema_200",
+      parametros: '{"timeperiod":200}',
+      strategy_id: 1,
+      tipo: "EMA",
+    },
+    {
+      id: 3,
+      nombre: "atr",
+      parametros: '{"timeperiod":14, "multiplier":2.5}',
+      strategy_id: 1,
+      tipo: "ATR",
+    },
+    {
+      id: 4,
+      nombre: "atr_tp",
+      parametros: '{"timeperiod":14, "multiplier":6}',
+      strategy_id: 1,
+      tipo: "ATR",
+    },
+  ],
+  acciones: acciones,
+  opciones: options,
+};
+let dataEma: EmaConfig[] = [];
+switch (indicator[0].tipo) {
+  case "EMA":
+    // let emaNew = indicator[0].nombre.match(/\d+/);
+    // const emaNew2 = Number(emaNew);
+    // const emaKey = `ema_${emaNew2}` as keyof (typeof dataFrame)[number];
+    // console.log(`EMA new2 ${emaNew2}`);
 
-  console.log(dataEma);
-  //Ema 200
+    // const dataEmaFromDF: EmaConfig = {
+    //   name: `ema_${emaNew2}`,
+    //   color: "#dd00ff",
+    //   data: dataFrame.map((dt) => ({
+    //     time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
+    //     value:  Number(dt[emaKey]),
+    //   })),
+    // };
 
-// const dataEma200FromDF: Ema200Point[] = dataFrame.map((dt) => ({
-//   time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-//   value: dt.ema_200,
-// }))
+    // dataEma = dataEMABefore
+    //   ? Array.isArray(dataEMABefore)
+    //     ? dataEMABefore
+    //     : [dataEMABefore]
+    //   : [dataEmaFromDF];
 
-// const dataEma200 = 
-  // dataEMA200Before && dataEMA200Before.length > 0  ? dataEMA200Before : dataEma200FromDF;
+    // console.log(dataEma);
+    // let dataEma: EmaConfig[] = [];
+
+    const emaColors = ["#dd00ff", "#facc15", "#38bdf8", "#22c55e", "#fb7185"];
+
+    const emaKeys = Object.keys(dataFrame[0] ?? {})
+      .filter((key) => /^ema_\d+$/i.test(key))
+      // .sort((a, b) => {
+      //   const periodA = Number(a.match(/\d+/)?.[0] ?? 0);
+      //   console.log(periodA);
+      //   const periodB = Number(b.match(/\d+/)?.[0] ?? 0);
+      //   console.log(periodB);
+      //   return periodA - periodB;
+      // });
+
+    const dataEmaFromDF: EmaConfig[] = emaKeys.map((emaKey, index) => ({
+      name: emaKey.toUpperCase().replace("_", " "),
+      color: emaColors[index % emaColors.length],
+      data: dataFrame.flatMap((dt) => {
+        const value = Number(dt[emaKey as keyof typeof dt]);
+
+        if (!Number.isFinite(value)) return [];
+
+        return [
+          {
+            time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
+            value,
+          },
+        ];
+      }),
+    }));
+
+    dataEma = dataEMABefore
+      ? Array.isArray(dataEMABefore)
+        ? dataEMABefore
+        : [dataEMABefore]
+      : dataEmaFromDF;
+
+    console.log("EMAs detectadas:", emaKeys);
+    console.log("dataEma final:", dataEma);
+    // const resultado = texto.match(/\d+/)
+    break;
+
+  case "ATR":
+    break;
+
+  default:
+    break;
+}
+
+// type Ema200Point = LineData<UTCTimestamp>;
+type CandlePoint = CandlestickData<UTCTimestamp>;
+
+//Para la ema--------:
 
 //Velas
 
@@ -105,7 +271,6 @@ console.log(candlesFromDF);
 
 // const chartCandles = candles && candles.length > 0 ? candles : candlesFromDF;
 const chartCandles = candlesFromDF;
-
 ---
 
 <section
@@ -116,9 +281,7 @@ const chartCandles = candlesFromDF;
     class="w-full"
     style={`height: ${height}px`}
     data-candles={JSON.stringify(chartCandles)}
-    
     data-markers={JSON.stringify(markers)}
-    
     data-ema={JSON.stringify(dataEma)}
     data-up-color={upColor}
     data-down-color={downColor}
@@ -142,19 +305,16 @@ const chartCandles = candlesFromDF;
     month: number;
     day: number;
   };
-
+  
   type Candle = CandlestickData<UTCTimestamp>;
-
 
   // type Ema50Point = LineData<UTCTimestamp>;
   // type Ema200Point = LineData<UTCTimestamp>;
-    type EmaConfig = {
-  name: string;
-  color: string;
-  data: LineData<UTCTimestamp>[];
-};
-
-
+  type EmaConfig = {
+    name: string;
+    color: string;
+    data: LineData<UTCTimestamp>[];
+  };
 
   const container = document.getElementById("trade-chart");
   if (container) {
@@ -201,8 +361,6 @@ const chartCandles = candlesFromDF;
 
     series.setData(candles);
 
-
-
     console.log(rawEma);
     // // console.log(rawEma200);
 
@@ -213,16 +371,17 @@ const chartCandles = candlesFromDF;
     //   });
     //   emaSeries.setData(rawEma);
     // }
+ 
     rawEma.forEach((ema) => {
-  if (ema.data.length > 0) {
-    const emaSeries = chart.addSeries(LineSeries, {
-      color: ema.color,
-      lineWidth: 2,
+      if (ema.data.length > 0) {
+        const emaSeries = chart.addSeries(LineSeries, {
+          color: ema.color,
+          lineWidth: 2,
+        });
+        console.log(ema.data.length);
+        emaSeries.setData(ema.data);
+      }
     });
-
-    emaSeries.setData(ema.data);
-  }
-});
     // if (rawEma200.length > 0) {
     //   const emaSeries = chart.addSeries(LineSeries, {
     //     color: "#ff0000",

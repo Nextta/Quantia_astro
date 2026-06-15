@@ -1,5 +1,5 @@
 // import SymbolInfoCFD  from "C:\\Users\\AXEN BROKER\\Documents\\Quantia\\Quantia_astro\\src\\interfaces\\SymbolInfoCFD";
-import type { SymbolInfoCFD } from '../interfaces/SymbolInfoCFD'
+import type { SymbolInfoCFD } from '../interfaces/symbolInfoCFD'
 import { EntryDirection } from "../enums/EntryDirection";
 
 

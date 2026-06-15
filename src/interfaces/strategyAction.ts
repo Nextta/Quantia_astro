@@ -5,6 +5,6 @@ export interface StrategyAction {
     strategy_id: number;
     tipo_signal: String,
     tipo: Action,
-    parametros: any,
+    parametro: any,
     conditions?: StrategyCondition,
 }
