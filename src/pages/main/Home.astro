@@ -2,6 +2,21 @@
 import StrategyCard from "../../components/StrategyCard.astro";
 import CarteraCard from "../../components/CarteraCard.astro";
 import Layout from "../../layouts/Layout.astro";
+import strategys from "../../datos/strategies.json"
+
+import type { Backtest } from "../../interfaces/backtest";
+import type { Strategy } from "../../interfaces/strategy";
+import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
+import { cuenta_data } from "../../functions/functions";
+import { backT_data } from "../../functions/functions";
+
+const {
+  id,
+  id_user,
+  nombre,
+  descripcion, 
+
+} = Astro.props as Strategy
 
 type CardItem = {
   titulo: string;
@@ -22,15 +37,17 @@ export const strategy1Points = [
 
 export let initialBalance = 10000;
 
-export let cardsArray : CardItem[] = [
-  {titulo: "Estrategia NVIDIA", balance: 2000, tipo: "Acciones"},
-  {titulo: "Estrategia NASDAQ", balance: 2000, tipo: "INDICES"},
-  {titulo: "Estrategia USDJPY", balance: 2000, tipo: "forex"},
-  {titulo: "Estrategia Retail", balance: 2000, tipo: "forex"},
-  {titulo: "Estrategia EURUSD", balance: 2000, tipo: "forex"},
-]
 
-const id = 1;
+
+// export let cardsArray : CardItem[] = [
+//   {titulo: "Estrategia NVIDIA", balance: 2000, tipo: "Acciones"},
+//   {titulo: "Estrategia NASDAQ", balance: 2000, tipo: "INDICES"},
+//   {titulo: "Estrategia USDJPY", balance: 2000, tipo: "forex"},
+//   {titulo: "Estrategia Retail", balance: 2000, tipo: "forex"},
+//   {titulo: "Estrategia EURUSD", balance: 2000, tipo: "forex"},
+// ]
+
+// const id = 1;
 ---
 <Layout title="Quantia">
 <div class="space-y-16">
@@ -56,25 +73,21 @@ const id = 1;
 
     <div
       class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
-    >{
-    
-    cardsArray.slice(0,3).map((card)=>{
+    >
+    {
+  cuenta_data.slice(0, 3).map((card) => {
+    const backtest = backT_data.find((item) => item.id === card.id);
 
-    return(
+    return (
       <StrategyCard
-
-        title={card.titulo}
-        market={card.tipo}
-        percent={`${card.balance * 100 / initialBalance}%` }
-        image="/images/chart-1.png"
-        profitFactor={1.84}
-        drawdown={4.2}
-        points={strategy1Points}
+        nombre={card.nombre}
+        id={card.id}
+        pointsP={strategy1Points}
+        balance={backtest?.balance ?? 0}
       />
-    )
-      })
-
-    }
+    );
+  })
+}
     </div>
   </section>
 

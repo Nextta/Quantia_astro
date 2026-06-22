@@ -1,15 +1,17 @@
 ---
+import type { resultados } from '../../interfaces/resultados';
+
 interface Props {
   factor1?: string;
   factor2?: string;
-  recoveryFactor?: number;
-  profitFactor?: number;
+  recoveryFactor?: resultados["recovery_factor"];
+  profitFactor?: resultados["profit_factor"];
 }
 
 const { recoveryFactor = -3.24, profitFactor = 1.65, factor1 = "Factor 1", factor2 = "Factor 2" } = Astro.props as Props;
 
 ---
-<div class="bg-surface-container-low rounded-xl p-6 grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low rounded-xl p-6 grid grid-cols-2 gap-4 border-0">
   <div>
     <span class="block text-[10px] text-on-surface-variant font-bold"
       >{factor1}</span

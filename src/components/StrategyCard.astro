@@ -1,29 +1,42 @@
 ---
 import MiniTVChart from "./DetailsComponentsStr/MiniTVChart.astro";
-
-interface Props {
-  title?: string;
-  market?: string;
-  percent?: string;
-  image?: string;
-  parameter1?: string;
-  parameter2?: string;
-  profitFactor?: number;
-  drawdown?: number;
-  id?: number;
-  symbol?: string;
-  points: Point[];
-}
+import type { Strategy} from "../interfaces/strategy";
+import { strategy1Points } from "../pages/main/Home.astro";
+import type { Backtest } from "../interfaces/backtest"
 
 interface Point {
   time: number;
   value: number;
 }
+// interface Props extends Strategy, Backtest {
+//   pointsP: Point[];
+// }
+interface Props {
+  id: Strategy["id"];
+  nombre: Strategy["nombre"];
+  balance: Backtest["balance"];
+  pointsP: Point[];
+}
 
-const { title, market, percent, image, parameter1="PROFIT FACTOR", parameter2="DRAWDOWN", profitFactor, drawdown, points } =
-  Astro.props as Props;
+// interface Props {
+//   id: Strategy;
+//   nombre: Strategy;
+//   balance?: Backtest;
+//   pointsP: Point[];
+// }
 
-const id = 1;
+const {
+  id,
+  nombre,
+  pointsP,
+  balance
+} = Astro.props as Props;
+
+// type TestId = StrategyProps["id"];
+
+
+
+// const id = 1;
 ---
 
 <article
@@ -42,13 +55,13 @@ const id = 1;
       <h3
         class="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-on-surface font-headline wrap-break-word"
       >
-        {title}
+        #{id}
       </h3>
 
       <span
         class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
       >
-        {market}
+        {nombre}
       </span>
     </div>
 
@@ -61,13 +74,15 @@ const id = 1;
       >
         trending_up
       </span>
-      <span>{percent}</span>
+      <span>
+        {balance}%<!-- porcentaje -->
+      </span>
     </div>
   </div>
 <!-- First -->
   <div class="bg-surface-container-lowest rounded-xl p-3 sm:p-4 mb-6">
     <div class="rounded-2xl overflow-hidden bg-[#061020]">
-      <MiniTVChart points={points} height={110} />
+      <MiniTVChart points={pointsP} height={110} />
     </div>
   </div>
 
@@ -77,12 +92,12 @@ const id = 1;
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          {parameter1}
+          parameter1
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface leading-none"
         >
-          {profitFactor}
+         1.56 <!-- profitFactor    -->
         </p>
       </div>
 
@@ -90,12 +105,12 @@ const id = 1;
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          {parameter2}
+         2 <!-- parameter2 -->
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none"
         >
-          {drawdown}
+          0.55<!-- drawdown -->
         </p>
       </div>
     </div>

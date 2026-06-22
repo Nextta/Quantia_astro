@@ -1,11 +1,21 @@
 ---
+
+ 
+// interface Props {
+//   title?: string;
+//   ratioValue?: number;
+//   ratioLabel?: string;
+// }
+
+import type { resultados } from "../../interfaces/resultados"; 
+
 interface Props {
-  title?: string;
-  ratioValue?: number;
+  title?:  string;
+  risk_of_ruin?: resultados["risk_of_ruin"];
   ratioLabel?: string;
 }
 
-const { title = "Ratio de Sharpe", ratioValue = 1.82, ratioLabel = "Excepcional" } = Astro.props as Props;
+const { title = "Risk of ruin--", risk_of_ruin = 1.82, ratioLabel = "Excepcional" } = Astro.props as Props;
 
 
 ---
@@ -18,7 +28,7 @@ const { title = "Ratio de Sharpe", ratioValue = 1.82, ratioLabel = "Excepcional"
     >{title}</span
   >
   <div class="flex items-end gap-2">
-    <span class={ratioValue > 0 ? "text-4xl font-black text-primary font-headline" : "text-4xl font-black text-tertiary font-headline"}>{ratioValue}</span>
+    <span class={risk_of_ruin > 0 ? "text-4xl font-black text-primary font-headline" : "text-4xl font-black text-tertiary font-headline"}>{risk_of_ruin}</span>
     <span class="text-secondary text-xs font-medium mb-2">{ratioLabel}</span>
   </div>
 </div>

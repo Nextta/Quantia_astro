@@ -1,4 +1,4 @@
-interface resultados {
+export interface resultados {
     id: number;
     id_backtest: number;
     retorno: number;

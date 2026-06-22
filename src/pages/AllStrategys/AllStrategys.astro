@@ -1,29 +1,35 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import StrategyCard from "../../components/StrategyCard.astro";
-import { cardsArray } from "../main/Home.astro";
+// import { cardsArray } from "../main/Home.astro";
 import { initialBalance } from "../main/Home.astro";
 import { strategy1Points } from "../main/Home.astro";
+import type { Strategy } from "../../interfaces/strategy";
+import type { Props } from "astro/components/ClientRouter.astro";
+import { cuenta_data } from "../../functions/functions";
+import { backT_data } from "../../functions/functions";
+
+
+
+
+// const cuenta_data_all, Strategy = cuenta_data
 ---
 
 <Layout>
   <div class="grid grid-cols-3 gap-3">
     {
-      cardsArray.map((card) => {
-        return (
-          <div class="">
-            <StrategyCard
-              title={card.titulo}
-              market={card.tipo}
-              percent={`${(card.balance * 100) / initialBalance}%`}
-              image="/images/chart-1.png"
-              profitFactor={1.84}
-              drawdown={4.2}
-              points={strategy1Points}
-            />
-          </div>
-        );
-      })
-    }
+  cuenta_data.map((card) => {
+    const backtest = backT_data.find((item) => item.id === card.id);
+
+    return (
+      <StrategyCard
+        nombre={card.nombre}
+        id={card.id}
+        pointsP={strategy1Points}
+        balance={backtest?.balance ?? 0}
+      />
+    );
+  })
+}
   </div>
 </Layout>

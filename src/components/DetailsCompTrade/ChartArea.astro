@@ -89,7 +89,7 @@ let indicator: StrategyIndicator[] = [
     tipo: "ATR",
   },
 ];
-console.log(indicator);
+console.log(indicator[0]);
 
 let acciones: StrategyAction[] = [
   {
@@ -173,78 +173,43 @@ let strategy: Strategy = {
   acciones: acciones,
   opciones: options,
 };
-let dataEma: EmaConfig[] = [];
-switch (indicator[0].tipo) {
+let dataEma = [];
+
+var b;
+
+function get_values_indicator(name: string){
+  return[{
+    time: Math.floor(1548054000000 / 1000),
+    value:1282.2613176347684
+}]
+}
+
+
+for(let i=0; i<indicator.length; i++){
+  console.log("iterando indicador: "+indicator[i])
+switch (indicator[i]?.tipo) {
   case "EMA":
-    // let emaNew = indicator[0].nombre.match(/\d+/);
-    // const emaNew2 = Number(emaNew);
-    // const emaKey = `ema_${emaNew2}` as keyof (typeof dataFrame)[number];
-    // console.log(`EMA new2 ${emaNew2}`);
 
-    // const dataEmaFromDF: EmaConfig = {
-    //   name: `ema_${emaNew2}`,
-    //   color: "#dd00ff",
-    //   data: dataFrame.map((dt) => ({
-    //     time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-    //     value:  Number(dt[emaKey]),
-    //   })),
-    // };
+ //fffdfd
 
-    // dataEma = dataEMABefore
-    //   ? Array.isArray(dataEMABefore)
-    //     ? dataEMABefore
-    //     : [dataEMABefore]
-    //   : [dataEmaFromDF];
 
-    // console.log(dataEma);
-    // let dataEma: EmaConfig[] = [];
+    dataEma = get_values_indicator(indicator[i]?.nombre)
 
-    const emaColors = ["#dd00ff", "#facc15", "#38bdf8", "#22c55e", "#fb7185"];
 
-    const emaKeys = Object.keys(dataFrame[0] ?? {})
-      .filter((key) => /^ema_\d+$/i.test(key))
-      // .sort((a, b) => {
-      //   const periodA = Number(a.match(/\d+/)?.[0] ?? 0);
-      //   console.log(periodA);
-      //   const periodB = Number(b.match(/\d+/)?.[0] ?? 0);
-      //   console.log(periodB);
-      //   return periodA - periodB;
-      // });
 
-    const dataEmaFromDF: EmaConfig[] = emaKeys.map((emaKey, index) => ({
-      name: emaKey.toUpperCase().replace("_", " "),
-      color: emaColors[index % emaColors.length],
-      data: dataFrame.flatMap((dt) => {
-        const value = Number(dt[emaKey as keyof typeof dt]);
-
-        if (!Number.isFinite(value)) return [];
-
-        return [
-          {
-            time: Math.floor(dt.timestamp / 1000) as UTCTimestamp,
-            value,
-          },
-        ];
-      }),
-    }));
-
-    dataEma = dataEMABefore
-      ? Array.isArray(dataEMABefore)
-        ? dataEMABefore
-        : [dataEMABefore]
-      : dataEmaFromDF;
-
-    console.log("EMAs detectadas:", emaKeys);
-    console.log("dataEma final:", dataEma);
     // const resultado = texto.match(/\d+/)
     break;
 
   case "ATR":
+
     break;
 
   default:
     break;
 }
+}
+
+
 
 // type Ema200Point = LineData<UTCTimestamp>;
 type CandlePoint = CandlestickData<UTCTimestamp>;

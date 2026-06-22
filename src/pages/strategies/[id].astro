@@ -10,12 +10,26 @@ import ReturnDistribution from "../../components/DetailsComponentsStr/ReturnDist
 import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
-interface Props {
-  id: string;
-}
-import type { Trade } from "../../lib/types";
 
-const { id } = Astro.props as Props;
+import { resultados_data } from "../../functions/functions";
+
+const { id } = Astro.params;
+
+const idActual = Number(id);
+// get_results_by_backtest
+// const resultadoActual = get_results_by_backtest(id); ✅
+
+const resultadoActual = resultados_data.find((res) => res.id === idActual);
+const max_drawdown_avg = resultados_data.find((res) => res.id === idActual);
+const recovery_factorC = resultados_data.find((res) => res.id === idActual);
+const profit_factorC = resultados_data.find((res) => res.id === idActual);
+const retornoC = resultados_data.find((res) => res.id === idActual);
+
+
+// console.log(recovery_factorC?.recovery_factor?);
+console.log(max_drawdown_avg);
+import type { Trade } from "../../lib/types";
+import type { resultados } from "../../interfaces/resultados";
 
 const allTrades: Trade[] = [
   {
@@ -138,13 +152,13 @@ const allTrades: Trade[] = [
         Reporte de Desempeño
       </h1>
     </div>
-    <div class="flex gap-4 ">
+    <div class="flex gap-4">
       <div class="bg-surface-container-low px-4 py-2 rounded-xl">
         <span
           class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
           >Descargar</span
         >
-        <div class="mt-1 flex items-center gap-2 ">
+        <div class="mt-1 flex items-center gap-2">
           <span class="text-sm font-semibold">Reporte</span>
           <div class="flex">
             <svg
@@ -163,20 +177,40 @@ const allTrades: Trade[] = [
     </div>
   </div>
   <!-- Hero Section: Bento Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 ">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
     <!-- Equity Curve -->
     <CurveDetail />
 
     <!-- Key Ratios -->
-    <div class="md:col-span-4 flex flex-col gap-6 ">
-      <InfoBoxDetail ratioValue={-4.2} />
-      <InfoBoxDetail />
-      <FactorBox />
+    <div class="md:col-span-4 flex flex-col gap-6">
+      {
+        resultadoActual ? (
+          <>
+            <InfoBoxDetail
+              title="Risk of ruin"
+              risk_of_ruin={resultadoActual.risk_of_ruin ?? 0}
+            />
+          </>
+        ) : (
+          <p class="text-red-400">No se encontró el resultado</p>
+        )
+      }{
+        (
+          <FactorBox
+            recoveryFactor={
+              Math.round((recovery_factorC?.recovery_factor ?? 0) * 100) / 100
+            }
+            profitFactor={
+              Math.round((profit_factorC?.profit_factor ?? 0) * 100) / 100
+            }
+          />
+        )
+      }
     </div>
   </div>
   <!-- Detailed Metrics Grids -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 ">
-    <FourMetrics />
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    <FourMetrics totalReturnValue={retornoC?.retorno ?? 0}/>
     <FourMetrics />
     <FourMetrics />
     <FourMetrics />
@@ -184,7 +218,7 @@ const allTrades: Trade[] = [
   <!-- Heatmap Section -->
   <HeatMap />
   <!-- Comparative Charts & Histograms -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 ">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <BarGraph />
     <ReturnDistribution />
     <StrVSBench />
@@ -193,7 +227,7 @@ const allTrades: Trade[] = [
   <TradesList tradesPerPage={10} trades={allTrades} id={1} />
   <!-- System Footer -->
   <footer
-    class=" border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
+    class="border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
   >
     <GlosaryDetail />
   </footer>
