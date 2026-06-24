@@ -6,6 +6,12 @@ import ExecutionTiming from "../../components/DetailsCompTrade/ExecutionTiming.a
 import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
 
+import type { BusinessDay, CandlestickData, SeriesMarker } from "lightweight-charts";
+
+type CandlePoint = CandlestickData<BusinessDay>;
+type MarkerPoint = SeriesMarker<BusinessDay>;
+
+
 
 const candles = [
   {
