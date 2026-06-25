@@ -2,7 +2,7 @@
 import StrategyCard from "../../components/StrategyCard.astro";
 import CarteraCard from "../../components/CarteraCard.astro";
 import Layout from "../../layouts/Layout.astro";
-import strategys from "../../datos/strategies.json"
+import strategys from "../../datos/strategies.json";
 
 import type { Backtest } from "../../interfaces/backtest";
 import type { Strategy } from "../../interfaces/strategy";
@@ -10,13 +10,7 @@ import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
 import { cuenta_data } from "../../functions/functions";
 import { backT_data } from "../../functions/functions";
 
-const {
-  id,
-  id_user,
-  nombre,
-  descripcion, 
-
-} = Astro.props as Strategy
+const { id, id_user, nombre, descripcion } = Astro.props as Strategy;
 
 type CardItem = {
   titulo: string;
@@ -37,8 +31,6 @@ export const strategy1Points = [
 
 export let initialBalance = 10000;
 
-
-
 // export let cardsArray : CardItem[] = [
 //   {titulo: "Estrategia NVIDIA", balance: 2000, tipo: "Acciones"},
 //   {titulo: "Estrategia NASDAQ", balance: 2000, tipo: "INDICES"},
@@ -49,107 +41,108 @@ export let initialBalance = 10000;
 
 // const id = 1;
 ---
+
 <Layout title="Quantia">
-<div class="space-y-16">
-  <section>
-    <div
-      class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8"
-    >
-      <div>
-        <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
-          Top 3 Estrategias de Trading
-        </h2>
+  <div class="space-y-16">
+    <section>
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8"
+      >
+        <div>
+          <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
+            Top 3 Estrategias de Trading
+          </h2>
+        </div>
+
+        <a href="/AllStrategys/AllStrategys">
+          <button
+            class="px-6 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
+          >
+            Ver más estrategias
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </a>
       </div>
 
-      <a href="/AllStrategys/AllStrategys">
-        <button
-          class="px-6 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
-        >
-          Ver más estrategias
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
-      </a>
-    </div>
+      <div
+        class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
+      >
+        {
+          cuenta_data.slice(0, 3).map((card) => {
+            const backtest = backT_data.find((item) => item.id === card.id);
+
+            return (
+              <StrategyCard
+                nombre={card.nombre}
+                id={card.id}
+                pointsP={strategy1Points}
+                balance={backtest?.balance ?? 0}
+              />
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <section>
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8"
+      >
+        <!-- <div class="grid grid-cols-1 lg:grid-cols-2 min-[1400px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"> -->
+        <div>
+          <span
+            class="text-secondary text-xs font-bold tracking-[0.2em] uppercase mb-2 block"
+          >
+            Systematic Aggregation
+          </span>
+          <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
+            Top 3 Carteras
+          </h2>
+        </div>
+
+        <a href="/AllWallets/AllWallets">
+          <button
+            class="px-6 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
+          >
+            Ver más carteras
+            <span class="material-symbols-outlined text-sm">folder_open</span>
+          </button>
+        </a>
+      </div>
+    </section>
 
     <div
       class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
     >
-    {
-  cuenta_data.slice(0, 3).map((card) => {
-    const backtest = backT_data.find((item) => item.id === card.id);
-
-    return (
-      <StrategyCard
-        nombre={card.nombre}
-        id={card.id}
-        pointsP={strategy1Points}
-        balance={backtest?.balance ?? 0}
+      <CarteraCard
+        title="Cartera 1"
+        market="DIVERSIFIED / TAIL RISK"
+        percent={12.4}
+        image="/images/chart-4.png"
+        profitFactor={12.4}
+        drawdown={-0.15}
+        points={strategy1Points}
       />
-    );
-  })
-}
+
+      <CarteraCard
+        title="Cartera 2"
+        market="EQUITY / GROWTH"
+        percent={31.9}
+        image="/images/chart-5.png"
+        profitFactor={31.9}
+        drawdown={0.85}
+        points={strategy1Points}
+      />
+
+      <CarteraCard
+        title="Cartera 3"
+        market="INCOME / STABLE"
+        percent={8.2}
+        image="/images/chart-6.png"
+        profitFactor={8.2}
+        drawdown={0.12}
+        points={strategy1Points}
+      />
     </div>
-  </section>
-
-  <section>
-    <div
-      class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8"
-    >
-      <!-- <div class="grid grid-cols-1 lg:grid-cols-2 min-[1400px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"> -->
-      <div>
-        <span
-          class="text-secondary text-xs font-bold tracking-[0.2em] uppercase mb-2 block"
-        >
-          Systematic Aggregation
-        </span>
-        <h2 class="text-3xl font-extrabold text-on-surface tracking-tight">
-          Top 3 Carteras
-        </h2>
-      </div>
-
-      <a href="/AllWallets/AllWallets">
-        <button
-          class="px-6 py-2 bg-secondary/10 text-secondary hover:bg-secondary hover:text-on-secondary transition-all rounded-lg text-sm font-semibold flex items-center gap-2"
-        >
-          Ver más carteras
-          <span class="material-symbols-outlined text-sm">folder_open</span>
-        </button>
-      </a>
-    </div>
-  </section>
-
-  <div
-    class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
-  >
-    <CarteraCard
-      title="Cartera 1"
-      market="DIVERSIFIED / TAIL RISK"
-      percent={12.4}
-      image="/images/chart-4.png"
-      profitFactor={12.4}
-      drawdown={-0.15}
-      points={strategy1Points}
-    />
-
-    <CarteraCard
-      title="Cartera 2"
-      market="EQUITY / GROWTH"
-      percent={31.9}
-      image="/images/chart-5.png"
-      profitFactor={31.9}
-      drawdown={0.85}
-      points={strategy1Points}
-    />
-
-    <CarteraCard
-      title="Cartera 3"
-      market="INCOME / STABLE"
-      percent={8.2}
-      image="/images/chart-6.png"
-      profitFactor={8.2}
-      drawdown={0.12}
-      points={strategy1Points}
-    />
   </div>
-</div>
 </Layout>

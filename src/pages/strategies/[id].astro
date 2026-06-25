@@ -11,6 +11,13 @@ import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
+
+import type { Trade } from "../../lib/types";
+import type { resultados } from "../../interfaces/resultados";
+import { get_results_by_backtest } from "../../utils/testing/testing";
+
+
+
 import { resultados_data } from "../../functions/functions";
 
 const { id } = Astro.params;
@@ -19,17 +26,26 @@ const idActual = Number(id);
 // get_results_by_backtest
 // const resultadoActual = get_results_by_backtest(id); ✅
 
-const resultadoActual = resultados_data.find((res) => res.id === idActual);
-const max_drawdown_avg = resultados_data.find((res) => res.id === idActual);
+export const resultadoActual = resultados_data.find((res) => res.id === idActual);
+const max_drawdown_avgC = resultados_data.find((res) => res.id === idActual);
 const recovery_factorC = resultados_data.find((res) => res.id === idActual);
 const profit_factorC = resultados_data.find((res) => res.id === idActual);
 const retornoC = resultados_data.find((res) => res.id === idActual);
 
 
+
+// const {
+//   resultadoActual,
+//   max_drawdown_avgC,
+//   recovery_factorC,
+//   profit_factorC,
+//   retornoC,
+// } = getResultadoActual(resultados_data, idActual);
+
+
 // console.log(recovery_factorC?.recovery_factor?);
-console.log(max_drawdown_avg);
-import type { Trade } from "../../lib/types";
-import type { resultados } from "../../interfaces/resultados";
+// console.log(max_drawdown_avgC);
+
 
 const allTrades: Trade[] = [
   {
@@ -210,7 +226,7 @@ const allTrades: Trade[] = [
   </div>
   <!-- Detailed Metrics Grids -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-    <FourMetrics totalReturnValue={retornoC?.retorno ?? 0}/>
+    <FourMetrics />
     <FourMetrics />
     <FourMetrics />
     <FourMetrics />
