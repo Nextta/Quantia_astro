@@ -1,6 +1,6 @@
 ---
 import { dataFrame } from "../../datos/dataFrame";
-import strategies from "../../datos/strategies.json";
+// import strategies from "../../datos/strategies.json";
 
 import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
 import type { Strategy } from "../../interfaces/strategy";
@@ -193,7 +193,7 @@ switch (indicator[i]?.tipo) {
  //fffdfd
 
 
-    dataEma = get_values_indicator(indicator[i]?.nombre)
+    // dataEma = get_values_indicator(indicator[i]?.nombre)
 
 
 
@@ -247,10 +247,11 @@ const chartCandles = candlesFromDF;
     style={`height: ${height}px`}
     data-candles={JSON.stringify(chartCandles)}
     data-markers={JSON.stringify(markers)}
-    data-ema={JSON.stringify(dataEma)}
+    
     data-up-color={upColor}
     data-down-color={downColor}
   >
+  <!-- data-ema={JSON.stringify(dataEma)} -->
   </div>
 </section>
 

@@ -3,7 +3,7 @@ import { Dias } from "../enums/Dias";
 export interface SymbolInfoCFD {
     id: number;
     broker_id: number;
-    name: String;
+    name: string;
     valor_contrato: number;
     comision_lote: number;
     swap_long: number;

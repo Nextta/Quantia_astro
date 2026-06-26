@@ -26,7 +26,7 @@ const idActual = Number(id);
 // get_results_by_backtest
 // const resultadoActual = get_results_by_backtest(id); ✅
 
-export const resultadoActual = resultados_data.find((res) => res.id === idActual);
+const resultadoActual = resultados_data.find((res) => res.id === idActual);
 const max_drawdown_avgC = resultados_data.find((res) => res.id === idActual);
 const recovery_factorC = resultados_data.find((res) => res.id === idActual);
 const profit_factorC = resultados_data.find((res) => res.id === idActual);
