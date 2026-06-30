@@ -11,12 +11,9 @@ import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
-
 import type { Trade } from "../../lib/types";
 import type { resultados } from "../../interfaces/resultados";
 import { get_results_by_backtest } from "../../utils/testing/testing";
-
-
 
 import { resultados_data } from "../../functions/functions";
 import { get_backtest } from "../../utils/testing/testing";
@@ -45,18 +42,21 @@ const retornoC = resultados_data.find((res) => res.id === idActual);
 //   return risk_of_ruinC;
 // }
 console.log(get_results_by_backtest(idActual));
-const resultsC = get_results_by_backtest(idActual);
-const backtestC = get_backtest(idActual);
-const strategiesC = get_strategies(idActual);
-const strategies_actionC = get_strategies_actions(idActual);
-const strategies_conditionsC = get_strategies_conditions(idActual);
-const strategy_indicatorsC = get_strategies_indicators(idActual);
-const strategy_optionsC = get_strategies_options(idActual);
-const symbol_cfdC = get_symbol_cfd(idActual);
-const tradesC = get_trades(idActual);
+const resultsC = get_results_by_backtest(idActual);//-
 
+const backtestC = get_backtest(idActual); 
+// const backtestAllC = get_alls_backtests();
 
-// const 
+const strategiesC = get_strategies(idActual); //-
+const strategies_actionC = get_strategies_actions(idActual);//-
+const strategies_conditionsC = get_strategies_conditions(idActual);//-
+const strategy_indicatorsC = get_strategies_indicators(idActual);//-
+const strategy_optionsC = get_strategies_options(idActual);//-
+
+const symbol_cfdC = get_symbol_cfd(idActual);//-
+const tradesC = get_trades(idActual);//-
+
+// const
 
 // const {
 //   resultadoActual,
@@ -66,10 +66,8 @@ const tradesC = get_trades(idActual);
 //   retornoC,
 // } = getResultadoActual(resultados_data, idActual);
 
-
 // console.log(recovery_factorC?.recovery_factor?);
 // console.log(max_drawdown_avgC);-
-
 
 const allTrades: Trade[] = [
   {
@@ -237,11 +235,8 @@ const allTrades: Trade[] = [
       }{
         (
           <FactorBox
-
             factor1={"Recovery Factor"}
-
             factor2={"Profit Factor"}
-
             recoveryFactor={
               Math.round((resultsC?.recovery_factor ?? 0) * 100) / 100
             }
@@ -255,10 +250,50 @@ const allTrades: Trade[] = [
   </div>
   <!-- Detailed Metrics Grids -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-    <FourMetrics />
-    <FourMetrics />
-    <FourMetrics />
-    <FourMetrics />
+    <FourMetrics
+      parametro1="Total return"
+      parametro2="Best Month"
+      parametro3="Worst Month"
+      parametro4="Market time"
+      title="Overall returns"
+      parametro1Value={Math.round((resultsC?.retorno ?? 0) * 100) / 100}
+      parametro2Value={Math.round((resultsC?.best_month ?? 0) * 100) / 100}
+      parametro3Value={Math.round((resultsC?.worst_month ?? 0) * 100) / 100}
+      parametro4Value={Math.round((resultsC?.time_in_market ?? 0) * 100) / 100}
+    />
+    <FourMetrics
+      parametro1="Max. Drawdown"
+      parametro2="Ulcer Index"
+      parametro3="Risk of ruin"
+      parametro4="Volatilidad anual"
+      title="Overall returns"
+      parametro1Value={Math.round((resultsC?.max_drawdown ?? 0) * 100) / 100}
+      parametro2Value={Math.round((resultsC?.ulcer_index ?? 0) * 100) / 100}
+      parametro3Value={Math.round((resultsC?.risk_of_ruin ?? 0) * 100) / 100}
+      parametro4Value={Math.round((resultsC?.volatility_ann ?? 0) * 100) / 100}
+    />
+    <FourMetrics
+      parametro1="Skew ratio"
+      parametro2="Kurtosis ratio"
+      parametro3="Risk of ruin"
+      parametro4="Kelly Criterion"
+      title="Overall returns"
+      parametro1Value={Math.round((resultsC?.skew_ratio ?? 0) * 100) / 100}
+      parametro2Value={Math.round((resultsC?.kurtosis_ratio ?? 0) * 100) / 100}
+      parametro3Value={Math.round((resultsC?.risk_of_ruin ?? 0) * 100) / 100}
+      parametro4Value={Math.round((resultsC?.kelly_criterion ?? 0) * 100) / 100}
+    />
+    <FourMetrics
+      parametro1="Número de trades"
+      parametro2="Win %"
+      parametro3="Avg Win/Loss"
+      parametro4="R_expectancy"
+      title="Overall returns"
+      parametro1Value={Math.round((resultsC?.n_trades ?? 0) * 100) / 100}
+      parametro2Value={Math.round((resultsC?.wins_percentage ?? 0) * 100) / 100}
+      parametro3Value={Math.round((resultsC?.avg_win_loss_ratio ?? 0) * 100) / 100}
+      parametro4Value={Math.round((resultsC?.r_expectancy ?? 0) * 100) / 100}
+    />
   </div>
   <!-- Heatmap Section -->
   <HeatMap />

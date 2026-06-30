@@ -26,7 +26,20 @@ export function get_results_by_backtest(idActual: number) {
 }
 
 export function get_backtest(idActual: number){
-  let backtest : Backtest = {"balance":10000.0,"gestion_strategy":GestionStrategy.Formula,"id":27,"parametros_gestion":{multiplicador:1.0,lotaje_fijo:0.1},"tipo":Activo.CDF,"titulo":"UnitTest: CruceMedias"};
+  let backtest : Backtest = {"balance":10000.0,"gestion_strategy":GestionStrategy.Formula,"id":27,"parametros_gestion":{multiplicador:1.0,lotaje_fijo:0.1},"tipo":Activo.CDF,"titulo":"UnitTest: CruceMedias", "estrategia":{"activa":true,"creada_en":"2020/05/20","descripcion":"Esto es una prueba para el tets unitario.","id":1,"id_user":1,"nombre":"Cruce de medias"}, trades: [{"duracion_dias":"00","duracion_horas":"22","duracion_minutos":"1320","duracion_segundos":"79200","id":18065,"id_backtest":27,"id_symbol":1,"label":0,"lotaje":0.07,"multiplicador":1.0,"pips_pl":-23232.68248,"pl":-15.84,"plsc":-16.26,"precio_cierre":1280.7012682484271,"precio_entrada":1278.378,"precio_maximo":0.0,"precio_minimo":0.0,"sl":1280.7012682484271,"symbol":{id: 1,
+      broker_id: 1,
+      name: "XAUUSD",
+      valor_contrato: 100,
+      comision_lote: 7,
+      swap_long: -35,
+      swap_short: 12,
+      dia_triple_swap: Dias.Mi,
+      lotaje_minimo: 0.01,
+      lotaje_maximo: 50,
+      digitos: 3,
+      open_weekend: false,
+      spread: 25,},
+      "t0":"2019-01-21 10:00:00","t1":"2019-01-22 08:00:00","tipo":EntryDirection.Sell,"tp":1272.8021562037748}],"datos":[""]};
 
   return backtest;
 }

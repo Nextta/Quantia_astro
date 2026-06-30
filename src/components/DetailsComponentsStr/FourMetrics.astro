@@ -1,57 +1,68 @@
 ---
-import type {resultados} from '../../interfaces/resultados'; 
+import type { resultados } from "../../interfaces/resultados";
 //--
 interface Props {
-  title?: string;
-  totalReturnValue?: number;
-  bestMonthValue?: number;
-  worstMonthValue?: number;
-  timeInMarketValue?: number;
   parametro1?: string;
   parametro2?: string;
   parametro3?: string;
   parametro4?: string;
+  title?: string;
+  parametro1Value?: number;
+  parametro2Value?: number;
+  parametro3Value?: number;
+  parametro4Value?: number;
 }
 
-const { totalReturnValue = "42.4%", bestMonthValue = "+8.2%", worstMonthValue = "-4.1%", timeInMarketValue = "68.2%", parametro1 = "Retorno Total", parametro2 = "Mejor Mes", parametro3 = "Peor Mes", parametro4 = "Tiempo en Mercado", title = "Análisis de Retornos" } = Astro.props as Props;
-
+const {
+  parametro1Value = "42.4%",
+  parametro2Value = "+8.2%",
+  parametro3Value = "-4.1%",
+  parametro4Value = "68.2%",
+  parametro1 = "Retorno Total",
+  parametro2 = "Mejor Mes",
+  parametro3 = "Peor Mes",
+  parametro4 = "Tiempo en Mercado",
+  title = "Análisis de Retornos",
+} = Astro.props as Props;
 ---
 
-
-  <!-- Returns Analytics -->
-  <div class="bg-surface-container-low rounded-xl p-5">
-    <h4 class="text-primary text-xs font-black uppercase tracking-widest mb-4">
-      {title}
-    </h4>
-    <div class="space-y-3">
-      <div class="flex justify-between items-center group/item cursor-default">
-        <span
-          class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >{parametro1}</span
-        >
-        <span class="text-sm font-bold text-secondary">{totalReturnValue}</span>
-      </div>
-      <div class="flex justify-between items-center group/item cursor-default">
-        <span
-          class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >{parametro2}</span
-        >
-        <span class="text-sm font-bold">{bestMonthValue}</span>
-      </div>
-      <div class="flex justify-between items-center group/item cursor-default">
-        <span
-          class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
-          >{parametro3}</span
-        >
-        <span class="text-sm font-bold text-tertiary">{worstMonthValue}</span>
-      </div>
-      <div class="flex justify-between items-center group/item cursor-default gap-2">
-        <span
-          class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors min-w-0"
-          >{parametro4}</span
-        >
-        <span class="text-sm font-bold whitespace-nowrap shrink-0">{timeInMarketValue}</span>
-      </div>
+<!-- Returns Analytics -->
+<div class="bg-surface-container-low rounded-xl p-5">
+  <h4 class="text-primary text-xs font-black uppercase tracking-widest mb-4">
+    {title}
+  </h4>
+  <div class="space-y-3">
+    <div class="flex justify-between items-center group/item cursor-default">
+      <span
+        class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
+        >{parametro1}</span
+      >
+      <span class="text-sm font-bold text-secondary">{parametro1Value}</span>
+    </div>
+    <div class="flex justify-between items-center group/item cursor-default">
+      <span
+        class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
+        >{parametro2}</span
+      >
+      <span class="text-sm font-bold">{parametro2Value}</span>
+    </div>
+    <div class="flex justify-between items-center group/item cursor-default">
+      <span
+        class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors"
+        >{parametro3}</span
+      >
+      <span class="text-sm font-bold text-tertiary">{parametro3Value}</span>
+    </div>
+    <div
+      class="flex justify-between items-center group/item cursor-default gap-2"
+    >
+      <span
+        class="text-sm text-on-surface-variant group-hover/item:text-on-surface transition-colors min-w-0"
+        >{parametro4}</span
+      >
+      <span class="text-sm font-bold whitespace-nowrap shrink-0"
+        >{parametro4Value}</span
+      >
     </div>
   </div>
-
+</div>

@@ -20,10 +20,10 @@ export interface Trades{
     precio_cierre: number;
     precio_maximo: number; // precioMaximo = Precio máximo alcanzado durante la operación
     precio_minimo: number; // precioMinimo = Precio mínimo alcanzado durante la operación
-    duracion_segundos: String; // duracionSegundos = Duración en segundos de la operación
-    duracion_minutos: String; // duracionMinutos = Duración en minutos de la operación
-    duracion_horas: String; // duracionHoras = Duración en horas de la operación
-    duracion_dias: String; // duracionDias = Duración en días de la operación
+    duracion_segundos: string; // duracionSegundos = Duración en segundos de la operación
+    duracion_minutos: string; // duracionMinutos = Duración en minutos de la operación
+    duracion_horas: string; // duracionHoras = Duración en horas de la operación
+    duracion_dias: string; // duracionDias = Duración en días de la operación
     label: number;         // label = Etiqueta de la operación 1 ganada; 0 perdida
     pl: number;            // pl = Ganancia o pérdida de la operación con comisión
     plsc: number;          // plsc = Ganancia o pérdida de la operación sin comisiones
