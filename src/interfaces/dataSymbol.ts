@@ -4,13 +4,13 @@ import { DataFormatSymbol } from '../enums/dataFormatSymbol';
 
 export interface DataSymbol {
     id: number;
-    name: String;
+    name: string;
     timeframe?: Timeframe;
-    ruta: String;
+    ruta: string;
     formato?: DataFormatSymbol;
-    fecha_inicio: String;
-    fecha_fin: String;
+    fecha_inicio: string;
+    fecha_fin: string;
     actualizado: boolean;
     n_data: number;
-    origen: String;
+    origen: string;
 }

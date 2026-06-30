@@ -13,17 +13,18 @@ import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.a
 
 import type { Trade } from "../../lib/types";
 import type { resultados } from "../../interfaces/resultados";
-import { get_results_by_backtest } from "../../utils/testing/testing";
+// import { get_results_by_backtest } from "../../utils/testing/testing";
 
 import { resultados_data } from "../../functions/functions";
 import { get_backtest } from "../../utils/testing/testing";
-import { get_strategies } from "../../utils/testing/testing";
-import { get_strategies_actions } from "../../utils/testing/testing";
-import { get_strategies_conditions } from "../../utils/testing/testing";
-import { get_strategies_indicators } from "../../utils/testing/testing";
-import { get_strategies_options } from "../../utils/testing/testing";
-import { get_symbol_cfd } from "../../utils/testing/testing";
-import { get_trades } from "../../utils/testing/testing";
+
+// import { get_strategies } from "../../utils/testing/testing";
+// import { get_strategies_actions } from "../../utils/testing/testing";
+// import { get_strategies_conditions } from "../../utils/testing/testing";
+// import { get_strategies_indicators } from "../../utils/testing/testing";
+// import { get_strategies_options } from "../../utils/testing/testing";
+// import { get_symbol_cfd } from "../../utils/testing/testing";
+// import { get_trades } from "../../utils/testing/testing";
 
 const { id } = Astro.params;
 
@@ -41,20 +42,21 @@ const retornoC = resultados_data.find((res) => res.id === idActual);
 //   const risk_of_ruinC = resultados_data.find((res) => res.id === idActual);
 //   return risk_of_ruinC;
 // }
-console.log(get_results_by_backtest(idActual));
-const resultsC = get_results_by_backtest(idActual);//-
+// console.log(get_results_by_backtest(idActual));
+// const resultsC = get_results_by_backtest(idActual);//-
+// const resultBacktest = invoke('get_backtest', { id: 35 });
+const backtestC = get_backtest(idActual);
 
-const backtestC = get_backtest(idActual); 
 // const backtestAllC = get_alls_backtests();
 
-const strategiesC = get_strategies(idActual); //-
-const strategies_actionC = get_strategies_actions(idActual);//-
-const strategies_conditionsC = get_strategies_conditions(idActual);//-
-const strategy_indicatorsC = get_strategies_indicators(idActual);//-
-const strategy_optionsC = get_strategies_options(idActual);//-
+// const strategiesC = get_strategies(idActual); //-
+// const strategies_actionC = get_strategies_actions(idActual);//-
+// const strategies_conditionsC = get_strategies_conditions(idActual);//-
+// const strategy_indicatorsC = get_strategies_indicators(idActual);//-
+// const strategy_optionsC = get_strategies_options(idActual);//-
 
-const symbol_cfdC = get_symbol_cfd(idActual);//-
-const tradesC = get_trades(idActual);//-
+// const symbol_cfdC = get_symbol_cfd(idActual);//-
+// const tradesC = get_trades(idActual);//-
 
 // const
 
@@ -222,11 +224,11 @@ const allTrades: Trade[] = [
     <!-- Key Ratios -->
     <div class="md:col-span-4 flex flex-col gap-6 border-3">
       {
-        resultsC ? (
+        backtestC ? (
           <>
             <InfoBoxDetail
               title="Risk of ruin"
-              risk_of_ruin={resultsC?.risk_of_ruin ?? 0}
+              risk_of_ruin={backtestC?.estrategia.id ?? 0}
             />
           </>
         ) : (
@@ -237,12 +239,8 @@ const allTrades: Trade[] = [
           <FactorBox
             factor1={"Recovery Factor"}
             factor2={"Profit Factor"}
-            recoveryFactor={
-              Math.round((resultsC?.recovery_factor ?? 0) * 100) / 100
-            }
-            profitFactor={
-              Math.round((resultsC?.profit_factor ?? 0) * 100) / 100
-            }
+            recoveryFactor={Math.round(backtestC?.estrategia.id * 100) / 100}
+            profitFactor={Math.round(backtestC?.estrategia.id * 100) / 100}
           />
         )
       }
@@ -256,10 +254,10 @@ const allTrades: Trade[] = [
       parametro3="Worst Month"
       parametro4="Market time"
       title="Overall returns"
-      parametro1Value={Math.round((resultsC?.retorno ?? 0) * 100) / 100}
-      parametro2Value={Math.round((resultsC?.best_month ?? 0) * 100) / 100}
-      parametro3Value={Math.round((resultsC?.worst_month ?? 0) * 100) / 100}
-      parametro4Value={Math.round((resultsC?.time_in_market ?? 0) * 100) / 100}
+      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
     />
     <FourMetrics
       parametro1="Max. Drawdown"
@@ -267,10 +265,10 @@ const allTrades: Trade[] = [
       parametro3="Risk of ruin"
       parametro4="Volatilidad anual"
       title="Overall returns"
-      parametro1Value={Math.round((resultsC?.max_drawdown ?? 0) * 100) / 100}
-      parametro2Value={Math.round((resultsC?.ulcer_index ?? 0) * 100) / 100}
-      parametro3Value={Math.round((resultsC?.risk_of_ruin ?? 0) * 100) / 100}
-      parametro4Value={Math.round((resultsC?.volatility_ann ?? 0) * 100) / 100}
+      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
     />
     <FourMetrics
       parametro1="Skew ratio"
@@ -278,10 +276,10 @@ const allTrades: Trade[] = [
       parametro3="Risk of ruin"
       parametro4="Kelly Criterion"
       title="Overall returns"
-      parametro1Value={Math.round((resultsC?.skew_ratio ?? 0) * 100) / 100}
-      parametro2Value={Math.round((resultsC?.kurtosis_ratio ?? 0) * 100) / 100}
-      parametro3Value={Math.round((resultsC?.risk_of_ruin ?? 0) * 100) / 100}
-      parametro4Value={Math.round((resultsC?.kelly_criterion ?? 0) * 100) / 100}
+      parametro1Value={Math.round(backtestC?.estrategia.id)}
+      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro3Value={Math.round(backtestC?.estrategia.id) / 100}
+      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
     />
     <FourMetrics
       parametro1="Número de trades"
@@ -289,10 +287,10 @@ const allTrades: Trade[] = [
       parametro3="Avg Win/Loss"
       parametro4="R_expectancy"
       title="Overall returns"
-      parametro1Value={Math.round((resultsC?.n_trades ?? 0) * 100) / 100}
-      parametro2Value={Math.round((resultsC?.wins_percentage ?? 0) * 100) / 100}
-      parametro3Value={Math.round((resultsC?.avg_win_loss_ratio ?? 0) * 100) / 100}
-      parametro4Value={Math.round((resultsC?.r_expectancy ?? 0) * 100) / 100}
+      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
+      parametro4Value={Math.round(backtestC?.estrategia.id) / 100}
     />
   </div>
   <!-- Heatmap Section -->
@@ -314,4 +312,41 @@ const allTrades: Trade[] = [
   <!-- </main> -->
   <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
   <!-- Suppressed: Shell Visibility Rule -->
+
+  <div id="backtest" data-id={idActual}>
+    <p id="backtest-status">Cargando backtest...</p>
+  </div>
 </Layout>
+
+<script>
+  import { isTauri } from "@tauri-apps/api/core";
+
+  console.log("¿Tauri?", isTauri());
+  import { invoke } from "@tauri-apps/api/core";
+  import type { Backtest } from "../../interfaces/backtest";
+
+  const container = document.querySelector<HTMLElement>("#backtest");
+  const status = document.querySelector<HTMLElement>("#backtest-status");
+
+
+  async function cargarBacktest() {
+    if (!container || !status) return;
+
+    try {
+      const id = Number(container.dataset.id);
+
+      const backtest = await invoke<Backtest>("get_backtest", { id });
+
+      console.log("Backtest:", backtest);
+
+      status.textContent = "Backtest cargado";
+    } catch (error) {
+      console.error("Error cargando backtest:", error);
+      status.textContent = "No se pudo cargar el backtest";
+    }
+  }
+
+  cargarBacktest();
+
+  
+</script>
