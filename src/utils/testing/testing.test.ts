@@ -3,7 +3,7 @@ import { describe, //agrupa pruebas
       it //define una prueba específica
      } from "vitest";
 import type { resultados } from "../../interfaces/resultados";
-import {  get_backtest, get_alls_backtest } from "./testing";
+import {  get_alls_backtests, get_backtest } from "./testing";
 import type { Backtest } from "../../interfaces/backtest";
 import type { Strategy } from "../../interfaces/strategy";
 import type { StrategyAction } from "../../interfaces/strategyAction";
@@ -20,7 +20,7 @@ describe("getResultadoActual", () => {
 
     let result: Backtest = get_backtest(1);
     let tipo = false;
-    if(typeof result === "object" ){
+    if(typeof result === "object"  ){
         tipo = true;
     }
     expect(tipo).toBe(true);
@@ -32,7 +32,7 @@ describe("getResultadoActual", () => {
   it("devuelve los valores del resultado encontrado", () => {
 
 
-    let result: Backtest[] = get_alls_backtest(1);
+    let result: Backtest[] = get_alls_backtests();
     let tipo = false;
     if(typeof result === "object" ){
         tipo = true;
