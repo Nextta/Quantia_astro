@@ -12,11 +12,11 @@ export interface Trade{
     tipo: EntryDirection; // tipo = Tipo de operación (buy/sell)
     lotaje: number;
     multiplicador: number; // Multiplicador del lotaje por operación.
-    t0: String;         // t0 = Fecha y hora de entrada
+    t0: string;         // t0 = Fecha y hora de entrada
     precio_entrada: number;
     tp: number;
     sl: number;
-    t1: String; // t1 = Fecha y hora de cierre
+    t1: string; // t1 = Fecha y hora de cierre
     precio_cierre: number;
     precio_maximo: number; // precioMaximo = Precio máximo alcanzado durante la operación
     precio_minimo: number; // precioMinimo = Precio mínimo alcanzado durante la operación

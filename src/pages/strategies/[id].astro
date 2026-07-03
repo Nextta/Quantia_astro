@@ -510,7 +510,7 @@ const allTrades: Tradess[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const dataTrades: Trade[] = await invoke("get_trades", { id: 35 });
+      const dataTrades: Trade[] = await invoke("get_trades", { idBacktest: 35 });
 
       console.log("Cargamos conjunto de trades por id:", dataTrades);
     } catch (error) {
@@ -532,7 +532,7 @@ const allTrades: Tradess[] = [
         pagina: 0,
       }); 
 
-      console.log("data_dukas:", dataTradesPagesC);
+      console.log("Trades por pagina:", dataTradesPagesC);
     } catch (error) {
       console.error("Error cargando get_trades_page:", error);
     }
