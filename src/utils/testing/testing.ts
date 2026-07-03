@@ -320,7 +320,7 @@ export function get_backtest(
   return backtest;
 }
 
-export function save_data_dukasF(
+export function save_data_dukas(
   data: DataDukas[],
   name: string,
   timeframe: Timeframe,
@@ -352,7 +352,7 @@ export function save_data_dukasF(
   }
 }
 
-export function save_data_dukas_ticksF(
+export function save_data_dukas_ticks(
   data: DataDukasTicks[],
   name: string,
   timeframe: Timeframe,
@@ -386,7 +386,7 @@ export function save_data_dukas_ticksF(
   }
 }
 
-export function get_data_for_tvF(
+export function get_data_for_tv(
   id_backtest: number,
   from_date: string,
   to_date: string,
@@ -411,7 +411,7 @@ export function get_data_for_tvF(
   return get_indicator_for_tv;
 }
 
-export function get_indicator_for_tvF(
+export function get_indicator_for_tv(
   id_backtest: number,
   id_estrategia: number,
   column: string,
@@ -432,7 +432,7 @@ export function get_indicator_for_tvF(
   return get_indicator_for_tv;
 }
 
-export function get_results_by_backtestF(id:number): resultados {
+export function get_results_by_backtest(id:number): resultados {
   let get_results_by_backtest: resultados = {
     id: 1,
     id_backtest: 101,
@@ -616,7 +616,7 @@ export function get_trade(id: number): Trades {
   return trade;
 }
 
-export function get_tardes_pageF(
+export function get_trades_page(
   id_backtest: number,
   limite:number,
   pagina:number

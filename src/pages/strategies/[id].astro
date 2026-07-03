@@ -321,6 +321,7 @@ const allTrades: Trade[] = [
 
 <script>
   import { isTauri } from "@tauri-apps/api/core";
+  
   // let idBacktest:number;
 
   console.log("¿Tauri?", isTauri());
@@ -330,8 +331,10 @@ const allTrades: Trade[] = [
   import type { Trades } from "../../interfaces/trades";
   import type { DataDukas } from "../../interfaces/dataDukas";
 
+
+
   const container = document.querySelector<HTMLElement>("#backtest");
-  const status = document.querySelector<HTMLElement>("#backtest-status");
+
 
   
 
