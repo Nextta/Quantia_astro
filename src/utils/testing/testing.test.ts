@@ -21,7 +21,7 @@ import type { Strategy } from "../../interfaces/strategy";
 import type { StrategyAction } from "../../interfaces/strategyAction";
 import type { StrategyCondition } from "../../interfaces/strategyCondition";
 import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
-import type { Trades } from "../../interfaces/trades";
+import type { Trade } from "../../interfaces/trades";
 import type { SymbolInfoCFD } from "../../interfaces/symbolInfoCFD";
 import type { DataDukas } from "../../interfaces/dataDukas";
 import type { DataTv } from "../../interfaces/dataTv";
@@ -114,7 +114,7 @@ describe("get_results_by_backtest", () => {
 
 describe("get_trade", () => {
   it("Devuelve un trade específico en objeto", () => {
-    let result: Trades = get_trade(
+    let result: Trade = get_trade(
      1
     );
     // let tipo = false;
@@ -130,7 +130,7 @@ describe("get_trade", () => {
 
 describe("get_trades_page", () => {
   it("Devuelve una página de trades en Vec", () => {
-    let result: Trades[] = get_trades_page(
+    let result: Trade[] = get_trades_page(
      35,20,0
     );
     // let tipo = false;
@@ -146,7 +146,7 @@ describe("get_trades_page", () => {
 
 describe("get_trades", () => {
   it("Devuelve los trades específicos en Vec", () => {
-    let result: Trades[] = get_trades(
+    let result: Trade[] = get_trades(
      1
     );
     // let tipo = false;

@@ -11,12 +11,13 @@ import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
-import type { Trade } from "../../lib/types";
+import type { Trade } from "../../interfaces/trades";
 import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
 
 import { resultados_data } from "../../functions/functions";
 import { get_backtest } from "../../utils/testing/testing";
+import type { Tradess } from "../../lib/types";
 
 // import { get_strategies } from "../../utils/testing/testing";
 // import { get_strategies_actions } from "../../utils/testing/testing";
@@ -34,10 +35,10 @@ const idActual = Number(id);
 // const resultadoActual = get_results_by_backtest(id); ✅
 
 // const risk_of_ruinC = resultados_data.find((res) => res.id === idActual);
-const max_drawdown_avgC = resultados_data.find((res) => res.id === idActual);
-const recovery_factorC = resultados_data.find((res) => res.id === idActual);
-const profit_factorC = resultados_data.find((res) => res.id === idActual);
-const retornoC = resultados_data.find((res) => res.id === idActual);
+// const max_drawdown_avgC = resultados_data.find((res) => res.id === idActual);
+// const recovery_factorC = resultados_data.find((res) => res.id === idActual);
+// const profit_factorC = resultados_data.find((res) => res.id === idActual);
+// const retornoC = resultados_data.find((res) => res.id === idActual);
 
 // function  get_results_by_backtest(id:number){
 //   const risk_of_ruinC = resultados_data.find((res) => res.id === idActual);
@@ -72,7 +73,7 @@ const backtestC = get_backtest(idActual);
 // console.log(recovery_factorC?.recovery_factor?);
 // console.log(max_drawdown_avgC);-
 
-const allTrades: Trade[] = [
+const allTrades: Tradess[] = [
   {
     id: 1,
     date: "2023-11-23 09:15",
@@ -321,24 +322,19 @@ const allTrades: Trade[] = [
 
 <script>
   import { isTauri } from "@tauri-apps/api/core";
-  
+
   // let idBacktest:number;
 
   console.log("¿Tauri?", isTauri());
   import { invoke } from "@tauri-apps/api/core";
   import type { Backtest } from "../../interfaces/backtest";
   import type { resultados } from "../../interfaces/resultados";
-  import type { Trades } from "../../interfaces/trades";
+  import type { Trade } from "../../interfaces/trades";
   import type { DataDukas } from "../../interfaces/dataDukas";
-
-
+  import type { DataTv } from "../../interfaces/dataTv";
+  import type { DataIndicator } from "../../interfaces/dataIndicator";
 
   const container = document.querySelector<HTMLElement>("#backtest");
-
-
-  
-
-  
 
   async function cargarAllBacktests() {
     if (!container) return;
@@ -346,11 +342,11 @@ const allTrades: Trade[] = [
     try {
       // const id = Number(container.dataset.id);
 
-      const allBacktestC = await invoke<Backtest>("get_alls_backtests");
+      const allBacktestC: Backtest[] = await invoke("get_alls_backtests");
 
-      console.log("All Backtest:", allBacktestC);
+      console.log("Todos los backtestings:", allBacktestC);
     } catch (error) {
-      console.error("Error cargando backtests:", error);
+      console.error("Error cargando todos los backtests:", error);
     }
   }
   cargarAllBacktests();
@@ -361,80 +357,80 @@ const allTrades: Trade[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const backtestC = await invoke<Backtest>("get_backtest", { id });
+      const backtestC: Backtest = await invoke("get_backtest", { id: 35 });
 
-      console.log("Backtest:", backtestC);
+      console.log("Backtest por id:", backtestC);
     } catch (error) {
-      console.error("Error cargando backtest:", error);
+      console.error("Error cargando 1 backtest:", error);
     }
   }
   cargarBacktest();
 
-  async function saveDataOHLC() {
-    if (!container) return;
+  // async function saveDataOHLC() {
+  //   if (!container) return;
 
-    try {
-      // const id = Number(container.dataset.id);
+  //   try {
+  //     // const id = Number(container.dataset.id);
 
-      const dataDukasC = await invoke("save_data_dukas", {
-        data: [
-          {
-            timestamp: 1547416809672,
-            open: 1.2525,
-            high: 1.2336,
-            low: 1.2222,
-            close: 1.2563,
-            volume: 12524.0,
-          },
-        ],
-        name: "EURUSD",
-        timeframe: "M1",
-        from_date: "2019-01-01 00:00:00",
-        to_date: "2019-12-31 23:59:59",
-        broker_data: "DukasCopy",
-        format: "Csv",
-        actualized: true,
-      });
+  //     const dataDukasC = await invoke("save_data_dukas", {
+  //       data: [
+  //         {
+  //           timestamp: 1547416809672,
+  //           open: 1.2525,
+  //           high: 1.2336,
+  //           low: 1.2222,
+  //           close: 1.2563,
+  //           volume: 12524.0,
+  //         },
+  //       ],
+  //       name: "EURUSD",
+  //       timeframe: "M1",
+  //       from_date: "2019-01-01 00:00:00",
+  //       to_date: "2019-12-31 23:59:59",
+  //       broker_data: "DukasCopy",
+  //       format: "Csv",
+  //       actualized: true,
+  //     });
 
-      console.log("data_dukas:", dataDukasC);
-    } catch (error) {
-      console.error("Error cargando data_dukas:", error);
-    }
-  }
+  //     console.log("data_dukas:", dataDukasC);
+  //   } catch (error) {
+  //     console.error("Error cargando data_dukas:", error);
+  //   }
+  // }
 
-  saveDataOHLC();
+  // saveDataOHLC();
 
-  async function saveDataDukasTicks() {
-    if (!container) return;
+  // async function saveDataDukasTicks() {
+  //   if (!container) return;
 
-    try {
-      // const id = Number(container.dataset.id);
+  //   try {
+  //     // const id = Number(container.dataset.id);
 
-      const saveDDTC = await invoke("save_data_dukas_ticks", {
-        data: [
-          {
-            timestamp: 1547416809672,
-            askPrice: 1.2221,
-            bidPrice: 1.222,
-            askVolume: 1.5,
-            bidVolume: 2.3,
-          },
-        ],
-        name: "EURUSD_TICKS",
-        timeframe: "Ticks",
-        from_date: "2019-01-01 00:00:00",
-        to_date: "2019-12-31 23:59:59",
-        broker_data: "DukasCopy",
-        format: "Csv",
-      });
+  //     const saveDDTC = await invoke("save_data_dukas_ticks", {
+  //       data: [
+  //         {
+  //           timestamp: 1547416809672,
+  //           askPrice: 1.2221,
+  //           bidPrice: 1.222,
+  //           askVolume: 1.5,
+  //           bidVolume: 2.3,
+  //         },
+  //       ],
+  //       name: "EURUSD_TICKS",
+  //       timeframe: "Ticks",
+  //       from_date: "2019-01-01 00:00:00",
+  //       to_date: "2019-12-31 23:59:59",
+  //       broker_data: "DukasCopy",
+  //       format: "Csv",
+  //     });
 
-      console.log("data_dukas:", saveDDTC);
-    } catch (error) {
-      console.error("Error cargando data_dukas:", error);
-    }
-  }
+  //     console.log("data_dukas:", saveDDTC);
+  //   } catch (error) {
+  //     console.error("Error cargando data_dukas:", error);
+  //   }
+  // }
 
-  saveDataDukasTicks();
+  // saveDataDukasTicks();
 
   async function cargarDataForTV() {
     if (!container) return;
@@ -442,14 +438,14 @@ const allTrades: Trade[] = [
     try {
       // const id = Number(container.dataset.id);
 
-      const getDTVC = await invoke("get_data_for_tv", {
-        id_backtest: 35,
-        from_date: "2024-08-19 04:00:00",
-        to_date: "2024-08-19 11:00:00",
-        prev_bars: 40,
+      const getDTVC: DataTv[] = await invoke("get_data_for_tv", {
+        idBacktest: 35,
+        fromDate: "2024-08-19 04:00:00",
+        toDate: "2024-08-19 11:00:00",
+        prevBars: 40,
       });
 
-      console.log("get_data_for_tv:", getDTVC);
+      console.log("Cargamos data de TV (get_data_for_tv):", getDTVC);
     } catch (error) {
       console.error("Error cargando get_data_for_tv:", error);
     }
@@ -457,28 +453,34 @@ const allTrades: Trade[] = [
 
   cargarDataForTV();
 
-  async function setIndicators() {
+  async function getIndicators() {
     if (!container) return;
 
     try {
       // const id = Number(container.dataset.id);
 
-      const dataIndicator = await invoke("get_indicator_for_tv", {
-        id_backtest: 35,
-        id_estrategia: 1,
-        column: "ema_50",
-        from_date: "2024-08-19 04:00:00",
-        to_date: "2024-08-19 11:00:00",
-        prev_bars: 40,
-      });
+      const dataIndicator: DataIndicator[] = await invoke(
+        "get_indicator_for_tv",
+        {
+          idBacktest: 35,
+          idEstrategia: 1,
+          column: "ema_50",
+          fromDate: "2024-08-19 04:00:00",
+          toDate: "2024-08-19 11:00:00",
+          prevBars: 40,
+        },
+      );
 
-      console.log("data_dukas:", dataIndicator);
+      console.log(
+        "Cargamos indicadores (get_indicator_for_tv):",
+        dataIndicator,
+      );
     } catch (error) {
-      console.error("Error cargando dataIndicator:", error);
+      console.error("Error cargando los indicadores:", error);
     }
   }
 
-  setIndicators();
+  getIndicators();
 
   async function cargarResultsByBacktest() {
     if (!container) return;
@@ -486,12 +488,15 @@ const allTrades: Trade[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const dataResultsByBacktest = await invoke<resultados>(
+      const dataResultsByBacktest: resultados = await invoke(
         "get_results_by_backtest",
-        { id },
-      ); //Tipado ⚠️
+        { id: 35},
+      );
 
-      console.log("data_dukas:", dataResultsByBacktest);
+      console.log(
+        "Cargamos resultados de backtest por id (get_results_by_backtest)",
+        dataResultsByBacktest,
+      );
     } catch (error) {
       console.error("Error cargando dataResultsByBacktest:", error);
     }
@@ -505,11 +510,11 @@ const allTrades: Trade[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const dataTrades = await invoke<Trades>("get_trades", { id });
+      const dataTrades: Trade[] = await invoke("get_trades", { id: 35 });
 
-      console.log("data_dukas:", dataTrades);
+      console.log("Cargamos conjunto de trades por id:", dataTrades);
     } catch (error) {
-      console.error("Error cargando dataTrades:", error);
+      console.error("Error cargando Trades:", error);
     }
   }
 
@@ -521,15 +526,15 @@ const allTrades: Trade[] = [
     try {
       // const id = Number(container.dataset.id);
 
-      const dataTradesPagesC = await invoke("get_trades_page", {
-        id_backtest: 35,
+      const dataTradesPagesC: Trade[] = await invoke("get_trades_page", {
+        idBacktest: 35,
         limite: 20,
         pagina: 0,
-      }); //Tipado no existe ⚠️
+      }); 
 
       console.log("data_dukas:", dataTradesPagesC);
     } catch (error) {
-      console.error("Error cargando get_tardes_page:", error);
+      console.error("Error cargando get_trades_page:", error);
     }
   }
 
@@ -541,13 +546,13 @@ const allTrades: Trade[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const tradeC = await invoke<Trades>("get_tarde", {
-        id,
-      }); //Tipado no existe ⚠️
+      const tradeC: Trade = await invoke("get_trade", {
+        id: 35,
+      }); 
 
-      console.log("data_dukas:", tradeC);
+      console.log("Cargamos 1 trade:", tradeC);
     } catch (error) {
-      console.error("Error cargando get_tardes_page:", error);
+      console.error("Error cargando 1 trade:", error);
     }
   }
 

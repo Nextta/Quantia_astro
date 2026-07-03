@@ -14,7 +14,7 @@ export interface PaginatedTrades {
   perPage: number;
 }
 
-export interface Trade { //Trade para TradesList
+export interface Tradess { //Trade para TradesList
   id: number;
   date: string;
   side: TradeSide;

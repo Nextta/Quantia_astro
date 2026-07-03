@@ -3,7 +3,7 @@ import type { StrategyAction } from "../../interfaces/strategyAction";
 import type { StrategyCondition } from "../../interfaces/strategyCondition";
 import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
 import type { StrategyOptions } from "../../interfaces/strategyOptions";
-import type { Trades } from "../../interfaces/trades";
+import type { Trade } from "../../interfaces/trades";
 // import type { DataTv } from "../../interfaces/dataTv";
 
 import { GestionStrategy } from "../../enums/gestionStrategy";
@@ -572,8 +572,8 @@ export function get_results_by_backtest(id:number): resultados {
 //   return symbol_cfd;
 // }
 
-export function get_trade(id: number): Trades {
-  let trade: Trades = {
+export function get_trade(id: number): Trade {
+  let trade: Trade = {
     duracion_dias: "00",
     duracion_horas: "22",
     duracion_minutos: "1320",
@@ -620,8 +620,8 @@ export function get_trades_page(
   id_backtest: number,
   limite:number,
   pagina:number
-): Trades[] {
-  let pages: Trades[] = [
+): Trade[] {
+  let pages: Trade[] = [
     {
       duracion_dias: "00",
       duracion_horas: "22",
@@ -666,8 +666,8 @@ export function get_trades_page(
   return pages;
 }
 
-export function get_trades(id: number): Trades[] {
-  let trades: Trades[] = [
+export function get_trades(id: number): Trade[] {
+  let trades: Trade[] = [
     {
       duracion_dias: "00",
       duracion_horas: "22",

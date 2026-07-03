@@ -4,7 +4,7 @@ import { EntryDirection } from "../enums/EntryDirection";
 
 
 
-export interface Trades{
+export interface Trade{
     id: number; // id del Backtest
     id_backtest: number;
     id_symbol: number;
