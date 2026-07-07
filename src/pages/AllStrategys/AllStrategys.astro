@@ -2,34 +2,157 @@
 import Layout from "../../layouts/Layout.astro";
 import StrategyCard from "../../components/StrategyCard.astro";
 // import { cardsArray } from "../main/Home.astro";
-import { initialBalance } from "../main/Home.astro";
 import { strategy1Points } from "../main/Home.astro";
 import type { Strategy } from "../../interfaces/strategy";
 import type { Props } from "astro/components/ClientRouter.astro";
-import { cuenta_data } from "../../functions/functions";
-import { backT_data } from "../../functions/functions";
 
-
+import type { Backtest } from "../../interfaces/backtest";
 
 
 // const cuenta_data_all, Strategy = cuenta_data
+import Database from "better-sqlite3";
+
+const db = new Database("src/data/Qauntia.db");
+
+
+async function getCards(): Promise<Strategy[]> {
+  return db
+    .prepare("SELECT * FROM strategies")
+    .all() as Strategy[];
+}
+
+const cards = await getCards();
+
+
 ---
 
 <Layout>
-  <div class="grid grid-cols-3 gap-3">
-    {
-  cuenta_data.map((card) => {
-    const backtest = backT_data.find((item) => item.id === card.id);
-
-    return (
-      <StrategyCard
-        nombre={card.nombre}
-        id={card.id}
-        pointsP={strategy1Points}
-        balance={backtest?.balance ?? 0}
-      />
-    );
-  })
-}
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div
+      id="strategy-grid"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      {cards.map((card) => (
+        <StrategyCard
+          id={card.id}
+          nombre={card.nombre}
+          pointsP={strategy1Points} 
+          balance={}
+        />
+      ))}
+    </div>
   </div>
+
+
 </Layout>
+
+<!-- <script>
+  import { invoke } from "@tauri-apps/api/core";
+  import type { Backtest } from "../../interfaces/backtest";
+  import { strategy1Points } from "../main/Home.astro";
+
+  async function cargarAllBacktests() {
+    try {
+      const card = document.getElementById("strategy-grid");
+      const allBacktestC: Backtest[] = await invoke("get_alls_backtests");
+      allBacktestC.forEach((bt) => {
+        var template: any = `<article
+  class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0"
+>
+<!-- First 
+  <div
+    class="
+    mb-5 flex 
+    flex-col gap-3 
+    min-[800px]:flex-row
+    min-[800px]:items-start 
+    min-[800px]:justify-between"
+  >
+    <div class="min-w-0 lg:max-w-[65%]">
+      <h3
+        class="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-on-surface font-headline wrap-break-word"
+      >
+        #{${bt.id}}
+      </h3>
+
+      <span
+       
+        class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
+      >
+        {${bt.titulo}}
+      </span>
+    </div>
+
+    <div
+      class="flex items-center gap-1 text-secondary font-bold text-lg md:text-2xl lg:text-4xl whitespace-nowrap shrink-0 self-start"
+    >
+      <span
+        class="material-symbols-outlined text-lg sm:text-xl"
+        style="font-variation-settings: 'FILL' 1;"
+      >
+        trending_up
+      </span>
+      <span >
+        {${bt.balance}}%<!-- porcentaje -->
+      </span>
+    </div>
+  </div>
+<!-- First 
+  <div class="bg-surface-container-lowest rounded-xl p-3 sm:p-4 mb-6">
+    <div class="rounded-2xl overflow-hidden bg-[#061020]">
+      <MiniTVChart points={strategy1Points} height={110} />
+    </div>
+  </div>
+
+  <div class="flex flex-col min-[400px]:flex-row gap-3 min-[400px]:items-end min-[400px]:justify-between">
+    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end">
+      <div class="min-w-0">
+        <p
+          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
+        >
+          parameter1
+        </p>
+        <p
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface leading-none"
+        >
+         1.56 <!-- profitFactor    
+        </p>
+      </div>
+
+      <div class="min-w-0">
+        <p
+          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
+        >
+         2 <!-- parameter2 
+        </p>
+        <p
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none"
+        >
+          0.55<!-- drawdown 
+        </p>
+      </div>
+    </div>
+
+    <div class="shrink-0">
+      <a
+        href="/strategies/${bt.id}"
+        aria-label="Ver más"
+        class="inline-flex h-11 w-11 sm:h-auto sm:w-auto items-center justify-center rounded-full bg-primary px-0 sm:px-3 md:px-4 py-0 sm:py-2 md:py-3 text-on-primary transition-colors hover:bg-primary/80 whitespace-nowrap"
+      >
+        <span class="hidden lg:inline mr-1">Ver más...</span>
+        <span class="material-symbols-outlined shrink-0">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</article>`;
+
+        if (!card) return;
+        card.innerHTML += template;
+      });
+    } catch (error) {
+      console.error("Error cargando todos los backtests:", error);
+    }
+  }
+  cargarAllBacktests();
+</script> -->
