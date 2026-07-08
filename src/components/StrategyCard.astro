@@ -13,7 +13,7 @@ interface Point {
 // }
 interface Props {
   id: number;
-  nombre: string;
+  titulo: string;
   balance: number;
   pointsP: Point[];
 }
@@ -27,7 +27,7 @@ interface Props {
 
 const {
   id,
-  nombre,
+  titulo,
   pointsP,
   balance
 } = Astro.props as Props;
@@ -63,7 +63,7 @@ const {
        
         class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
       >
-        {nombre}
+        {titulo}
       </span>
     </div>
 
