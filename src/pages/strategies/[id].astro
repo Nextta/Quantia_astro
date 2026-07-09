@@ -11,6 +11,7 @@ import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
+import Database from "better-sqlite3";
 import type { Trade } from "../../interfaces/trades";
 import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
@@ -19,18 +20,14 @@ import { resultados_data } from "../../functions/functions";
 import { get_backtest } from "../../utils/testing/testing";
 import type { Tradess } from "../../lib/types";
 
-// import { get_strategies } from "../../utils/testing/testing";
-// import { get_strategies_actions } from "../../utils/testing/testing";
-// import { get_strategies_conditions } from "../../utils/testing/testing";
-// import { get_strategies_indicators } from "../../utils/testing/testing";
-// import { get_strategies_options } from "../../utils/testing/testing";
-// import { get_symbol_cfd } from "../../utils/testing/testing";
-// import { get_trades } from "../../utils/testing/testing";
-
+import { getResults } from "../../utils/functionsGeneral";
 const { id } = Astro.params;
 
 const idActual = Number(id);
 
+const results = await getResults(idActual);
+
+console.log(results);
 // get_results_by_backtest
 // const resultadoActual = get_results_by_backtest(id); ✅
 
@@ -220,91 +217,104 @@ const allTrades: Tradess[] = [
   </div>
   <!-- Hero Section: Bento Grid -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
-    <!-- Equity Curve -->
+    <!-- Equity Curve - Gráfica TV -->
     <CurveDetail />
 
     <!-- Key Ratios -->
     <div class="md:col-span-4 flex flex-col gap-6 border-3">
       {
-        backtestC ? (
-          <>
-            <InfoBoxDetail
-              title="Risk of ruin"
-              risk_of_ruin={backtestC?.estrategia.id ?? 0}
-            />
-          </>
-        ) : (
-          <p class="text-red-400">No se encontró el resultado</p>
-        )
-      }{
-        (
+        results.map((rt) => (
           <FactorBox
             factor1={"Recovery Factor"}
             factor2={"Profit Factor"}
-            recoveryFactor={Math.round(backtestC?.estrategia.id * 100) / 100}
-            profitFactor={Math.round(backtestC?.estrategia.id * 100) / 100}
+            recoveryFactor={Math.round(rt?.recovery_factor * 100) / 100}
+            profitFactor={Math.round(rt?.profit_factor * 100) / 100}
           />
-        )
+        ))
       }
     </div>
   </div>
   <!-- Detailed Metrics Grids -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-    <FourMetrics
-      parametro1="Total return"
-      parametro2="Best Month"
-      parametro3="Worst Month"
-      parametro4="Market time"
-      title="Overall returns"
-      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-    />
-    <FourMetrics
-      parametro1="Max. Drawdown"
-      parametro2="Ulcer Index"
-      parametro3="Risk of ruin"
-      parametro4="Volatilidad anual"
-      title="Overall returns"
-      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-    />
-    <FourMetrics
-      parametro1="Skew ratio"
-      parametro2="Kurtosis ratio"
-      parametro3="Risk of ruin"
-      parametro4="Kelly Criterion"
-      title="Overall returns"
-      parametro1Value={Math.round(backtestC?.estrategia.id)}
-      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro3Value={Math.round(backtestC?.estrategia.id) / 100}
-      parametro4Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-    />
-    <FourMetrics
-      parametro1="Número de trades"
-      parametro2="Win %"
-      parametro3="Avg Win/Loss"
-      parametro4="R_expectancy"
-      title="Overall returns"
-      parametro1Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro2Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro3Value={Math.round(backtestC?.estrategia.id * 100) / 100}
-      parametro4Value={Math.round(backtestC?.estrategia.id) / 100}
-    />
+    {
+      results.map((rt) => (
+        <FourMetrics
+          parametro1="Total return"
+          parametro2="Best Month"
+          parametro3="Worst Month"
+          parametro4="Market time"
+          title="Overall returns"
+          parametro1Value={Math.round(rt?.retorno * 100) / 100}
+          parametro2Value={Math.round(rt?.best_month * 100) / 100}
+          parametro3Value={Math.round(rt?.worst_month * 100) / 100}
+          parametro4Value={Math.round(rt?.time_in_market * 100) / 100}
+        />
+      ))
+    }
+    {
+      results.map((rt) => (
+        <FourMetrics
+          parametro1="Max. Drawdown"
+          parametro2="Ulcer Index"
+          parametro3="Risk of ruin"
+          parametro4="Volatilidad anual"
+          title="Overall returns"
+          parametro1Value={Math.round(rt?.max_drawdown * 100) / 100}
+          parametro2Value={Math.round(rt?.ulcer_index * 100) / 100}
+          parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
+          parametro4Value={Math.round(rt?.volatility_ann * 100) / 100}
+        />
+      ))
+    }
+    {
+      results.map((rt) => (
+        <FourMetrics
+          parametro1="Skew ratio"
+          parametro2="Kurtosis ratio"
+          parametro3="Risk of ruin"
+          parametro4="Kelly Criterion"
+          title="Overall returns"
+          parametro1Value={Math.round(rt?.skew_ratio * 100) / 100}
+          parametro2Value={Math.round(rt?.kurtosis_ratio * 100) / 100}
+          parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
+          parametro4Value={Math.round(rt?.kelly_criterion * 100) / 100}
+        />
+      ))
+    }
+    {
+      results.map((rt) => (
+        <FourMetrics
+          parametro1="Número de trades"
+          parametro2="Win %"
+          parametro3="Avg Win/Loss"
+          parametro4="R_expectancy"
+          title="Overall returns"
+          parametro1Value={Math.round(rt?.n_trades * 100) / 100}
+          parametro2Value={Math.round(rt?.wins_percentage * 100) / 100}
+          parametro3Value={Math.round(rt?.avg_win_loss_ratio * 100) / 100}
+          parametro4Value={Math.round(rt?.r_expectancy * 100) / 100}
+        />
+      ))
+    }
   </div>
   <!-- Heatmap Section -->
-  <HeatMap />
+
+  {results.map((rt) => <HeatMap />)}
+
   <!-- Comparative Charts & Histograms -->
+
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <BarGraph />
+    {results.map((rt) => (
+      <BarGraph title="Rendimiento por día" />
+    ))}
     <ReturnDistribution />
     <StrVSBench />
   </div>
   <!-- Recent Activity Log Table -->
   <TradesList tradesPerPage={10} trades={allTrades} id={1} />
+
+  
+  
   <!-- System Footer -->
   <footer
     class="border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
@@ -490,7 +500,7 @@ const allTrades: Tradess[] = [
 
       const dataResultsByBacktest: resultados = await invoke(
         "get_results_by_backtest",
-        { id: 35},
+        { id: 35 },
       );
 
       console.log(
@@ -510,7 +520,9 @@ const allTrades: Tradess[] = [
     try {
       const id = Number(container.dataset.id);
 
-      const dataTrades: Trade[] = await invoke("get_trades", { idBacktest: 35 });
+      const dataTrades: Trade[] = await invoke("get_trades", {
+        idBacktest: 35,
+      });
 
       console.log("Cargamos conjunto de trades por id:", dataTrades);
     } catch (error) {
@@ -530,7 +542,7 @@ const allTrades: Tradess[] = [
         idBacktest: 35,
         limite: 20,
         pagina: 0,
-      }); 
+      });
 
       console.log("Trades por pagina:", dataTradesPagesC);
     } catch (error) {
@@ -548,7 +560,7 @@ const allTrades: Tradess[] = [
 
       const tradeC: Trade = await invoke("get_trade", {
         id: 35,
-      }); 
+      });
 
       console.log("Cargamos 1 trade:", tradeC);
     } catch (error) {

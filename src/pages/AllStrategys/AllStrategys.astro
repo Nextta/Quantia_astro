@@ -6,16 +6,7 @@ import { strategy1Points } from "../main/Home.astro";
 import type { Strategy } from "../../interfaces/strategy";
 import type { Props } from "astro/components/ClientRouter.astro";
 
-import type { Backtest } from "../../interfaces/backtest";
-
-// const cuenta_data_all, Strategy = cuenta_data
-import Database from "better-sqlite3";
-
-const db = new Database(import.meta.env.URL_DATABASE);
-
-async function getBacktest(): Promise<Backtest[]> {
-  return db.prepare("SELECT * FROM backtest ORDER BY id ASC").all() as Backtest[];
-}
+import { getBacktest } from "../../utils/functionsGeneral";
 
 const backtests = await getBacktest();
 

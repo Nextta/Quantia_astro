@@ -1,22 +1,60 @@
 ---
+import { getResults } from "../../utils/functionsGeneral";
+
 interface Props {
   title?: string;
 }
 
 const { title = "Rendimiento por Día" } = Astro.props as Props;
+const { id } = Astro.params;
+
+const idActual = Number(id);
+const results = await getResults(idActual);
+const activo = true;
+
 ---
 
 <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
   <h4 class="text-sm font-bold mb-6">{title}</h4>
   <div class="flex-1 flex items-end gap-2 px-2">
+    {
+  results.map((rt) => (
     <div
-      class="flex-1 bg-surface-container-highest h-[40%] rounded-t-sm relative group"
-    >
-    </div>
-    <div class="flex-1 bg-secondary h-[75%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-secondary h-[95%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-secondary h-[60%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-tertiary h-[30%] rounded-t-sm relative group"></div>
+      class="flex-1 bg-surface-container-highest rounded-t-sm relative group"
+      style={`height: ${rt.expected_daily}%`}
+    ></div>
+  ))
+}
+    
+    {
+  results.map((rt) => (
+    <div
+      class="flex-1 bg-secondary rounded-t-sm relative group"
+      style={`height: ${rt.expected_daily}%`}
+    ></div>
+  ))
+}
+
+{
+  results.map((rt) => (
+    <div
+      class="flex-1 bg-secondary rounded-t-sm relative group"
+      style={`height: ${rt.expected_daily}%`}
+    ></div>
+  ))
+}
+
+    
+
+{
+    results.map((rt) => (
+    <div
+      class="flex-1 bg-tertiary rounded-t-sm relative group"
+      style={`height: ${rt.expected_daily}%`}
+    ></div>
+  ))
+}
+    
   </div>
   <div
     class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold uppercase tracking-widest"
