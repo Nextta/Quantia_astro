@@ -1,11 +1,13 @@
 ---
-import type { Trade } from "../../lib/types";
+
+import { getTrades } from "../../utils/functionsGeneral";
+import { EntryDirection } from "../../enums/EntryDirection";
+import type { Trade } from "../../interfaces/trades";
 
 interface Props {
   id: number;
   title?: string;
   tradesPerPage?: number;
-  trades: Trade[];
   Fecha?: string;
   Lado?: string;
   Entrada?: string;
@@ -16,11 +18,11 @@ interface Props {
   Ver?: string;
 }
 
+
 const {
-  id,
+  id = Astro.params,
   title = "Actividad Reciente de Ejecución",
   tradesPerPage,
-  trades,
   Fecha = "Fecha",
   Lado = "Lado",
   Entrada = "Entrada",
@@ -31,120 +33,22 @@ const {
   Ver = "Ver"
 } = Astro.props as Props;
 
-const totalDeTrades = trades.length;
-console.log(trades);
+// const totalDeTrades = trades.length;
+// console.log(trades);
 let InitialBalance = 10000;
 let balanceActual = 0;
 
 var amountTrade: number;
 
-// function calculateBalance(trades: Trade[]) {
-//   let newBalance =trades.map((trade) => trade.resultAmount).reduce((total, amount) => total + amount, 0);
-  
-//   console.log(newBalance);
 
-//    return newBalance;
-// }
-// balanceActual = calculateBalance(trades);
-// console.log(balanceActual); 
+
+const idActual = Number(id);
+
+const tradesArray = await getTrades(idActual);
 
 
 
 
-// const id = 1;
-
-// const trades: Trade[] = [
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-//   {
-//     date: "2023-11-23 09:15",
-//     side: "SHORT",
-//     entryPrice: 41200.0,
-//     exitPrice: 41450.25,
-//     resultPercentage: -0.61,
-//     resultAmount: -4200,
-//     duration: "1d 2h",
-//   },
-// ];
 ---
 
 <div class="bg-surface-container-high rounded-xl overflow-hidden mb-8">
@@ -175,49 +79,48 @@ var amountTrade: number;
 
       <tbody class="divide-y divide-surface-container">
         {
-          trades.map((trade) => (
+        tradesArray.map((tr)=> (
             <tr class="hover:bg-surface-bright transition-colors">
-              <td class="px-6 py-4 font-medium">{trade.date}</td>
+              <td class="px-6 py-4 font-medium">{tr.t0}</td>
               <td class="px-6 py-4">
                 <span
                   class={`px-2 py-1 text-[10px] font-bold rounded ${
-                    trade.side === "LONG"
+                    tr.tipo === EntryDirection.Buy
                       ? "bg-secondary/10 text-secondary"
                       : "bg-tertiary/10 text-tertiary"
                   }`}
                 >
-                  {trade.side}
-                </span>
+                  {tr.tipo}                </span>
               </td>
               <td class="px-6 py-4 text-right tabular-nums">
-                {trade.entryPrice.toLocaleString("en-US", {
+                {tr.precio_entrada.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                 })}
               </td>
               <td class="px-6 py-4 text-right tabular-nums">
-                {trade.exitPrice.toLocaleString("en-US", {
+                {tr.precio_cierre.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                 })}
               </td>
               <td
-                class={`px-6 py-4 text-center font-bold ${trade.resultAmount >= 0 ? "text-secondary" : "text-tertiary"}`}
+                class={`px-6 py-4 text-center font-bold ${tr.pl >= 0 ? "text-secondary" : "text-tertiary" }`}
               >
 
-                {trade.resultAmount > 0 ? "+" : ""}
-                {((trade.resultAmount * 100) / InitialBalance).toFixed(2)}%
+                {tr.pl > 0 ? "+" : ""}
+                {((tr.pl * 100) / InitialBalance).toFixed(2)}%
              
               </td>
              
               <td
                 
-                 class={`px-6 py-4 text-right font-bold ${trade.resultAmount >= 0 ? "text-secondary" : "text-tertiary"}`}
+                 class={`px-6 py-4 text-right font-bold ${tr.pl  >= 0 ? "text-secondary" : "text-tertiary"}`}
                 
               >
-                {trade.resultAmount >= 0 ? "+" : "-"}$
-                {Math.abs(trade.resultAmount).toLocaleString()}
+                {tr.pl  >= 0 ? "+" : "-"}$
+                {Math.abs(tr.pl).toLocaleString()}
               </td>
               <td class="px-6 py-4 text-on-surface-variant">
-                {trade.duration}
+                {tr.duracion_horas}
               </td>
               <td class="px-6 py-4 text-on-surface-variant">
                 <a href={`/trades/1`}>
@@ -225,7 +128,8 @@ var amountTrade: number;
                 </a>
               </td>
             </tr>
-          ))
+          
+         ))
         }
       </tbody>
     </table>
@@ -236,7 +140,7 @@ var amountTrade: number;
     >
       <span class="text-xs text-on-surface-variant">
         <span class="font-bold text-on-surface">{`1-${tradesPerPage}`}</span> de <span
-          class="font-bold text-on-surface">{totalDeTrades}</span
+          class="font-bold text-on-surface">{tradesArray.length}</span
         > trades
       </span>
       <div class="flex items-center gap-1">

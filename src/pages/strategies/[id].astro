@@ -311,7 +311,7 @@ const allTrades: Tradess[] = [
     <StrVSBench />
   </div>
   <!-- Recent Activity Log Table -->
-  <TradesList tradesPerPage={10} trades={allTrades} id={1} />
+  <TradesList tradesPerPage={10} id={idActual} />
 
   
   
@@ -330,7 +330,7 @@ const allTrades: Tradess[] = [
   </div>
 </Layout>
 
-<script>
+<!-- <script>
   import { isTauri } from "@tauri-apps/api/core";
 
   // let idBacktest:number;
@@ -569,4 +569,4 @@ const allTrades: Tradess[] = [
   }
 
   get_trade();
-</script>
+</script> -->
