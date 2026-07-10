@@ -305,9 +305,9 @@ const allTrades: Tradess[] = [
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     {results.map((rt) => (
-      <BarGraph title="Rendimiento por día" />
+      <BarGraph title="Rendimiento por día" id={idActual}/>
     ))}
-    <ReturnDistribution />
+    <ReturnDistribution id={idActual}/>
     <StrVSBench />
   </div>
   <!-- Recent Activity Log Table -->

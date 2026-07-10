@@ -2,11 +2,12 @@
 import { getResults } from "../../utils/functionsGeneral";
 
 interface Props {
+  id: number;
   title?: string;
 }
 
-const { title = "Rendimiento por Día" } = Astro.props as Props;
-const { id } = Astro.params;
+const { title = "Rendimiento por Día", id = Astro.params } = Astro.props as Props;
+
 
 const idActual = Number(id);
 const results = await getResults(idActual);
@@ -21,39 +22,39 @@ const activo = true;
   results.map((rt) => (
     <div
       class="flex-1 bg-surface-container-highest rounded-t-sm relative group"
-      style={`height: ${rt.expected_daily}%`}
+      style={`height: ${Math.min(Math.abs(100), 100)}%`}
     ></div>
-  ))
-}
-    
-    {
-  results.map((rt) => (
-    <div
-      class="flex-1 bg-secondary rounded-t-sm relative group"
-      style={`height: ${rt.expected_daily}%`}
-    ></div>
-  ))
-}
-
-{
-  results.map((rt) => (
-    <div
-      class="flex-1 bg-secondary rounded-t-sm relative group"
-      style={`height: ${rt.expected_daily}%`}
-    ></div>
-  ))
-}
 
     
+    
+    <div
+      class="flex-1 bg-secondary rounded-t-sm relative group"
+      style={`height: ${Math.min(Math.abs(rt.z_score), 100)}%`}
+    ></div>
 
-{
-    results.map((rt) => (
+
+
+
+    <div
+      class="flex-1 bg-secondary rounded-t-sm relative group"
+      style={`height: ${Math.min(Math.abs(75), 100)}%`}
+    ></div>
+ 
+    
+
+
     <div
       class="flex-1 bg-tertiary rounded-t-sm relative group"
-      style={`height: ${rt.expected_daily}%`}
+      style={`height: ${Math.min(Math.abs(75), 100)}%`}
     ></div>
-  ))
+
+    <div
+      class="flex-1 bg-tertiary rounded-t-sm relative group"
+      style={`height: ${Math.min(Math.abs(75), 100)}%`}
+    ></div>
+      ))
 }
+
     
   </div>
   <div
