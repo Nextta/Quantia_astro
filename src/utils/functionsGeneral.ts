@@ -11,8 +11,12 @@ export async function getBacktest(): Promise<Backtest[]> {
   return db.prepare("SELECT * FROM backtest ORDER BY id ASC").all() as Backtest[];
 }
 
+export async function getOneBacktest(idBacktest:number): Promise<Backtest> {
+  return db.prepare(`SELECT * FROM backtest WHERE id = ?`).get(idBacktest) as Backtest;
+}
+
 export async function getResults(idBacktest:number): Promise<resultados[]>{
-    return db.prepare(`SELECT * FROM resultados WHERE id= ${idBacktest} ORDER BY id ASC`).all() as resultados[];
+    return db.prepare(`SELECT * FROM resultados WHERE id_backtest= ${idBacktest} ORDER BY id ASC`).all() as resultados[];
 }
 
 export async function getTrades(idBacktest:number): Promise<Trade[]>{

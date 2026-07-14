@@ -17,7 +17,6 @@ import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
 
 import { resultados_data } from "../../functions/functions";
-import { get_backtest } from "../../utils/testing/testing";
 import type { Tradess } from "../../lib/types";
 
 import { getResults } from "../../utils/functionsGeneral";
@@ -28,47 +27,6 @@ const idActual = Number(id);
 const results = await getResults(idActual);
 
 console.log(results);
-// get_results_by_backtest-
-// const resultadoActual = get_results_by_backtest(id); ✅
-
-// const risk_of_ruinC = resultados_data.find((res) => res.id === idActual);
-// const max_drawdown_avgC = resultados_data.find((res) => res.id === idActual);
-// const recovery_factorC = resultados_data.find((res) => res.id === idActual);
-// const profit_factorC = resultados_data.find((res) => res.id === idActual);
-// const retornoC = resultados_data.find((res) => res.id === idActual);
-
-// function  get_results_by_backtest(id:number){
-//   const risk_of_ruinC = resultados_data.find((res) => res.id === idActual);
-//   return risk_of_ruinC;
-// }
-// console.log(get_results_by_backtest(idActual));
-// const resultsC = get_results_by_backtest(idActual);//-
-// const resultBacktest = invoke('get_backtest', { id: 35 });
-const backtestC = get_backtest(idActual);
-
-// const backtestAllC = get_alls_backtests();
-
-// const strategiesC = get_strategies(idActual); //-
-// const strategies_actionC = get_strategies_actions(idActual);//-
-// const strategies_conditionsC = get_strategies_conditions(idActual);//-
-// const strategy_indicatorsC = get_strategies_indicators(idActual);//-
-// const strategy_optionsC = get_strategies_options(idActual);//-
-
-// const symbol_cfdC = get_symbol_cfd(idActual);//-
-// const tradesC = get_trades(idActual);//-
-
-// const
-
-// const {
-//   resultadoActual,
-//   max_drawdown_avgC,
-//   recovery_factorC,
-//   profit_factorC,
-//   retornoC,
-// } = getResultadoActual(resultados_data, idActual);
-
-// console.log(recovery_factorC?.recovery_factor?);
-// console.log(max_drawdown_avgC);-
 
 const allTrades: Tradess[] = [
   {
@@ -311,7 +269,7 @@ const allTrades: Tradess[] = [
     <StrVSBench />
   </div>
   <!-- Recent Activity Log Table -->
-  <TradesList tradesPerPage={10} id={idActual} />
+  <TradesList tradesPerPage={12} id={idActual} />
 
   
   
@@ -325,9 +283,9 @@ const allTrades: Tradess[] = [
   <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
   <!-- Suppressed: Shell Visibility Rule -->
 
-  <div id="backtest" data-id={idActual}>
+  <!-- <div id="backtest" data-id={idActual}>
     <p id="backtest-status">Cargando backtest...</p>
-  </div>
+  </div> -->
 </Layout>
 
 <!-- <script>
