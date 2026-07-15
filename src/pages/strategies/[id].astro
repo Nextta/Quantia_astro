@@ -19,14 +19,14 @@ import type { resultados } from "../../interfaces/resultados";
 import { resultados_data } from "../../functions/functions";
 import type { Tradess } from "../../lib/types";
 
-import { getResults } from "../../utils/functionsGeneral";
+import { getResults, getTrades } from "../../utils/functionsGeneral";
 const { id } = Astro.params;
 
 const idActual = Number(id);
 
 const results = await getResults(idActual);
 
-console.log(results);
+// console.log(results);
 
 const allTrades: Tradess[] = [
   {
@@ -130,6 +130,68 @@ const allTrades: Tradess[] = [
     duration: "1d 2h",
   },
 ];
+
+interface TradesPerMonth {
+  month: string;
+  start: string;
+  end: string;
+  count: number;
+  totalPL: number;
+  trades: Trade[];
+}
+
+const trades: Trade[] = await getTrades(idActual);
+
+function rangePerMonth(trades: Trade[]) {
+  const months = new Map<string, TradesPerMonth>();
+
+  for(const trade of trades){
+    const month = trade.t0.slice(0,7);
+    // console.log(month);
+    const tradeEnd = trade.t1 ?? trade.t0;
+    // console.log(tradeEnd);
+    const current = months.get(month);
+    // console.log(current);
+
+    if (!current) {
+      months.set(month, {
+        month,
+        start: trade.t0,
+        end: tradeEnd,
+        count: 1,
+        totalPL: trade.pl,
+        trades: [trade],
+      });
+
+      continue;
+    }
+
+    if (trade.t0 < current.start) {
+      current.start = trade.t0;
+    }
+
+    if (tradeEnd > current.end) {
+      current.end = tradeEnd;
+    }
+
+    current.count++;
+    current.totalPL += trade.pl;
+    current.trades.push(trade);
+  
+    
+  }
+  return Array.from(months.values()).sort((a, b) =>
+    a.month.localeCompare(b.month)
+  );
+  }
+
+const tradesDateRange = rangePerMonth(trades);
+
+console.log(tradesDateRange);
+
+
+
+
 ---
 
 <Layout>

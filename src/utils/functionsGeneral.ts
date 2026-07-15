@@ -4,6 +4,7 @@ import type { Trade} from "../interfaces/trades";
 
 // const cuenta_data_all, Strategy = cuenta_data
 import Database from "better-sqlite3";
+import { get_alls_backtests } from './testing/testing';
 
 const db = new Database(import.meta.env.URL_DATABASE);
 
@@ -22,5 +23,6 @@ export async function getResults(idBacktest:number): Promise<resultados[]>{
 export async function getTrades(idBacktest:number): Promise<Trade[]>{
     return db.prepare(`SELECT * FROM trades WHERE id_backtest= ${idBacktest} ORDER BY id ASC`).all() as Trade[];
 }
+
 
 

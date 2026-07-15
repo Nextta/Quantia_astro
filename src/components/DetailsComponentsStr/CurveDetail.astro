@@ -31,7 +31,7 @@ const tradeNumberF = new Map(
   }),
 );
 
-console.log(points);
+// console.log(points);
 
 const total = points.reduce((total: number, point: { value: number }) => {
   return (total += point.value);
@@ -183,7 +183,7 @@ const {
         const balance_Total = Number(root.dataset.balanceTotal);
         const balance_Initial = Number(root.dataset.balanceInitial);
 
-        console.log("Balance Initial:", balance_Initial);
+        // console.log("Balance Initial:", balance_Initial);
 
         const series = chart.addSeries(AreaSeries, {
           lineColor: balance_Total > balance_Initial ? "#4edea3" : "#ef4444",
@@ -194,7 +194,7 @@ const {
           lastValueVisible: false,
           crosshairMarkerVisible: false,
         });
-        console.log(points);
+        // console.log(points);
         series.setData(points);
         chart.timeScale().fitContent();
 
