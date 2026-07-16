@@ -1,40 +1,164 @@
 ---
+import type { Trade } from '../../interfaces/trades'; 
+import { getTrades } from "../../utils/functionsGeneral";
+
 interface Props {
+  trades: Trade[];
   title?: string;
-  PercentM1Y1?: number;
-  PercentM1Y2?: number;
-  PercentM2Y1?: number;
-  PercentM2Y2?: number;
-  PercentM3Y1?: number;
-  PercentM3Y2?: number;
-  PercentM4Y1?: number;
-  PercentM4Y2?: number;
-  PercentM5Y1?: number;
-  PercentM5Y2?: number;
-  PercentM6Y1?: number;
-  PercentM6Y2?: number;
-  PercentM7Y1?: number;
-  PercentM7Y2?: number;
-  PercentM8Y1?: number;
-  PercentM8Y2?: number;
-  PercentM9Y1?: number;
-  PercentM9Y2?: number;
-  PercentM10Y1?: number;
-  PercentM10Y2?: number;
-  PercentM11Y1?: number;
-  PercentM11Y2?: number;
-  PercentM12Y1?: number;
-  PercentM12Y2?: number;
-  YTDYear1?: number;
-  YTDYear2?: number;
-  Perdida?: string;
-  Neutral?: string;
-  Ganancia?: string;
-  FinalParameter?: string;
+  lossLabel?: string;
+  neutralLabel?: string;
+  profitLabel?: string;
+  finalParameter?: string;
 }
 
-const { title = "Mapa de Calor de Rendimiento Mensual", PercentM1Y1=-1.2, PercentM1Y2=-6.7, PercentM2Y1=2.4, PercentM2Y2=1.1, PercentM3Y1=5.8, PercentM3Y2=-2.4, PercentM4Y1=3.9, PercentM4Y2=-4.5, PercentM5Y1=1.5, PercentM5Y2=0.0, PercentM6Y1=6, PercentM6Y2=2.1, PercentM7Y1=0.5, PercentM7Y2=0.8, PercentM8Y1=-0.2, PercentM8Y2=-0.5, PercentM9Y1=4.4, PercentM9Y2=5.2, PercentM10Y1=-1.5, PercentM10Y2=1.8, PercentM11Y1=0.9, PercentM11Y2=0.4, PercentM12Y1=2.2, PercentM12Y2=2.9, YTDYear1= 20, YTDYear2=-22, Perdida="Perdida", Neutral="Neutral", Ganancia="Ganancia", FinalParameter="YTD" } = Astro.props as Props;
+interface YearRow {
+  year: number;
+  months: Array<number | null>;
+  ytd: number;
+}
 
+const {
+  trades,
+  title = "Mapa de Calor de Rendimiento Mensual",
+  lossLabel = "Pérdida",
+  neutralLabel = "Neutral",
+  profitLabel = "Ganancia",
+  finalParameter = "YTD",
+} = Astro.props;
+
+const monthNames = [
+  "Ene",
+  "Feb",
+  "Mar",
+  "Abr",
+  "May",
+  "Jun",
+  "Jul",
+  "Ago",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dic",
+];
+
+const monthlyTotals = new Map<string, number>();
+
+// Guardamos todos los años encontrados en los trades.
+const years = new Set<number>();
+// interface Props {
+//   title?: string;
+//   PercentM1Y1?: number;
+//   PercentM1Y2?: number;
+//   PercentM2Y1?: number;
+//   PercentM2Y2?: number;
+//   PercentM3Y1?: number;
+//   PercentM3Y2?: number;
+//   PercentM4Y1?: number;
+//   PercentM4Y2?: number;
+//   PercentM5Y1?: number;
+//   PercentM5Y2?: number;
+//   PercentM6Y1?: number;
+//   PercentM6Y2?: number;
+//   PercentM7Y1?: number;
+//   PercentM7Y2?: number;
+//   PercentM8Y1?: number;
+//   PercentM8Y2?: number;
+//   PercentM9Y1?: number;
+//   PercentM9Y2?: number;
+//   PercentM10Y1?: number;
+//   PercentM10Y2?: number;
+//   PercentM11Y1?: number;
+//   PercentM11Y2?: number;
+//   PercentM12Y1?: number;
+//   PercentM12Y2?: number;
+//   YTDYear1?: number;
+//   YTDYear2?: number;
+//   Perdida?: string;
+//   Neutral?: string;
+//   Ganancia?: string;
+//   FinalParameter?: string;
+// }
+
+
+
+interface TradesPerMonth {
+  month: string;
+  start: string;
+  end: string;
+  count: number;
+  totalPL: number;
+  trades: Trade[];
+}
+
+const { id } = Astro.params;
+
+const idActual = Number(id);
+
+const trades: Trade[] = await getTrades(idActual);
+
+// function rangePerMonth(trades: Trade[]) {
+//   const months = new Map<string, TradesPerMonth>();
+
+//   for (const trade of trades) {
+//     const month = trade.t0.slice(0, 7);
+//     // console.log(month);
+//     const tradeEnd = trade.t1 ?? trade.t0;
+//     // console.log(tradeEnd);
+//     const current = months.get(month);
+//     // console.log(current);
+
+//     if (!current) {
+//       months.set(month, {
+//         month,
+//         start: trade.t0,
+//         end: tradeEnd,
+//         count: 1,
+//         totalPL: trade.pl,
+//         trades: [trade],
+//       });
+
+//       continue;
+//     }
+
+//     if (trade.t0 < current.start) {
+//       current.start = trade.t0;
+//     }
+
+//     if (tradeEnd > current.end) {
+//       current.end = tradeEnd;
+//     }
+
+//     current.count++;
+//     current.totalPL += trade.pl;
+//     current.trades.push(trade);
+//   }
+//   return Array.from(months.values()).sort((a, b) =>
+//     a.month.localeCompare(b.month),
+//   );
+// }
+
+// const tradesDateRange = rangePerMonth(trades);
+
+// console.log(tradesDateRange);
+
+// function formatPL(value: number): string {
+//   const sign = value > 0 ? "+" : "-";
+
+//   return `${sign}${value.toFixed(1)}%`;
+// }
+
+// const heatMapData = tradesDateRange.map((item) => {
+//   const [year, month] = item.month.split("-").map(Number);
+
+//   return {
+//     year,
+//     month,
+//     pl: item.totalPL,
+//   };
+// });
+
+
+// const { title = "Mapa de Calor de Rendimiento Mensual", PercentM1Y1=-1.2, PercentM1Y2=-6.7, PercentM2Y1=2.4, PercentM2Y2=1.1, PercentM3Y1=5.8, PercentM3Y2=-2.4, PercentM4Y1=3.9, PercentM4Y2=-4.5, PercentM5Y1=1.5, PercentM5Y2=0.0, PercentM6Y1=6, PercentM6Y2=2.1, PercentM7Y1=0.5, PercentM7Y2=0.8, PercentM8Y1=-0.2, PercentM8Y2=-0.5, PercentM9Y1=4.4, PercentM9Y2=5.2, PercentM10Y1=-1.5, PercentM10Y2=1.8, PercentM11Y1=0.9, PercentM11Y2=0.4, PercentM12Y1=2.2, PercentM12Y2=2.9, YTDYear1= 20, YTDYear2=-22, Perdida="Perdida", Neutral="Neutral", Ganancia="Ganancia", FinalParameter="YTD" } = Astro.props as Props;
 ---
 
 <div class="bg-surface-container-high rounded-xl p-6 mb-8">

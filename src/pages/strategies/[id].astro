@@ -25,174 +25,115 @@ const { id } = Astro.params;
 const idActual = Number(id);
 
 const results = await getResults(idActual);
-
+const trades: Trade[] = await getTrades(idActual);
 // console.log(results);
 
-const allTrades: Tradess[] = [
-  {
-    id: 1,
-    date: "2023-11-23 09:15",
-    side: "LONG",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 2,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 3,
-    date: "2023-11-23 09:15",
-    side: "LONG",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -3000,
-    duration: "1d 2h",
-  },
-  {
-    id: 4,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 5,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 6,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 7,
-    date: "2023-11-23 09:15",
-    side: "LONG",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 8,
-    date: "2023-11-23 09:15",
-    side: "LONG",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 9,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-  {
-    id: 10,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: 5000,
-    duration: "1d 2h",
-  },
-];
-
-interface TradesPerMonth {
-  month: string;
-  start: string;
-  end: string;
-  count: number;
-  totalPL: number;
-  trades: Trade[];
-}
-
-const trades: Trade[] = await getTrades(idActual);
-
-function rangePerMonth(trades: Trade[]) {
-  const months = new Map<string, TradesPerMonth>();
-
-  for(const trade of trades){
-    const month = trade.t0.slice(0,7);
-    // console.log(month);
-    const tradeEnd = trade.t1 ?? trade.t0;
-    // console.log(tradeEnd);
-    const current = months.get(month);
-    // console.log(current);
-
-    if (!current) {
-      months.set(month, {
-        month,
-        start: trade.t0,
-        end: tradeEnd,
-        count: 1,
-        totalPL: trade.pl,
-        trades: [trade],
-      });
-
-      continue;
-    }
-
-    if (trade.t0 < current.start) {
-      current.start = trade.t0;
-    }
-
-    if (tradeEnd > current.end) {
-      current.end = tradeEnd;
-    }
-
-    current.count++;
-    current.totalPL += trade.pl;
-    current.trades.push(trade);
-  
-    
-  }
-  return Array.from(months.values()).sort((a, b) =>
-    a.month.localeCompare(b.month)
-  );
-  }
-
-const tradesDateRange = rangePerMonth(trades);
-
-console.log(tradesDateRange);
-
-
+// const allTrades: Tradess[] = [
+//   {
+//     id: 1,
+//     date: "2023-11-23 09:15",
+//     side: "LONG",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 2,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 3,
+//     date: "2023-11-23 09:15",
+//     side: "LONG",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -3000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 4,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: -5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 5,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 6,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 7,
+//     date: "2023-11-23 09:15",
+//     side: "LONG",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 8,
+//     date: "2023-11-23 09:15",
+//     side: "LONG",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 9,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+//   {
+//     id: 10,
+//     date: "2023-11-23 09:15",
+//     side: "SHORT",
+//     entryPrice: 41200.0,
+//     exitPrice: 41450.25,
+//     resultPercentage: -0.61,
+//     resultAmount: 5000,
+//     duration: "1d 2h",
+//   },
+// ];
 
 
 ---
+
 
 <Layout>
   <!-- Main Content -->
@@ -319,22 +260,25 @@ console.log(tradesDateRange);
   </div>
   <!-- Heatmap Section -->
 
-  {results.map((rt) => <HeatMap />)}
+
+<HeatMap />
+    
+
 
   <!-- Comparative Charts & Histograms -->
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    {results.map((rt) => (
-      <BarGraph title="Rendimiento por día" id={idActual}/>
-    ))}
-    <ReturnDistribution id={idActual}/>
+    {
+      results.map((rt) => (
+        <BarGraph title="Rendimiento por día" id={idActual} />
+      ))
+    }
+    <ReturnDistribution id={idActual} />
     <StrVSBench />
   </div>
   <!-- Recent Activity Log Table -->
   <TradesList tradesPerPage={12} id={idActual} />
 
-  
-  
   <!-- System Footer -->
   <footer
     class="border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
