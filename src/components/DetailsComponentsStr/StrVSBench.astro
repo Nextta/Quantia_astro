@@ -1,4 +1,6 @@
 ---
+import { getResults } from '../../utils/functionsGeneral';
+
 interface Props {
   title?: string;
   Value1?: number;
@@ -14,10 +16,13 @@ const {
   Value1 = 0.64,
   Value2 = 4.2,
   Value3 = 0.42,
-  Parametro1 = "Beta",
-  Parametro2 = "Alpha",
-  Parametro3 = "Correlación",
+  Parametro1 = "Alpha",
+  Parametro2 = "Beta",
+  Parametro3 = "Omega",
 } = Astro.props as Props;
+
+
+
 ---
 
 <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
@@ -26,13 +31,13 @@ const {
     <div>
       <div class="flex justify-between text-[10px] uppercase font-bold mb-2">
         <span>{Parametro1}</span>
-        <span class="text-primary">{Value1}</span>
+        <span class="text-primary">{Value1}%</span>
       </div>
       <div
         class="h-2 bg-surface-container-highest rounded-full overflow-hidden"
       >
         <div class="h-full bg-primary"
-        style={`width: ${Math.min(Math.abs(75), 100)}%;`}
+        style={`width: ${Value1}%;`}
         ></div>
       </div>
     </div>
@@ -45,20 +50,20 @@ const {
         class="h-2 bg-surface-container-highest rounded-full overflow-hidden"
       >
         <div class="h-full bg-secondary"
-        style={`width: ${Math.min(Math.abs(75), 100)}%;`}
+        style={`width: ${Value2}%;`}
         ></div>
       </div>
     </div>
     <div>
       <div class="flex justify-between text-[10px] uppercase font-bold mb-2">
         <span>{Parametro3}</span>
-        <span class="text-on-surface-variant">{Value3}</span>
+        <span class="text-on-surface-variant">{Value3}%</span>
       </div>
       <div
         class="h-2 bg-surface-container-highest rounded-full overflow-hidden"
       >
         <div class="h-full bg-red-400"
-        style={`width: ${Math.min(Math.abs(75), 100)}%;`}
+        style={`width: ${Value3}%;`}
         ></div>
       </div>
     </div>
