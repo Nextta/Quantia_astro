@@ -1,8 +1,9 @@
 ---
-import type { Trade } from '../../interfaces/trades'; 
+import type { Trade } from "../../interfaces/trades";
 
 interface Props {
   trades: Trade[];
+  initialBalance?: number;
   title?: string;
   lossLabel?: string;
   neutralLabel?: string;
@@ -18,12 +19,22 @@ interface YearRow {
 
 const {
   trades,
+  initialBalance,
   title = "Mapa de Calor de Rendimiento Mensual",
   lossLabel = "Pérdida",
   neutralLabel = "Neutral",
   profitLabel = "Ganancia",
   finalParameter = "YTD",
 } = Astro.props;
+
+const validInitialBalance: number =
+  typeof initialBalance === "number" &&
+  Number.isFinite(initialBalance) &&
+  initialBalance > 0
+    ? initialBalance
+    : 10_000;
+
+console.log(validInitialBalance);
 
 const monthNames = [
   "Ene",
@@ -39,7 +50,7 @@ const monthNames = [
   "Nov",
   "Dic",
 ];
-
+//Guardamos los PL de cada mes.
 const monthlyTotals = new Map<string, number>();
 
 // Guardamos todos los años encontrados en los trades.
@@ -105,31 +116,55 @@ for (const trade of trades) {
 
   monthlyTotals.set(key, currentTotal + tradePL);
 
-  
-  console.log("Trades por mes: ",monthlyTotals);
+  console.log("Trades por mes: ", monthlyTotals);
 }
 
 /*
  * Creamos una fila por cada año.
  * Los años aparecen del más reciente al más antiguo.
  */
+let runningBalance = validInitialBalance;
+console.log(runningBalance);
 const yearRows: YearRow[] = Array.from(years)
-  .sort((a, b) => b - a)
+  .sort((a, b) => a - b)
   .map((year) => {
+    const yearOpeningBalance = runningBalance;
+    console.log(yearOpeningBalance);
+
     const months = Array.from({ length: 12 }, (_, index) => {
       const month = index + 1;
       const key = `${year}-${month}`;
 
+      if (!monthlyTotals.has(key)) {
+        return null;
+      }
+
+      const monthPL = monthlyTotals.get(key) ?? 0;
+      const monthOpeningBalance = runningBalance;
+
+      console.log(monthOpeningBalance);
+
+      runningBalance += monthPL;
+
+      console.log(runningBalance);
+      const monthlyPercentage =
+        monthOpeningBalance !== 0 ? (monthPL / monthOpeningBalance) * 100 : 0;
       // null significa que ese mes no tuvo trades.
-      return monthlyTotals.has(key)
-        ? monthlyTotals.get(key)!
-        : null;
+      // return monthlyTotals.has(key)
+      //   ? monthlyTotals.get(key)!
+      //   : null;
+        return monthlyPercentage;
+
     });
 
-    const ytd = months.reduce<number>(
-      (total, monthPL) => total + (monthPL ?? 0),
-      0,
-    );
+    // const ytd = months.reduce<number>(
+    //   (total, monthPL) => total + (monthPL ?? 0),
+    //   0,
+    // );
+    const ytd =
+      yearOpeningBalance !== 0
+        ? ((runningBalance - yearOpeningBalance) / yearOpeningBalance) * 100
+        : 0;
 
     return {
       year,
@@ -150,12 +185,8 @@ function formatPL(value: number | null): string {
   return `${sign}${normalizedValue.toFixed(1)}%`;
 }
 
-function getCellClass(
-  value: number | null,
-  isYtd = false,
-): string {
-  const base =
-    "p-3 rounded-lg text-center whitespace-nowrap font-medium";
+function getCellClass(value: number | null, isYtd = false): string {
+  const base = "p-3 rounded-lg text-center whitespace-nowrap font-medium";
 
   if (value === null || value === 0) {
     return `${base} bg-surface-container-lowest text-on-surface`;
@@ -171,24 +202,29 @@ function getCellClass(
     ? `${base} bg-[#f55b5b] text-on-tertiary font-bold`
     : `${base} bg-tertiary/60 text-on-tertiary`;
 }
-
-
 ---
 
 <div class="bg-surface-container-high rounded-xl p-6 mb-8">
-  <div class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6">
+  <div
+    class="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-6"
+  >
     <h3 class="text-lg font-bold font-headline">
       {title}
     </h3>
-    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-on-surface-variant">
+    <div
+      class="flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-on-surface-variant"
+    >
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 bg-tertiary rounded-sm"></div> {lossLabel}
+        <div class="w-3 h-3 bg-tertiary rounded-sm"></div>
+        {lossLabel}
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 bg-surface-container-lowest rounded-sm"></div> {neutralLabel}
+        <div class="w-3 h-3 bg-surface-container-lowest rounded-sm"></div>
+        {neutralLabel}
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-3 h-3 bg-secondary rounded-sm"></div> {profitLabel}
+        <div class="w-3 h-3 bg-secondary rounded-sm"></div>
+        {profitLabel}
       </div>
     </div>
   </div>
@@ -199,47 +235,35 @@ function getCellClass(
           class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
         >
           <th class="p-2">Año</th>
-          {
-            monthNames.map((monthName)=>(
-              <th class="min-w-24">{monthName}</th>
-            ))
-          }
-          <th class="p-2 bg-surface-container-highest rounded">{finalParameter}</th>
+          {monthNames.map((monthName) => <th class="min-w-24">{monthName}</th>)}
+          <th class="p-2 bg-surface-container-highest rounded"
+            >{finalParameter}</th
+          >
         </tr>
       </thead>
       <tbody class="text-sm font-medium">
         {
-          yearRows.map((row)=>(
+          yearRows.map((row) => (
             <tr>
-              <td class="p-2 text-primary font-bold">
-                {row.year}
-              </td>
+              <td class="p-2 text-primary font-bold">{row.year}</td>
 
               {row.months.map((monthPL) => (
-                <td class={getCellClass(monthPL)}>
-                  {formatPL(monthPL)}
-                </td>
+                <td class={getCellClass(monthPL)}>{formatPL(monthPL)}</td>
               ))}
 
-              <td class={getCellClass(row.ytd, true)}>
-                {formatPL(row.ytd)}
-              </td>
+              <td class={getCellClass(row.ytd, true)}>{formatPL(row.ytd)}</td>
             </tr>
           ))
         }
         {
           yearRows.length === 0 && (
             <tr>
-              <td
-                colspan="14"
-                class="p-6 text-center text-on-surface-variant"
-              >
+              <td colspan="14" class="p-6 text-center text-on-surface-variant">
                 No hay trades disponibles para este backtesting.
               </td>
             </tr>
           )
         }
-      
       </tbody>
     </table>
   </div>

@@ -19,13 +19,15 @@ import type { resultados } from "../../interfaces/resultados";
 import { resultados_data } from "../../functions/functions";
 import type { Tradess } from "../../lib/types";
 
-import { getResults, getTrades } from "../../utils/functionsGeneral";
+import { getOneBacktest, getResults, getTrades } from "../../utils/functionsGeneral";
+import type { Backtest } from "../../interfaces/backtest";
 const { id } = Astro.params;
 
 const idActual = Number(id);
 
 const results = await getResults(idActual);
 const trades: Trade[] = await getTrades(idActual);
+const backtestArr: Backtest = await getOneBacktest(idActual);
 // console.log(results);
 
 // const allTrades: Tradess[] = [
@@ -130,7 +132,6 @@ const trades: Trade[] = await getTrades(idActual);
 //     duration: "1d 2h",
 //   },
 // ];
-
 
 ---
 
@@ -260,8 +261,10 @@ const trades: Trade[] = await getTrades(idActual);
   </div>
   <!-- Heatmap Section -->
 
-
-<HeatMap trades={trades}/>
+ {
+  console.log(backtestArr.balance)
+ }
+<HeatMap trades={trades} initialBalance={backtestArr.balance}/>
     
 
 
