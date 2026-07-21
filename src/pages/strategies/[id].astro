@@ -15,11 +15,17 @@ import Database from "better-sqlite3";
 import type { Trade } from "../../interfaces/trades";
 import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
+import {calculateMonthlyTotals, calculateAverageByMonth} from "../../utils/functionsGeneral";
+
 
 import { resultados_data } from "../../functions/functions";
 import type { Tradess } from "../../lib/types";
 
-import { getOneBacktest, getResults, getTrades } from "../../utils/functionsGeneral";
+import {
+  getOneBacktest,
+  getResults,
+  getTrades,
+} from "../../utils/functionsGeneral";
 import type { Backtest } from "../../interfaces/backtest";
 const { id } = Astro.params;
 
@@ -133,8 +139,18 @@ const backtestArr: Backtest = await getOneBacktest(idActual);
 //   },
 // ];
 
----
+let respMonthTotals = calculateMonthlyTotals(trades).monthTotals
+let respYearsTotals = calculateMonthlyTotals(trades).yearsTotals
 
+console.log(respMonthTotals);
+
+const monthlyAverages = calculateAverageByMonth(respMonthTotals);
+console.log("Totales por año y mes:");
+console.log([...respMonthTotals.entries()]);
+
+console.log("Promedios por mes:");
+console.table(monthlyAverages);
+---
 
 <Layout>
   <!-- Main Content -->
@@ -261,12 +277,8 @@ const backtestArr: Backtest = await getOneBacktest(idActual);
   </div>
   <!-- Heatmap Section -->
 
- {
-  console.log(backtestArr.balance)
- }
-<HeatMap trades={trades} initialBalance={backtestArr.balance}/>
-    
-
+  {console.log(backtestArr.balance)}
+  <HeatMap trades={trades} initialBalance={backtestArr.balance} />
 
   <!-- Comparative Charts & Histograms -->
 
@@ -277,7 +289,15 @@ const backtestArr: Backtest = await getOneBacktest(idActual);
       ))
     }
     <ReturnDistribution id={idActual} />
-    <StrVSBench />
+    {
+      results.map((rt) => (
+        <StrVSBench
+          Value1={rt.alpha}
+          Value2={rt.beta}
+          Value3={rt.omega_ratio}
+        />
+      ))
+    }
   </div>
   <!-- Recent Activity Log Table -->
   <TradesList tradesPerPage={12} id={idActual} />
