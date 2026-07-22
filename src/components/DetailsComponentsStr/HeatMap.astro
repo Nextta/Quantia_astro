@@ -55,39 +55,6 @@ const monthlyTotals = new Map<string, number>();
 
 // Guardamos todos los años encontrados en los trades.
 const years = new Set<number>();
-// interface Props {
-//   title?: string;
-//   PercentM1Y1?: number;
-//   PercentM1Y2?: number;
-//   PercentM2Y1?: number;
-//   PercentM2Y2?: number;
-//   PercentM3Y1?: number;
-//   PercentM3Y2?: number;
-//   PercentM4Y1?: number;
-//   PercentM4Y2?: number;
-//   PercentM5Y1?: number;
-//   PercentM5Y2?: number;
-//   PercentM6Y1?: number;
-//   PercentM6Y2?: number;
-//   PercentM7Y1?: number;
-//   PercentM7Y2?: number;
-//   PercentM8Y1?: number;
-//   PercentM8Y2?: number;
-//   PercentM9Y1?: number;
-//   PercentM9Y2?: number;
-//   PercentM10Y1?: number;
-//   PercentM10Y2?: number;
-//   PercentM11Y1?: number;
-//   PercentM11Y2?: number;
-//   PercentM12Y1?: number;
-//   PercentM12Y2?: number;
-//   YTDYear1?: number;
-//   YTDYear2?: number;
-//   Perdida?: string;
-//   Neutral?: string;
-//   Ganancia?: string;
-//   FinalParameter?: string;
-// }
 
 for (const trade of trades) {
   if (!trade.t0) continue;
@@ -149,18 +116,11 @@ const yearRows: YearRow[] = Array.from(years)
       console.log(runningBalance);
       const monthlyPercentage =
         monthOpeningBalance !== 0 ? (monthPL / monthOpeningBalance) * 100 : 0;
-      // null significa que ese mes no tuvo trades.
-      // return monthlyTotals.has(key)
-      //   ? monthlyTotals.get(key)!
-      //   : null;
         return monthlyPercentage;
 
     });
 
-    // const ytd = months.reduce<number>(
-    //   (total, monthPL) => total + (monthPL ?? 0),
-    //   0,
-    // );
+
     const ytd =
       yearOpeningBalance !== 0
         ? ((runningBalance - yearOpeningBalance) / yearOpeningBalance) * 100

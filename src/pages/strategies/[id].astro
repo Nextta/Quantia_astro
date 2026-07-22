@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import type { Trade } from "../../interfaces/trades";
 import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
-import {calculateMonthlyTotals, calculateAverageByMonth} from "../../utils/functionsGeneral";
+// import {calculateMonthlyTotals, calculateAverageByMonth} from "../../utils/functionsGeneral";
 
 
 import { resultados_data } from "../../functions/functions";
@@ -139,17 +139,13 @@ const backtestArr: Backtest = await getOneBacktest(idActual);
 //   },
 // ];
 
-let respMonthTotals = calculateMonthlyTotals(trades).monthTotals
-let respYearsTotals = calculateMonthlyTotals(trades).yearsTotals
+// let respMonthTotals = calculateMonthlyTotals(trades).monthTotals
+// let respYearsTotals = calculateMonthlyTotals(trades).yearsTotals
 
-console.log(respMonthTotals);
+// const { monthTotals, yearsTotals } = calculateMonthlyTotals(trades);
 
-const monthlyAverages = calculateAverageByMonth(respMonthTotals);
-console.log("Totales por año y mes:");
-console.log([...respMonthTotals.entries()]);
-
-console.log("Promedios por mes:");
-console.table(monthlyAverages);
+// const monthlyAverages = calculateAverageByMonth(monthTotals);
+console.log(backtestArr);
 ---
 
 <Layout>
@@ -288,7 +284,10 @@ console.table(monthlyAverages);
         <BarGraph title="Rendimiento por día" id={idActual} />
       ))
     }
-    <ReturnDistribution id={idActual} />
+    <ReturnDistribution id={idActual} trades={trades} 
+      initialBalance={backtestArr.balance}
+    />
+    
     {
       results.map((rt) => (
         <StrVSBench

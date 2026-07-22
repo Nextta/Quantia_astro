@@ -3,12 +3,17 @@ import StrategyCard from "../../components/StrategyCard.astro";
 import CarteraCard from "../../components/CarteraCard.astro";
 import Layout from "../../layouts/Layout.astro";
 import strategys from "../../datos/strategies.json";
-
+import { seek } from "../../utils/prueba";
 import type { Backtest } from "../../interfaces/backtest";
 import type { Strategy } from "../../interfaces/strategy";
 import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
 import { cuenta_data } from "../../functions/functions";
 import { backT_data } from "../../functions/functions";
+
+let arr: number[] = [1,4,5,6,4];
+let ob = 4;
+
+seek(ob, arr);
 
 const { id, id_user, nombre, descripcion } = Astro.props as Strategy;
 
