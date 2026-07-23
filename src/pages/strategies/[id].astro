@@ -17,7 +17,6 @@ import type { resultados } from "../../interfaces/resultados";
 // import { get_results_by_backtest } from "../../utils/testing/testing";
 // import {calculateMonthlyTotals, calculateAverageByMonth} from "../../utils/functionsGeneral";
 
-
 import { resultados_data } from "../../functions/functions";
 import type { Tradess } from "../../lib/types";
 
@@ -284,10 +283,12 @@ console.log(backtestArr);
         <BarGraph title="Rendimiento por día" id={idActual} />
       ))
     }
-    <ReturnDistribution id={idActual} trades={trades} 
+    <ReturnDistribution
+      id={idActual}
+      trades={trades}
       initialBalance={backtestArr.balance}
     />
-    
+
     {
       results.map((rt) => (
         <StrVSBench
@@ -307,14 +308,168 @@ console.log(backtestArr);
   >
     <GlosaryDetail />
   </footer>
-  <!-- </main> -->
-  <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
-  <!-- Suppressed: Shell Visibility Rule -->
-
-  <!-- <div id="backtest" data-id={idActual}>
-    <p id="backtest-status">Cargando backtest...</p>
-  </div> -->
+ 
+  <div
+    id="monthly-debug-data"
+    data-trades={JSON.stringify(trades)}
+    data-initial-balance={10000}
+    hidden
+  >
+  </div>
 </Layout>
+
+<script>
+
+  import type { Trade } from "../../interfaces/trades";
+
+  const monthNames = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+  interface YearRow {
+    year: number;
+    months: Array<number | null>;
+    ytd: number;
+  }
+  export interface MonthlyAverage {
+    month: number;
+    average: number | null;
+    observations: number;
+  }
+
+  export function calculateMonthlyPerformance(
+    trades: Trade[],
+    initialBalance = 20,
+  ): YearRow[] {
+    const validInitialBalance =
+      Number.isFinite(initialBalance) && initialBalance > 0
+        ? initialBalance
+        : 200;
+
+    const monthlyTotals = new Map<string, number>();
+    const years = new Set<number>();
+
+    for (const trade of trades) {
+      if (!trade.t0) continue;
+
+      const dateMatch = /^(\d{4})-(\d{2})/.exec(trade.t0);
+
+      if (!dateMatch) continue;
+
+      const year = Number(dateMatch[1]);
+      const month = Number(dateMatch[2]);
+
+      if (month < 1 || month > 12) continue;
+
+      years.add(year);
+
+      const key = `${year}-${month}`;
+      const parsedPL = Number(trade.pl ?? 0);
+      const tradePL = Number.isFinite(parsedPL) ? parsedPL : 0;
+      const currentTotal = monthlyTotals.get(key) ?? 0;
+
+      monthlyTotals.set(key, currentTotal + tradePL);
+    }
+
+    let runningBalance = validInitialBalance;
+    console.log(runningBalance);
+
+    return Array.from(years)
+      .sort((a, b) => a - b)
+      .map((year) => {
+        const yearOpeningBalance = runningBalance;
+
+        const months = Array.from({ length: 12 }, (_, index) => {
+          const month = index + 1;
+          const key = `${year}-${month}`;
+
+          if (!monthlyTotals.has(key)) {
+            return null;
+          }
+
+          const monthPL = monthlyTotals.get(key) ?? 0;
+          const monthOpeningBalance = runningBalance;
+
+          const monthlyPercentage =
+            monthOpeningBalance !== 0
+              ? (monthPL / monthOpeningBalance) * 100
+              : 0;
+
+          runningBalance += monthPL;
+
+          return monthlyPercentage;
+        });
+
+        const ytd =
+          yearOpeningBalance !== 0
+            ? ((runningBalance - yearOpeningBalance) / yearOpeningBalance) * 100
+            : 0;
+
+        return {
+          year,
+          months,
+          ytd,
+        };
+      });
+  }
+
+  export function calculateAverageMonthlyPerformance(
+    yearRows: YearRow[],
+  ): MonthlyAverage[] {
+    return Array.from({ length: 12 }, (_, monthIndex) => {
+      const values = yearRows
+        .map((row) => row.months[monthIndex])
+        .filter((value): value is number => typeof value === "number");
+
+      const sum = values.reduce((accumulator, value) => accumulator + value, 0);
+
+      return {
+        month: monthIndex + 1,
+        average: values.length > 0 ? sum / values.length : null,
+        observations: values.length,
+      };
+    });
+  }
+
+  const dataElement = document.querySelector<HTMLElement>(
+    "#monthly-debug-data",
+  );
+
+  if (!dataElement) {
+    throw new Error("No se encontraron los datos de depuración");
+  }
+
+  const clientTrades = JSON.parse(
+    dataElement.dataset.trades ?? "[]",
+  ) as Trade[];
+
+  const clientInitialBalance = Number(dataElement.dataset.initialBalance ?? 0);
+
+  console.log("Trades recibidos:", clientTrades.length);
+  console.log("Primer trade:", clientTrades[0]);
+
+  debugger;
+
+  const performancePerMonth = calculateMonthlyPerformance(
+    clientTrades,
+    clientInitialBalance,
+  );
+
+  const averages = calculateAverageMonthlyPerformance(performancePerMonth);
+
+  console.table(performancePerMonth);
+  console.table(averages);
+</script>
 
 <!-- <script>
   import { isTauri } from "@tauri-apps/api/core";
