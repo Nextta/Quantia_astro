@@ -57,7 +57,7 @@ export interface MonthlyAverage {
 
 export function calculateMonthlyPerformance(
   trades: Trade[],
-  initialBalance = 1,
+  initialBalance: number = 1,
 ): YearRow[] {
   const validInitialBalance =
     Number.isFinite(initialBalance) && initialBalance > 0
@@ -140,6 +140,8 @@ export function calculateAverageMonthlyPerformance(
     const values = yearRows
       .map((row) => row.months[monthIndex])
       .filter((value): value is number => typeof value === "number");
+
+      console.log(values);
 
     const sum = values.reduce(
       (accumulator, value) => accumulator + value,

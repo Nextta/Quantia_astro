@@ -5,7 +5,6 @@ import {calculateMonthlyPerformance,
 
   
 interface Props {
-  id: number;
   title?: string;
   trades: Trade[];
   initialBalance: number;
@@ -14,12 +13,11 @@ interface Props {
 }
 
 const {
-  id,
   title = "Rendimiento mensual",
   trades,
   initialBalance,
-  ratioValue1 = -5,
-  ratioValue2 = 5,
+  ratioValue1 = -1,
+  ratioValue2 = 1,
 } = Astro.props as Props;
 
 const monthNames = [
@@ -47,15 +45,15 @@ const yearRows = calculateMonthlyPerformance(
 const monthlyAverages =
   calculateAverageMonthlyPerformance(yearRows);
 
+
+  // console.log(monthlyAverages);
 const monthlyAveragesNames = monthlyAverages.map((result) => ({
   month: result.month,
   name:
     monthNames[result.month - 1] ??
     `Mes ${result.month}`,
   average:
-    result.average === null
-      ? null
-      : Math.round(result.average * 100) / 100,
+    result.average,
   observations: result.observations,
 }));
 
@@ -70,9 +68,11 @@ const maxAbsoluteAverage = Math.max(
   ),
 );
 
-console.log("Promedio mensual usado en las barras:");
+console.log("Promedio mensual usado en las barras:", maxAbsoluteAverage);
 console.table(monthlyAveragesNames);
 ---
+
+
 <div
   class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col"
 >
@@ -89,7 +89,7 @@ console.table(monthlyAveragesNames);
       {
         monthlyAveragesNames.map((avg) => {
           const value = avg.average ?? 0;
-
+            console.log("Promedio value:", value);
           const height = Math.min(
             (Math.abs(value) / maxAbsoluteAverage) * 100,
             100,
@@ -148,120 +148,13 @@ console.table(monthlyAveragesNames);
       ))
     }
   </div>
+  <div
+    id="monthly-debug-data"
+    data-trades={JSON.stringify(trades)}
+    data-initial-balance={10000}
+    hidden
+  >
+  </div>
 </div>
 
 
-<!-- <div
-  class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col"
->
-  <h4 class="text-sm font-bold mb-4">{title}</h4>
-
-  <div class="relative flex-1">
-    Línea correspondiente a cero 
-    <div
-      class="absolute left-0 right-0 top-1/2 border-t border-on-surface-variant/40"
-    ></div>
-
-    <div class="grid grid-cols-12 gap-1 h-full">
-      {
-        monthlyAveragesNames.map((avg) => {
-          const value = avg.average ?? 0;
-
-          const height = Math.min(
-            (Math.abs(value) / maxAbsoluteAverage) * 100,
-            100,
-          );
-
-          return (
-            <div class="grid grid-rows-2 h-full min-w-0 group relative">
-               Mitad superior: valores positivos 
-              <div class="flex items-end">
-                {value > 0 && (
-                  <div
-                    class="w-full bg-secondary rounded-t-sm"
-                    style={`height: ${height}%`}
-                  ></div>
-                )}
-              </div>
-
-           
-              <div class="flex items-start">
-                {value < 0 && (
-                  <div
-                    class="w-full bg-tertiary rounded-b-sm"
-                    style={`height: ${height}%`}
-                  ></div>
-                )}
-              </div>
-
-            
-              <div
-                class="hidden group-hover:block absolute z-10 bottom-full left-1/2
-                       -translate-x-1/2 mb-2 whitespace-nowrap rounded
-                       bg-surface-container-highest px-2 py-1 text-xs"
-              >
-                <div>{avg.name}: {avg.average?.toFixed(2) ?? "Sin datos"}%</div>
-                <div>{avg.observations} observaciones</div>
-              </div>
-            </div>
-          );
-        })
-      }
-    </div>
-  </div>
-
-  
-  <div
-    class="grid grid-cols-12 gap-1 mt-3 text-[10px]
-           text-on-surface-variant text-center font-bold"
-  >
-    {
-      monthlyAveragesNames.map((avg) => (
-        <span>{avg.name}</span>
-      ))
-    }
-  </div>
-</div> 
-<!-- {
-  results.map((rt) => ( -->
-    <!-- <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col border-4">
-      <h4 class="text-sm font-bold mb-6">{title}</h4>
-      <div class="flex-1 flex items-end gap-1">
-        {monthlyAveragesNames.map((avg) => (
-        <div class=
-          "flex-1 bg-tertiary/40 rounded-t-sm border-8 border-red-500"
-        style={`height: ${80}%;`}
-        /> 
-        <div class="flex-1 bg-tertiary/40 rounded-t-sm border-0" 
-        style={`height: ${Math.min(Math.abs(150), 100)}%;`}
-        />
-        <div class="flex-1 bg-tertiary/60 h-[25%] rounded-t-sm"
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        <div class="flex-1 bg-tertiary h-[45%] rounded-t-sm" 
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        <div class="flex-1 bg-surface-container-highest h-[85%] rounded-t-sm" 
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        <div class="flex-1 bg-secondary h-[65%] rounded-t-sm" 
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        <div class="flex-1 bg-secondary/60 h-[30%] rounded-t-sm" 
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        <div class="flex-1 bg-secondary/40 h-[15%] rounded-t-sm" 
-        style={`height: ${Math.min(Math.abs(50), 100)}%;`}
-        />
-        ))}
-      </div>
-      <div class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold">
-        <>
-          <span>{ratioValue1}%</span>
-          <span>0%</span>
-          <span>{ratioValue2}%</span>
-        </>
-      </div>
-    </div>
-   -->
-<!-- } -->
