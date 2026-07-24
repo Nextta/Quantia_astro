@@ -349,12 +349,12 @@ console.log(backtestArr);
 
   export function calculateMonthlyPerformance(
     trades: Trade[],
-    initialBalance = 20,
+    initialBalance = 1,
   ): YearRow[] {
     const validInitialBalance =
       Number.isFinite(initialBalance) && initialBalance > 0
         ? initialBalance
-        : 200;
+        : 1;
 
     const monthlyTotals = new Map<string, number>();
     const years = new Set<number>();

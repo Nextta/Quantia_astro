@@ -44,7 +44,7 @@ const monthNames = [
   "Nov",
   "Dic",
 ];
-interface YearRow {
+export interface YearRow {
   year: number;
   months: Array<number | null>;
   ytd: number;
@@ -57,14 +57,14 @@ export interface MonthlyAverage {
 
 export function calculateMonthlyPerformance(
   trades: Trade[],
-  initialBalance = 20,
+  initialBalance = 1,
 ): YearRow[] {
   const validInitialBalance =
     Number.isFinite(initialBalance) && initialBalance > 0
       ? initialBalance
-      : 200;
+      : 1;
 
-  const monthlyTotals = new Map<string, number>();
+  const monthlyTotals = new Map<string, number>(); //El number es el PL, la clave es año y mes
   const years = new Set<number>();
 
   for (const trade of trades) {
