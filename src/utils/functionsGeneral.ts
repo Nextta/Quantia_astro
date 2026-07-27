@@ -1,31 +1,40 @@
 import type { Backtest } from "../interfaces/backtest";
-import type { resultados } from "../interfaces/resultados"
-import type { Trade} from "../interfaces/trades";
+import type { resultados } from "../interfaces/resultados";
+import type { Trade } from "../interfaces/trades";
 
 // const cuenta_data_all, Strategy = cuenta_data
 import Database from "better-sqlite3";
-import { get_alls_backtests } from './testing/testing';
+import { get_alls_backtests } from "./testing/testing";
 
 const db = new Database(import.meta.env.URL_DATABASE);
 
 export async function getBacktest(): Promise<Backtest[]> {
-  return db.prepare("SELECT * FROM backtest ORDER BY id ASC").all() as Backtest[];
+  return db
+    .prepare("SELECT * FROM backtest ORDER BY id ASC")
+    .all() as Backtest[];
 }
 
-export async function getOneBacktest(idBacktest:number): Promise<Backtest> {
-  return db.prepare(`SELECT * FROM backtest WHERE id = ?`).get(idBacktest) as Backtest;
+export async function getOneBacktest(idBacktest: number): Promise<Backtest> {
+  return db
+    .prepare(`SELECT * FROM backtest WHERE id = ?`)
+    .get(idBacktest) as Backtest;
 }
 
-export async function getResults(idBacktest:number): Promise<resultados[]>{
-    return db.prepare(`SELECT * FROM resultados WHERE id_backtest= ${idBacktest} ORDER BY id ASC`).all() as resultados[];
+export async function getResults(idBacktest: number): Promise<resultados[]> {
+  return db
+    .prepare(
+      `SELECT * FROM resultados WHERE id_backtest= ${idBacktest} ORDER BY id ASC`,
+    )
+    .all() as resultados[];
 }
 
-export async function getTrades(idBacktest:number): Promise<Trade[]>{
-    return db.prepare(`SELECT * FROM trades WHERE id_backtest= ${idBacktest} ORDER BY id ASC`).all() as Trade[];
+export async function getTrades(idBacktest: number): Promise<Trade[]> {
+  return db
+    .prepare(
+      `SELECT * FROM trades WHERE id_backtest= ${idBacktest} ORDER BY id ASC`,
+    )
+    .all() as Trade[];
 }
-
-
-
 
 //---------------------------------------
 //---------------------------------------
@@ -60,9 +69,7 @@ export function calculateMonthlyPerformance(
   initialBalance: number = 1,
 ): YearRow[] {
   const validInitialBalance =
-    Number.isFinite(initialBalance) && initialBalance > 0
-      ? initialBalance
-      : 1;
+    Number.isFinite(initialBalance) && initialBalance > 0 ? initialBalance : 1;
 
   const monthlyTotals = new Map<string, number>(); //El number es el PL, la clave es año y mes
   const years = new Set<number>();
@@ -92,61 +99,53 @@ export function calculateMonthlyPerformance(
   let runningBalance = validInitialBalance;
   console.log(runningBalance);
 
-  return Array.from(years)
-    .sort((a, b) => a - b)
-    .map((year) => {
-      const yearOpeningBalance = runningBalance;
+  const sortedYears = Array.from(years).sort((a, b) => a - b);
+  const yearsRows: YearRow[] = sortedYears.map((year) => {
+    const yearOpeningBalance = runningBalance;
 
-      const months = Array.from({ length: 12 }, (_, index) => {
-        const month = index + 1;
-        const key = `${year}-${month}`;
+    const months = Array.from({ length: 12 }, (_, index) => {
+      const month = index + 1;
+      const key = `${year}-${month}`;
 
-        if (!monthlyTotals.has(key)) {
-          return null;
-        }
+      if (!monthlyTotals.has(key)) {
+        return null;
+      }
 
-        const monthPL = monthlyTotals.get(key) ?? 0;
-        const monthOpeningBalance = runningBalance;
+      const monthPL = monthlyTotals.get(key) ?? 0;
+      const monthOpeningBalance = runningBalance;
 
-        const monthlyPercentage =
-          monthOpeningBalance !== 0
-            ? (monthPL / monthOpeningBalance) * 100
-            : 0;
+      const monthlyPercentage =
+        monthOpeningBalance !== 0 ? (monthPL / monthOpeningBalance) * 100 : 0;
 
-        runningBalance += monthPL;
+      runningBalance += monthPL;
 
-        return monthlyPercentage;
-      });
-
-      const ytd =
-        yearOpeningBalance !== 0
-          ? ((runningBalance - yearOpeningBalance) /
-              yearOpeningBalance) *
-            100
-          : 0;
-
-      return {
-        year,
-        months,
-        ytd,
-      };
+      return monthlyPercentage;
     });
+
+    const ytd =
+      yearOpeningBalance !== 0
+        ? ((runningBalance - yearOpeningBalance) / yearOpeningBalance) * 100
+        : 0;
+
+    const yearRow: YearRow = {
+      year,
+      months,
+      ytd,
+    };
+    return yearRow;
+  });
+  return yearsRows;
 }
 
 export function calculateAverageMonthlyPerformance(
   yearRows: YearRow[],
 ): MonthlyAverage[] {
-  return Array.from({ length: 12 }, (_, monthIndex) => {
+  const monthlyAvgs = Array.from({ length: 12 }, (_, monthIndex) => {
     const values = yearRows
       .map((row) => row.months[monthIndex])
       .filter((value): value is number => typeof value === "number");
 
-      console.log(values);
-
-    const sum = values.reduce(
-      (accumulator, value) => accumulator + value,
-      0,
-    );
+    const sum = values.reduce((accumulator, value) => accumulator + value, 0);
 
     return {
       month: monthIndex + 1,
@@ -154,10 +153,9 @@ export function calculateAverageMonthlyPerformance(
       observations: values.length,
     };
   });
+
+  return monthlyAvgs;
 }
-
-
-
 
 // interface MonthlyAverage {
 //   month: number;
@@ -166,10 +164,6 @@ export function calculateAverageMonthlyPerformance(
 // }
 
 //Sumamos porcentaje
-
-
-
-
 
 // export function calculateMonthlyTotals(trades: Trade[]) {
 //   const monthTotals = new Map<string, number>();
@@ -277,6 +271,3 @@ export function calculateAverageMonthlyPerformance(
 
 //   return monthlyReturns;
 // }
-
-
-
