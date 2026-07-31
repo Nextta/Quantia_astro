@@ -26,6 +26,7 @@ import {
   getTrades,
 } from "../../utils/functionsGeneral";
 import type { Backtest } from "../../interfaces/backtest";
+import { initialBalance } from "../main/Home.astro";
 const { id } = Astro.params;
 
 const idActual = Number(id);
@@ -170,7 +171,7 @@ const backtestArr: Backtest = await getOneBacktest(idActual);
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     {
       results.map((rt) => (
-        <BarGraph title="Rendimiento por día" id={idActual} />
+        <BarGraph title="Rendimiento por día" id={idActual} trade={trades} initialBalance={backtestArr.balance}/>
       ))
     }
     <ReturnDistribution

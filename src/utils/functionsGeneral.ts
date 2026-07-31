@@ -157,6 +157,131 @@ export function calculateAverageMonthlyPerformance(
   return monthlyAvgs;
 }
 
+type TradingWeekDay = 1 | 2 | 3 | 4 | 5;
+
+export type WeekAverage = {
+  day: TradingWeekDay;
+  average: number | null;
+  observations: number;
+};
+
+export function getDayAverage(
+  trades: Trade[],
+  initialBalance: number = 1,
+): WeekAverage[] {
+  const validInitialBalance =
+    Number.isFinite(initialBalance) && initialBalance > 0 ? initialBalance : 1;
+
+  const dayTotals = new Map<string, number>();
+
+  for (const trade of trades) {
+    if (!trade.t0) continue;
+
+    const dateMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(trade.t0);
+
+    if (!dateMatch) continue;
+
+    const year = Number(dateMatch[1]);
+    const month = Number(dateMatch[2]);
+    const day = Number(dateMatch[3]);
+
+    if (month < 1 || month > 12) continue;
+
+    const key = `${year}-${month}-${day}`;
+
+    const parsedPL = Number(trade.pl ?? 0);
+
+    const tradePL = Number.isFinite(parsedPL) ? parsedPL : 0;
+
+    const currentTotal = dayTotals.get(key) ?? 0;
+
+    dayTotals.set(key, currentTotal + tradePL); //Aqui hacemos la suma por dia
+    //Aqui ya tenemos la suma de cada fecha, esto es  lo que hace todo el for
+
+    // console.log(year);
+
+    // const dateUTC = Date.UTC(year,month-1,day);
+    // const newDateF = new Date(dateUTC);
+
+    // const weekDay = newDateF.getUTCDay();
+  }
+
+  const allEntrys = dayTotals.entries(); //Obtenemos todos los datos anteriormente obtenidos con el for
+
+  const arrDaysTotals = Array.from(allEntrys); //Aqui convertimos el iterador en array
+
+  console.log("Todas las entradas: ", arrDaysTotals);
+
+  const sortedDaysTotals = arrDaysTotals.sort((a, b) => {
+    const dateA = a[0]; //a[0] es la fechav a[1] es el PL
+    const dateB = b[0]; //Extraemos ambas fechas
+    const elementsA = dateA.split("-").map(Number); //Separamos el string con guion, y convertimos a numero con map
+    const elementsB = dateB.split("-").map(Number);
+    const timeA = Date.UTC(elementsA[0], elementsA[1] - 1, elementsA[2]);
+    const timeB = Date.UTC(elementsB[0], elementsB[1] - 1, elementsB[2]);
+
+    return timeA - timeB;
+  });
+
+  let runningBalance = validInitialBalance;
+
+  console.log("Balance al principio del día:", runningBalance);
+
+  const percentWeekDay = new Map<number, number[]>();
+
+  for (const [dateKey, dayPL] of sortedDaysTotals) {
+    console.log("Balance al principio del día:", runningBalance);
+    const [year, month, day] = dateKey.split("-").map(Number);
+
+    const dailyPercent = (dayPL / runningBalance) * 100;
+
+    const dateUTC = Date.UTC(year, month - 1, day);
+    const weekDay = new Date(dateUTC).getUTCDay();
+
+    const currentPercentages = percentWeekDay.get(weekDay) ?? [];
+    console.log(dateKey, "-", weekDay);
+
+    console.log("Fecha:", dateUTC);
+    console.log("Pl diario:", dayPL, dailyPercent);
+
+    //aumentar running balance
+
+    runningBalance += dayPL;
+
+    currentPercentages.push(dailyPercent);
+
+    percentWeekDay.set(weekDay, currentPercentages);
+
+    console.log("Balance después del día:", runningBalance);
+  }
+
+  console.log("Días ordenados:", sortedDaysTotals);
+  console.log("Porcentajes agrupados:", percentWeekDay);
+
+  const daysToShow: TradingWeekDay[] = [1, 2, 3, 4, 5];
+
+  const weekAvgs = daysToShow.map((weekDay) => {
+    const percentages = percentWeekDay.get(weekDay) ?? [];
+
+    const sum = percentages.reduce(
+      (accumulator, percentage) => accumulator + percentage,
+      0,
+    );
+
+    const prom = percentages.length > 0 ? sum / percentages.length : null;
+
+    console.log(weekDay, percentages);
+    console.log("Día:", weekDay, "Suma:", sum);
+    return {
+      day: weekDay,
+      average: prom,
+      observations: percentages.length,
+    };
+  });
+  console.log("Promedios semanales:", weekAvgs);
+  return weekAvgs;
+}
+
 // interface MonthlyAverage {
 //   month: number;
 //   average: number | null;
