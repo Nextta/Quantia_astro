@@ -70,34 +70,41 @@ const returnPercentage =
       type="application/json"
       class="equity-chart-data"
       set:html={JSON.stringify(points)}
-    />
+    ></script> 
   </div>
 </div>
 
 <script>
-  import { createChart, AreaSeries, ColorType } from "lightweight-charts";
+  import { createChart, BaselineSeries, ColorType } from "lightweight-charts";
+
+  
 
   function initEquityCharts() {
     const roots = document.querySelectorAll<HTMLElement>(".equity-chart-root");
 
     roots.forEach((root) => {
-      if (root.dataset.initialized === "true") return;
+      if (root.dataset.initialized === "true") return; //Evitamos crear el gráfico si ya se ha inicializado
 
       const container = root.querySelector<HTMLElement>(".equity-chart");
 
       const dataTag =
-        root.querySelector<HTMLScriptElement>(".equity-chart-data");
+        root.querySelector<HTMLScriptElement>(".equity-chart-data"); // Obtenemos el elemento <script> que contiene los datos
 
-      if (!container || !dataTag) return;
+      if (!container || !dataTag) return; // Si no encontramos el contenedor o el elemento de datos, salimos de la función
 
-      const points = JSON.parse(dataTag.textContent || "[]");
+      const points = JSON.parse(dataTag.textContent || "[]"); // Parseamos los datos del elemento <script> a un arreglo de puntos
+
+      console.log("¿Es un arreglo?", Array.isArray(points));
+      console.log("Cantidad de puntos:", points.length);
+      console.log("Primer punto:", points[0]);
+      console.table(points);
 
       // console.log("Total:", total);
 
       requestAnimationFrame(() => {
-        var tradeNumber = new Map<string, number>(
-          points.slice(1).map((point: { time: string }, index: number) => {
-            return [point.time, index + 1];
+        const tradeNumber = new Map<number, number>(
+          points.slice(1).map((point: { time: number }, index: number) => {
+            return [Number(point.time), index + 1];
           }),
         );
 
@@ -125,49 +132,59 @@ const returnPercentage =
             visible: true,
             borderVisible: false,
             ticksVisible: true,
-            tickMarkFormatter: (time: string) => {
-              const tradeN = tradeNumber.get(String(time));
+              tickMarkMaxCharacterLength: 5,
+            tickMarkFormatter: (time: number) => {
+              const numericTime = Number(time);
+              const tradeN = tradeNumber.get(numericTime);
 
-              if (!tradeN) return "Initial Balance";
+              if (tradeN === undefined) {
+                return "#0";
+              }
 
-              return `| #${tradeN} - ${time} |`;
+              return `#${tradeN}`;
             },
           },
           localization: {
-            priceFormatter: (price: number) => {
-              return `$${price.toLocaleString()}`;
+            priceFormatter: (money: number) => {
+              return `$${money.toLocaleString()} USD`;
             },
           },
 
-          handleScroll: false,
-          handleScale: false,
+          handleScroll: true,
+          handleScale: true,
         });
 
-        const finalBalance = Number(root.dataset.finalBalance);
         const initialBalance = Number(root.dataset.initialBalance);
 
-        console.log({
-          finalBalance,
-          initialBalance,
-        });
+        const series = chart.addSeries(BaselineSeries, {
+          baseValue: {
+            type: "price",
+            price: initialBalance,
+          },
 
-        // console.log("Balance Initial:", balance_Initial);
-        const isProfitable = finalBalance >= initialBalance;
-        const series = chart.addSeries(AreaSeries, {
-          lineColor: isProfitable ? "#4edea3" : "#ef4444",
+          topLineColor: "#4edea3",
+          topFillColor1: "rgba(78, 222, 163, 0.30)",
+          topFillColor2: "rgba(78, 222, 163, 0.03)",
 
-          topColor: isProfitable
-            ? "rgba(78, 222, 163, 0.30)"
-            : "rgba(239, 68, 68, 0.03)",
-          bottomColor: isProfitable
-            ? "rgba(78, 222, 163, 0.03)"
-            : "rgba(239, 68, 68, 0.03)",
+          bottomLineColor: "#ef4444",
+          bottomFillColor1: "rgba(239, 68, 68, 0.03)",
+          bottomFillColor2: "rgba(239, 68, 68, 0.30)",
+
           lineWidth: 3,
           priceLineVisible: false,
           lastValueVisible: false,
           crosshairMarkerVisible: false,
         });
-        // console.log(points);
+       
+
+        //         const testPoints = [
+        //   { time: "2026-01-01", value: 10000 },
+        //   { time: "2026-01-02", value: 10500 },
+        //   { time: "2026-01-03", value: 10200 },
+        //   { time: "2026-01-04", value: 11000 },
+        //   { time: "2026-01-05", value: 12933.13 },
+        // ];
+
         series.setData(points);
         chart.timeScale().fitContent();
 

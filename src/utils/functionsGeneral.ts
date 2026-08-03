@@ -23,7 +23,7 @@ export async function getOneBacktest(idBacktest: number): Promise<Backtest> {
 export async function getResults(idBacktest: number): Promise<resultados[]> {
   return db
     .prepare(
-      `SELECT * FROM resultados WHERE id_backtest= ${idBacktest} ORDER BY id ASC`,
+      `SELECT * FROM resultados WHERE id_backtest= ${idBacktest}`,
     )
     .all() as resultados[];
 }
@@ -39,20 +39,6 @@ export async function getTrades(idBacktest: number): Promise<Trade[]> {
 //---------------------------------------
 //---------------------------------------
 
-const monthNames = [
-  "Ene",
-  "Feb",
-  "Mar",
-  "Abr",
-  "May",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dic",
-];
 export interface YearRow {
   year: number;
   months: Array<number | null>;
@@ -73,7 +59,7 @@ export function calculateMonthlyPerformance(
 
   const monthlyTotals = new Map<string, number>(); //El number es el PL, la clave es año y mes
   const years = new Set<number>();
-
+  console.log(trades);
   for (const trade of trades) {
     if (!trade.t0) continue;
 
@@ -94,6 +80,7 @@ export function calculateMonthlyPerformance(
     const currentTotal = monthlyTotals.get(key) ?? 0;
 
     monthlyTotals.set(key, currentTotal + tradePL);
+      
   }
 
   let runningBalance = validInitialBalance;
@@ -286,22 +273,49 @@ export function buildEquityCurve(
   trades: Trade[],
   initialBalance: number,
 ) {
+
+  const orderedTrades = trades
+    .map((trade) => ({
+      trade,
+      time: parseTradeTime(trade.t0),
+    }))
+    .sort((a, b) => a.time - b.time);
+
   let currentBalance = initialBalance;
+
+    const initialTime =
+    orderedTrades.length > 0
+      ? orderedTrades[0].time - 1
+      : Math.floor(Date.now() / 1000);
+console.log(orderedTrades[0]);
+console.log(orderedTrades[0].time);
+
+  let previousTime = initialTime;
+
 
   const points = [
     {
-      time: "",
+      time: initialTime,
       value: initialBalance,
     },
   ];
 
-  for (const trade of trades) {
+  for (const item of orderedTrades) {
+
+    const { trade } = item;
+
+    const uniqueTime = // Aqui nos aseguramos de que el tiempo sea único para cada punto en la curva de equidad
+      item.time <= previousTime // Si el tiempo del trade es menor o igual al tiempo anterior, incrementamos el tiempo en 1 segundo para evitar duplicados
+        ? previousTime + 1
+        : item.time;
+
     currentBalance += trade.pl;
 
     points.push({
-      time: trade.t0,
+      time: uniqueTime,
       value: currentBalance,
     });
+    previousTime = uniqueTime;
   }
 
   return {
@@ -311,4 +325,15 @@ export function buildEquityCurve(
     netProfit: currentBalance - initialBalance,
     tradeCount: trades.length,
   };
+}
+
+function parseTradeTime(time: string): number {
+  const normalizedTime = time.trim().replace(" ", "T");
+  const milliseconds = Date.parse(normalizedTime);
+
+  if (Number.isNaN(milliseconds)) {
+    throw new Error(`Fecha inválida en una operación: ${time}`);
+  }
+
+  return Math.floor(milliseconds / 1000); //Quitamos posibles decimales con math floor
 }

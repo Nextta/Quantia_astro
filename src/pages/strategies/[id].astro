@@ -11,13 +11,7 @@ import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
-import Database from "better-sqlite3";
 import type { Trade } from "../../interfaces/trades";
-import type { resultados } from "../../interfaces/resultados";
-
-
-import { resultados_data } from "../../functions/functions";
-import type { Tradess } from "../../lib/types";
 
 import {
   getOneBacktest,
@@ -36,8 +30,6 @@ if (!Number.isInteger(idActual) || idActual <= 0) {
 const results = await getResults(idActual);
 const trades: Trade[] = await getTrades(idActual);
 const backtest: Backtest = await getOneBacktest(idActual);
-
-
 ---
 
 <Layout>
@@ -84,10 +76,10 @@ const backtest: Backtest = await getOneBacktest(idActual);
   <!-- Hero Section: Bento Grid -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
     <!-- Equity Curve - Gráfica TV -->
-    <CurveDetail trades={trades} initialBalance={backtest.balance}/>
+    <CurveDetail trades={trades} initialBalance={backtest.balance} />
 
     <!-- Key Ratios -->
-    <div class="md:col-span-4 flex flex-col gap-6 border-3">
+    <div class="md:col-span-4 flex flex-col gap-6 border-0">
       {
         results.map((rt) => (
           <FactorBox
@@ -96,8 +88,24 @@ const backtest: Backtest = await getOneBacktest(idActual);
             recoveryFactor={Math.round(rt?.recovery_factor * 100) / 100}
             profitFactor={Math.round(rt?.profit_factor * 100) / 100}
           />
-        ))
-      }
+        
+      
+       
+          <InfoBoxDetail
+            title={"Sharpe Ratio"}
+            value={Math.round(rt?.sharpe_ratio * 100) / 100}
+          />
+        
+      
+      
+        
+          <InfoBoxDetail
+            title={"MAX DRAWDOWN"}
+            value={Math.round(rt?.max_drawdown * 100) / 100}
+            ratioLabel="Pico a Valle"
+          />
+      ))}
+      
     </div>
   </div>
   <!-- Detailed Metrics Grids -->
@@ -115,10 +123,10 @@ const backtest: Backtest = await getOneBacktest(idActual);
           parametro3Value={Math.round(rt?.worst_month * 100) / 100}
           parametro4Value={Math.round(rt?.time_in_market * 100) / 100}
         />
-      ))
-    }
-    {
-      results.map((rt) => (
+      
+    
+    
+     
         <FourMetrics
           parametro1="Max. Drawdown"
           parametro2="Ulcer Index"
@@ -130,10 +138,10 @@ const backtest: Backtest = await getOneBacktest(idActual);
           parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
           parametro4Value={Math.round(rt?.volatility_ann * 100) / 100}
         />
-      ))
-    }
-    {
-      results.map((rt) => (
+      
+    
+    
+      
         <FourMetrics
           parametro1="Skew ratio"
           parametro2="Kurtosis ratio"
@@ -145,10 +153,8 @@ const backtest: Backtest = await getOneBacktest(idActual);
           parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
           parametro4Value={Math.round(rt?.kelly_criterion * 100) / 100}
         />
-      ))
-    }
-    {
-      results.map((rt) => (
+ 
+      
         <FourMetrics
           parametro1="Número de trades"
           parametro2="Win %"
@@ -173,21 +179,24 @@ const backtest: Backtest = await getOneBacktest(idActual);
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     {
       results.map((rt) => (
-        <BarGraph title="Rendimiento por día" trades={trades} initialBalance={backtest.balance}/>
+        <BarGraph
+          title="Rendimiento por día"
+          trades={trades}
+          initialBalance={backtest.balance}
+        />
       ))
     }
-    <ReturnDistribution
-      trades={trades}
-      initialBalance={backtest.balance}
-    />
-
+    <ReturnDistribution trades={trades} initialBalance={backtest.balance} />
+    
     {
       results.map((rt) => (
         <StrVSBench
-          Value1={rt.alpha}
-          Value2={rt.beta}
-          Value3={rt.omega_ratio}
+          Value1={Math.round(Number(rt.alpha) * 100) / 100}
+          Value2={Math.round(Number(rt.beta) * 100) / 100}
+          Value3={Math.round(Number(rt.omega_ratio) * 100) / 100}
+          
         />
+        
       ))
     }
   </div>
@@ -200,13 +209,5 @@ const backtest: Backtest = await getOneBacktest(idActual);
   >
     <GlosaryDetail />
   </footer>
- 
-  <div
-    id="monthly-debug-data"
-    data-trades={JSON.stringify(trades)}
-    data-initial-balance={10000}
-    hidden
-  >
-  </div>
-</Layout>
 
+</Layout>
