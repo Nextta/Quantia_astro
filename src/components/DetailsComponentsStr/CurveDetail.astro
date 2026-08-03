@@ -1,57 +1,31 @@
 ---
-var balanceInitial: number = 10000;
-var balanceTotal: number = balanceInitial;
-
-const points = [
-  { time: "2025-01-01", value: balanceTotal },
-  // { time: "2025-01-10", value: 0 },
-  // { time: "2025-01-20", value: 0 },
-];
-
-//Balance actual
-//PLN
-function addProfit(pln: number, date: string) {
-  // let total = balance + pln;
-  balanceTotal += pln;
-  points.push({ time: date, value: balanceTotal });
-}
-
-addProfit(40, "2025-01-02");
-addProfit(40, "2025-01-03");
-addProfit(40, "2025-01-04");
-addProfit(-400, "2025-01-05");
-addProfit(80, "2025-01-06");
-addProfit(100, "2025-01-07");
-addProfit(140, "2025-01-08");
-addProfit(-50, "2025-01-09");
-
-const tradeNumberF = new Map(
-  points.map((point: { time: string; value: number }, index: number) => {
-    return [point.time, index + 1];
-  }),
-);
-
-// console.log(points);
-
-const total = points.reduce((total: number, point: { value: number }) => {
-  return (total += point.value);
-}, 0);
-
-const TradeNumber = points.length - 1;
+import type { Trade } from "../../interfaces/trades";
+import { buildEquityCurve } from "../../utils/functionsGeneral";
 
 interface Props {
   title?: string;
-  moneyTotal?: number;
+  initialBalance: number;
+  trades: Trade[];
   porcentaje?: number;
   CAGR?: string;
 }
 
 const {
   title = "Curva de Equidad (Equity Curve)",
-  moneyTotal = balanceTotal,
+  initialBalance,
+  trades,
   porcentaje = 24.5,
   CAGR = "CAGR",
 } = Astro.props as Props;
+
+const equityR = buildEquityCurve(trades, initialBalance);
+
+console.log(equityR);
+
+const { points, finalBalance, netProfit, tradeCount } = equityR;
+
+const returnPercentage =
+  initialBalance > 0 ? (netProfit / initialBalance) * 100 : 0;
 ---
 
 <div
@@ -63,15 +37,24 @@ const {
         {title}
       </h3>
       <p class="text-2xl font-bold font-headline text-slate-50 tracking-tight">
-        ${moneyTotal.toLocaleString()}
+        ${finalBalance.toLocaleString()}
       </p>
     </div>
 
     <div class="flex gap-2">
       <span
-        class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold"
+        class:list={[
+          "px-2 py-1 rounded text-[10px] font-bold",
+
+          returnPercentage > 0 && "bg-secondary/10 text-secondary",
+
+          returnPercentage < 0 && "bg-red-500/10 text-red-500",
+
+          returnPercentage === 0 && "bg-gray-500/10 text-gray-400",
+        ]}
       >
-        +{porcentaje}% {CAGR}
+        {returnPercentage > 0 ? "+" : ""}
+        {returnPercentage.toFixed(2)}% Return
       </span>
     </div>
   </div>
@@ -79,9 +62,8 @@ const {
   <div
     class="equity-chart-root w-full"
     style="height: 256px;"
-    data-balance-total={balanceTotal}
-    data-balance-initial={balanceInitial}
-    data-trade-number={TradeNumber}
+    data-final-balance={finalBalance}
+    data-initial-balance={initialBalance}
   >
     <div class="equity-chart w-full h-full"></div>
     <script
@@ -90,12 +72,6 @@ const {
       set:html={JSON.stringify(points)}
     />
   </div>
-  <!-- <div 
-    class="equity-chart-root"
-    data-balance-total={balanceTotal}
-  >
-    <div class="equity-chart"></div>
-  </div> -->
 </div>
 
 <script>
@@ -108,26 +84,13 @@ const {
       if (root.dataset.initialized === "true") return;
 
       const container = root.querySelector<HTMLElement>(".equity-chart");
+
       const dataTag =
         root.querySelector<HTMLScriptElement>(".equity-chart-data");
 
       if (!container || !dataTag) return;
 
       const points = JSON.parse(dataTag.textContent || "[]");
-      let acumulado: number = 0;
-      // const equityPoints = points.map(
-      //   (point: { time: string; value: number }) => {
-      //     acumulado += point.value;
-      //     return {
-      //       time: point.time,
-      //       value: acumulado,
-      //     };
-      //   },
-      // );
-
-      // const total = points.reduce((total: number, point: { value: number }) => {
-      //   return (acumulado += point.value);
-      // }, 0);
 
       // console.log("Total:", total);
 
@@ -180,15 +143,25 @@ const {
           handleScale: false,
         });
 
-        const balance_Total = Number(root.dataset.balanceTotal);
-        const balance_Initial = Number(root.dataset.balanceInitial);
+        const finalBalance = Number(root.dataset.finalBalance);
+        const initialBalance = Number(root.dataset.initialBalance);
+
+        console.log({
+          finalBalance,
+          initialBalance,
+        });
 
         // console.log("Balance Initial:", balance_Initial);
-
+        const isProfitable = finalBalance >= initialBalance;
         const series = chart.addSeries(AreaSeries, {
-          lineColor: balance_Total > balance_Initial ? "#4edea3" : "#ef4444",
-          topColor: "rgba(78, 222, 163, 0.30)",
-          bottomColor: "rgba(78, 222, 163, 0.03)",
+          lineColor: isProfitable ? "#4edea3" : "#ef4444",
+
+          topColor: isProfitable
+            ? "rgba(78, 222, 163, 0.30)"
+            : "rgba(239, 68, 68, 0.03)",
+          bottomColor: isProfitable
+            ? "rgba(78, 222, 163, 0.03)"
+            : "rgba(239, 68, 68, 0.03)",
           lineWidth: 3,
           priceLineVisible: false,
           lastValueVisible: false,

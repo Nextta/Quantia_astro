@@ -282,117 +282,33 @@ export function getDayAverage(
   return weekAvgs;
 }
 
-// interface MonthlyAverage {
-//   month: number;
-//   average: number | null;
-//   observations: number;
-// }
+export function buildEquityCurve(
+  trades: Trade[],
+  initialBalance: number,
+) {
+  let currentBalance = initialBalance;
 
-//Sumamos porcentaje
+  const points = [
+    {
+      time: "",
+      value: initialBalance,
+    },
+  ];
 
-// export function calculateMonthlyTotals(trades: Trade[]) {
-//   const monthTotals = new Map<string, number>();
-//   const yearsTotals = new Set<number>();
+  for (const trade of trades) {
+    currentBalance += trade.pl;
 
-//   for (const tr of trades) {
-//     if (!tr.t0) continue;
+    points.push({
+      time: trade.t0,
+      value: currentBalance,
+    });
+  }
 
-//     const dateMatch = /^(\d{4})-(\d{2})/.exec(tr.t0);
-
-//     if (!dateMatch) continue;
-
-//     const year = Number(dateMatch[1]);
-//     const month = Number(dateMatch[2]);
-
-//     if (month < 1 || month > 12) continue;
-
-//     yearsTotals.add(year);
-
-//     const key = `${year}-${month}`;
-
-//     const parsedPL = Number(tr.pl ?? 0);
-//     const tradePL = Number.isFinite(parsedPL) ? parsedPL : 0;
-
-//     const currentTotal = monthTotals.get(key) ?? 0;
-
-//     monthTotals.set(key, currentTotal + tradePL);
-//   }
-
-//   return{
-//     monthTotals,
-//     yearsTotals,
-//   };
-// }
-
-// export function calculateAverageByMonth(
-//   monthTotals: Map<string, number>,
-// ): MonthlyAverage[] {
-//   const accumulators = Array.from({ length: 12 }, () => ({
-//     sum: 0,
-//     count: 0,
-//   }));
-
-//   for (const [key, monthlyTotal] of monthTotals) {
-//     const [, monthText] = key.split("-");
-//     const month = Number(monthText);
-
-//     if (month < 1 || month > 12) continue;
-//     if (!Number.isFinite(monthlyTotal)) continue;
-
-//     const accumulator = accumulators[month - 1];
-
-//     accumulator.sum += monthlyTotal;
-//     accumulator.count += 1;
-//   }
-//   return accumulators.map((accumulator, index) => ({
-//     month: index + 1,
-
-//     average: accumulator.count > 0 ? accumulator.sum / accumulator.count : null,
-
-//     observations: accumulator.count,
-//   }));
-// }
-
-// export function calculateMonthlyReturns(
-//   trades: Trade[],
-//   initialBalance: number,
-// ) {
-//   const { monthTotals } = calculateMonthlyTotals(trades);
-
-//   // Ordenar cronológicamente los meses.
-//   const orderedMonths = [...monthTotals.entries()]
-//     .map(([key, profitLoss]) => {
-//       const [yearText, monthText] = key.split("-");
-
-//       return {
-//         key,
-//         year: Number(yearText),
-//         month: Number(monthText),
-//         profitLoss,
-//       };
-//     })
-//     .sort(
-//       (a, b) =>
-//         a.year - b.year ||
-//         a.month - b.month,
-//     );
-
-//   let currentBalance = initialBalance;
-//   const monthlyReturns = new Map<string, number>();
-
-//   for (const period of orderedMonths) {
-//     const openingBalance = currentBalance;
-
-//     const returnPercentage =
-//       openingBalance !== 0
-//         ? (period.profitLoss / openingBalance) * 100
-//         : 0;
-
-//     monthlyReturns.set(period.key, returnPercentage);
-
-//     // El cierre de este mes será el balance inicial del siguiente.
-//     currentBalance += period.profitLoss;
-//   }
-
-//   return monthlyReturns;
-// }
+  return {
+    points,
+    initialBalance,
+    finalBalance: currentBalance,
+    netProfit: currentBalance - initialBalance,
+    tradeCount: trades.length,
+  };
+}

@@ -4,34 +4,42 @@ import type { WeekAverage } from "../../utils/functionsGeneral";
 import type { Trade } from "../../interfaces/trades";
 
 interface Props {
-  id: number;
   title?: string;
-  trade: Trade[];
+  trades: Trade[];
   initialBalance: number;
 }
 
 const {
   title = "Rendimiento por día",
-  trade,
+  trades,
   initialBalance,
 } = Astro.props as Props;
 
-const getDays = getDayAverage(trade, initialBalance);
+const daysAverages = getDayAverage(trades, initialBalance);
 
 function getCellClass(value: number | null): string {
   const base =
     "w-full rounded-t-sm relative group transition-all duration-300";
 
-  if (value === null || value === 0) {
+  // No existen datos
+  if (value === null) {
+    return `${base} bg-transparent border-2 border-dashed border-gray-300`;
+  }
+
+  // Existen datos, pero el rendimiento fue 0%
+  if (value === 0) {
     return `${base} bg-gray-500`;
   }
 
+  // Rendimiento negativo
   if (value < 0) {
     return `${base} bg-red-500`;
   }
 
+  // Rendimiento positivo
   return `${base} bg-green-500`;
 }
+
 
 function getMax(weekAverages: WeekAverage[]): number {
   let actualMax = 0;
@@ -47,11 +55,11 @@ function getMax(weekAverages: WeekAverage[]): number {
   return actualMax;
 }
 
-const maxAverage = getMax(getDays);
+const maxAverage = getMax(daysAverages);
 
 const dayLabels = ["LUN", "MAR", "MIE", "JUE", "VIE"];
 
-const chartDays = getDays.map((item) => {
+const chartDays = daysAverages.map((item) => {
   const absoluteAverage = Math.abs(item.average ?? 0);
 
   const height =
