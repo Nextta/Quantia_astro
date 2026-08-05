@@ -10,115 +10,95 @@ import ReturnDistribution from "../../components/DetailsComponentsStr/ReturnDist
 import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
-interface Props {
-  id: string;
+
+import type { Trade } from "../../interfaces/trades";
+
+import {
+  getOneBacktest,
+  getResults,
+  getTrades,
+} from "../../utils/functionsGeneral";
+import type { Backtest } from "../../interfaces/backtest";
+const { id } = Astro.params;
+
+const idActual = Number(id);
+
+if (!Number.isInteger(idActual) || idActual <= 0) {
+  return Astro.redirect("/strategies");
 }
-import type { Trade } from "../../lib/types";
 
-const { id } = Astro.props as Props;
+const results = await getResults(idActual);
+const trades: Trade[] = await getTrades(idActual);
+const backtest: Backtest = await getOneBacktest(idActual);
 
-const allTrades: Trade[] = [
-  {
-    id: 1,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 2,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 3,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 4,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 5,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 6,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 7,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 8,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 9,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-  {
-    id: 10,
-    date: "2023-11-23 09:15",
-    side: "SHORT",
-    entryPrice: 41200.0,
-    exitPrice: 41450.25,
-    resultPercentage: -0.61,
-    resultAmount: -4200,
-    duration: "1d 2h",
-  },
-];
+
+let totalReturnV;
+let bestMonthV;
+let worstMonthV;
+let marketTimeV;
+
+let maxDrawDownV;
+let ulcerIndexV;
+let riskOfRuin1V;
+let volatilidadAnualV;
+
+let skewRatioV;
+let kurtosisRatioV;
+let riskOfRuin2V;
+let kellyCriterionV;
+
+let numeroDeTradesV;
+let winV;
+let avgWinLossV;
+let rExpectancyV;
+
+const arrProps = results.flatMap((rt) => {
+  
+  totalReturnV = Math.round(rt.retorno * 100) / 100 + " USD";
+  bestMonthV = Math.round(rt.best_month * 100) / 100 + " USD";
+  worstMonthV = Math.round(rt.worst_month * 100) / 100 + " USD";
+  marketTimeV = Math.round(rt.time_in_market * 100) / 100 + " %";
+
+  maxDrawDownV = Math.round(rt.max_drawdown * 100) / 100 + " %"; //Rojo en negativo, siempre rojo
+  ulcerIndexV = Math.round(rt.ulcer_index * 100) / 100 + " %";
+  riskOfRuin1V = Math.round(rt.risk_of_ruin * 100) / 100 + " %";
+  volatilidadAnualV = Math.round(rt.volatility_ann * 100) / 100 + " %";
+
+  skewRatioV = Math.round(rt.skew_ratio * 100) / 100 + " %";
+  kurtosisRatioV = Math.round(rt.kurtosis_ratio * 100) / 100 + " %";
+  riskOfRuin2V = Math.round(rt.risk_of_ruin * 100) / 100 + " %";
+  kellyCriterionV = Math.round(rt.kelly_criterion * 100) / 100 + " %";
+
+  numeroDeTradesV = Math.round(rt.n_trades) + "";
+  winV = Math.round(rt.wins_percentage * 100) / 100 + " %";
+  avgWinLossV = Math.round(rt.avg_win_loss_ratio * 100) / 100 + "";
+  rExpectancyV = Math.round(rt.r_expectancy * 100) / 100 + " R";
+
+  return {
+    totalReturnV,
+    bestMonthV,
+    worstMonthV,
+    marketTimeV,
+
+    maxDrawDownV,
+    ulcerIndexV,
+    riskOfRuin1V,
+    volatilidadAnualV,
+
+    skewRatioV,
+    kurtosisRatioV,
+    riskOfRuin2V,
+    kellyCriterionV,
+
+    numeroDeTradesV,
+    winV,
+    avgWinLossV,
+    rExpectancyV,
+  };
+});
+
+
+
 ---
 
 <Layout>
@@ -138,13 +118,13 @@ const allTrades: Trade[] = [
         Reporte de Desempeño
       </h1>
     </div>
-    <div class="flex gap-4 ">
+    <div class="flex gap-4">
       <div class="bg-surface-container-low px-4 py-2 rounded-xl">
         <span
           class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
           >Descargar</span
         >
-        <div class="mt-1 flex items-center gap-2 ">
+        <div class="mt-1 flex items-center gap-2">
           <span class="text-sm font-semibold">Reporte</span>
           <div class="flex">
             <svg
@@ -163,41 +143,136 @@ const allTrades: Trade[] = [
     </div>
   </div>
   <!-- Hero Section: Bento Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 ">
-    <!-- Equity Curve -->
-    <CurveDetail />
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+    <!-- Equity Curve - Gráfica TV -->
+    <CurveDetail trades={trades} initialBalance={backtest.balance} />
 
     <!-- Key Ratios -->
-    <div class="md:col-span-4 flex flex-col gap-6 ">
-      <InfoBoxDetail />
-      <InfoBoxDetail />
-      <FactorBox />
+    <div class="md:col-span-4 flex flex-col gap-6 border-0">
+      {
+        results.map((rt) => (
+          <FactorBox
+            factor1={"Recovery Factor"}
+            factor2={"Profit Factor"}
+            recoveryFactor={Math.round(rt?.recovery_factor * 100) / 100}
+            profitFactor={Math.round(rt?.profit_factor * 100) / 100}
+          />
+        
+      
+      
+          <InfoBoxDetail
+            title={"Sharpe Ratio"}
+            value={String(Math.round(rt?.sharpe_ratio * 100) / 100)}
+          />
+        
+      
+      
+        //Colocar porcentaje en maxDrawDown
+          
+      ))}
+      {
+        arrProps.map((rt) => (
+          <InfoBoxDetail
+            title={"MAX DRAWDOWN"}
+            value={rt.maxDrawDownV}
+            ratioLabel="Pico a Valle"
+          />
+        ))
+      }
     </div>
   </div>
   <!-- Detailed Metrics Grids -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 ">
-    <FourMetrics />
-    <FourMetrics />
-    <FourMetrics />
-    <FourMetrics />
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+    {
+      arrProps.map((rt) => (
+        <FourMetrics
+          parametro1="Total return"
+          parametro2="Best Month"
+          parametro3="Worst Month"
+          parametro4="Market time"
+          title="Overall returns"
+          parametro1Value={rt.totalReturnV}
+          parametro2Value={rt.bestMonthV}
+          parametro3Value={rt.worstMonthV}
+          parametro4Value={rt.marketTimeV}
+        />
+
+        <FourMetrics
+          parametro1="Max. Drawdown"
+          parametro2="Ulcer Index"
+          parametro3="Risk of ruin"
+          parametro4="Volatilidad anual"
+          title="Risk metrics"
+          parametro1Value={rt.maxDrawDownV}
+          parametro2Value={rt.ulcerIndexV}
+          parametro3Value={rt.riskOfRuin1V}
+          parametro4Value={rt.volatilidadAnualV}
+        />
+
+        <FourMetrics
+          parametro1="Skew ratio"
+          parametro2="Kurtosis ratio"
+          parametro4="Kelly Criterion"
+          title="Statistical metrics"
+          parametro1Value={rt.skewRatioV}
+          parametro2Value={rt.kurtosisRatioV}
+          parametro4Value={rt.kellyCriterionV}
+        />
+
+        <FourMetrics
+          parametro1="Número de trades"
+          parametro2="Win %"
+          parametro3="Avg Win/Loss"
+          parametro4="R expectancy"
+          title="Trading metrics"
+          parametro1Value={rt.numeroDeTradesV}
+          parametro2Value={rt.winV}
+          parametro3Value={rt.avgWinLossV}
+          parametro4Value={rt.rExpectancyV}
+        />
+      
+      ))
+    }
   </div>
   <!-- Heatmap Section -->
-  <HeatMap />
+
+  
+  <HeatMap trades={trades} initialBalance={backtest.balance} />
+
   <!-- Comparative Charts & Histograms -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 ">
-    <BarGraph />
-    <ReturnDistribution />
-    <StrVSBench />
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    {
+      results.map((rt) => (
+        <BarGraph
+          title="Rendimiento por día"
+          trades={trades}
+          initialBalance={backtest.balance}
+        />
+      ))
+    }
+    <ReturnDistribution trades={trades} initialBalance={backtest.balance} />
+    
+    {
+      results.map((rt) => (
+        <StrVSBench
+          Value1={Math.round(Number(rt.alpha) * 100) / 100}
+          Value2={Math.round(Number(rt.beta) * 100) / 100}
+          Value3={Math.round(Number(rt.omega_ratio) * 100) / 100}
+          
+        />
+        
+      ))
+    }
   </div>
   <!-- Recent Activity Log Table -->
-  <TradesList tradesPerPage={10} trades={allTrades} id={1} />
+  <TradesList tradesPerPage={12} id={idActual} />
+
   <!-- System Footer -->
   <footer
-    class=" border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
+    class="border-surface-container-high flex flex-col md:flex-row justify-between items-start gap-8 opacity-60"
   >
     <GlosaryDetail />
   </footer>
-  <!-- </main> -->
-  <!-- Contextual FAB (Hidden on details per mandate, but included for complete shell logic if needed on other screens) -->
-  <!-- Suppressed: Shell Visibility Rule -->
+
 </Layout>

@@ -11,9 +11,84 @@ const {
 
 const items = [
   {
-    term: "Concepto 1",
+    term: "Overall Returns",
     definition:
-      "Definición------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+      "Retornos generales. Sección que agrupa las principales métricas de rendimiento, riesgo y comportamiento de una estrategia de trading.",
+  },
+  {
+    term: "Total Return",
+    definition:
+      "Retorno total. Representa la ganancia o pérdida acumulada de la estrategia durante todo el periodo analizado. Puede expresarse en dinero o porcentaje.",
+  },
+  {
+    term: "Best Month",
+    definition:
+      "Mejor mes. Indica la mayor ganancia obtenida por la estrategia durante un solo mes.",
+  },
+  {
+    term: "Worst Month",
+    definition:
+      "Peor mes. Indica la mayor pérdida registrada por la estrategia durante un solo mes.",
+  },
+  {
+    term: "Market Time",
+    definition:
+      "Tiempo en mercado. Porcentaje del periodo total durante el cual la estrategia mantuvo una o más operaciones abiertas.",
+  },
+  {
+    term: "Max Drawdown",
+    definition:
+      "Máxima caída de capital. Representa la mayor disminución sufrida desde un máximo de la curva de balance o equity hasta el mínimo posterior.",
+  },
+  {
+    term: "Ulcer Index",
+    definition:
+      "Índice de ulceración. Mide la profundidad y la duración de los drawdowns. Un valor más bajo indica una curva de capital más estable.",
+  },
+  {
+    term: "Risk of Ruin",
+    definition:
+      "Riesgo de ruina. Probabilidad estimada de que la estrategia pierda una parte crítica del capital o alcance el límite establecido como ruina.",
+  },
+  {
+    term: "Annual Volatility",
+    definition:
+      "Volatilidad anual. Mide cuánto varían los retornos de la estrategia durante un año. Una volatilidad alta indica movimientos más agresivos e irregulares.",
+  },
+  {
+    term: "Skew Ratio",
+    definition:
+      "Ratio de asimetría. Mide si la distribución de retornos presenta resultados extremos principalmente hacia las ganancias o hacia las pérdidas.",
+  },
+  {
+    term: "Kurtosis Ratio",
+    definition:
+      "Ratio de curtosis. Mide la frecuencia con la que aparecen resultados extremos en la distribución de retornos de la estrategia.",
+  },
+  {
+    term: "Kelly Criterion",
+    definition:
+      "Criterio de Kelly. Estima la fracción óptima del capital que debería arriesgarse para maximizar el crecimiento compuesto a largo plazo.",
+  },
+  {
+    term: "Number of Trades",
+    definition:
+      "Número de operaciones. Cantidad total de trades ejecutados por la estrategia durante el periodo del backtesting.",
+  },
+  {
+    term: "Win %",
+    definition:
+      "Porcentaje de operaciones ganadoras. Indica qué proporción de todos los trades terminó con un resultado positivo.",
+  },
+  {
+    term: "Avg Win/Loss",
+    definition:
+      "Relación entre ganancia y pérdida promedio. Compara cuánto gana en promedio una operación ganadora contra cuánto pierde una operación perdedora.",
+  },
+  {
+    term: "R Expectancy",
+    definition:
+      "Expectativa en múltiplos de R. Indica cuánto se espera ganar o perder en promedio por operación en relación con el riesgo inicial asumido.",
   },
 ];
 ---
@@ -43,7 +118,7 @@ const items = [
             </div>
 
             <div>
-              <p class="text-sm leading-7 text-on-surface-variant">
+              <p class="text-md leading-7 text-white">
                 {item.definition}
               </p>
             </div>

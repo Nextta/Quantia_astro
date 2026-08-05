@@ -9,19 +9,37 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
-    "@astrojs/node": "^10.0.4",
+    "@astrojs/node": "^11.0.3",
+    "@astrojs/react": "^6.0.2",
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/api": "^2.10.1",
-    "astro": "^6.0.8",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^7.1.6",
+    "better-sqlite3": "^12.11.1",
     "lightweight-charts": "^5.1.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "rete": "^2.0.6",
+    "rete-area-plugin": "^2.1.5",
+    "rete-connection-plugin": "^2.0.5",
+    "rete-react-plugin": "^2.1.0",
+    "rete-render-utils": "^2.0.3",
+    "styled-components": "^6.4.1",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.67",
     "@iconify-json/mdi-light": "^1.2.2",
-    "@tauri-apps/cli": "^2.10.1"
+    "@tauri-apps/cli": "^2.10.1",
+    "@types/better-sqlite3": "^7.6.13",
+    "happy-dom": "^20.10.6",
+    "vite": "8.2.0",
+    "vitest": "^4.1.9"
   }
 }

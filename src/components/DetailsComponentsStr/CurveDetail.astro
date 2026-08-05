@@ -1,73 +1,104 @@
 ---
-const points = [
-  { time: "2025-01-01", value: 1000000 },
-  { time: "2025-01-10", value: 1020000 },
-  { time: "2025-01-20", value: 1015000 },
-  { time: "2025-02-01", value: 1060000 },
-  { time: "2025-02-10", value: 1085000 },
-  { time: "2025-02-20", value: 1078000 },
-  { time: "2025-03-01", value: 1120000 },
-  { time: "2025-03-10", value: 1180000 },
-  { time: "2025-03-20", value: 1210000 },
-  { time: "2025-04-01", value: 1280000 },
-  { time: "2025-04-10", value: 1335000 },
-  { time: "2025-04-20", value: 1424592 },
-];
+import type { Trade } from "../../interfaces/trades";
+import { buildEquityCurve } from "../../utils/functionsGeneral";
 
-interface Props{
+interface Props {
   title?: string;
-  moneyTotal?: number;
+  initialBalance: number;
+  trades: Trade[];
   porcentaje?: number;
+  CAGR?: string;
 }
 
-const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcentaje = 24.5 } = Astro.props as Props;
+const {
+  title = "Curva de Equidad (Equity Curve)",
+  initialBalance,
+  trades,
+  porcentaje = 24.5,
+  CAGR = "CAGR",
+} = Astro.props as Props;
+
+const equityR = buildEquityCurve(trades, initialBalance);
+
+const { points, finalBalance, netProfit, tradeCount } = equityR;
+
+const returnPercentage =
+  initialBalance > 0 ? (netProfit / initialBalance) * 100 : 0;
 ---
 
-<div class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden">
+<div
+  class="md:col-span-8 bg-surface-container-high rounded-xl p-6 relative overflow-hidden"
+>
   <div class="flex justify-between items-start mb-8">
     <div>
       <h3 class="text-on-surface-variant text-sm font-medium mb-1">
         {title}
       </h3>
       <p class="text-2xl font-bold font-headline text-slate-50 tracking-tight">
-        ${moneyTotal.toLocaleString()}
+        ${finalBalance.toLocaleString()}
       </p>
     </div>
 
     <div class="flex gap-2">
-      <span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold">
-        +{porcentaje}% CAGR
+      <span
+        class:list={[
+          "px-2 py-1 rounded text-[10px] font-bold",
+
+          returnPercentage > 0 && "bg-secondary/10 text-secondary",
+
+          returnPercentage < 0 && "bg-red-500/10 text-red-500",
+
+          returnPercentage === 0 && "bg-gray-500/10 text-gray-400",
+        ]}
+      >
+        {returnPercentage > 0 ? "+" : ""}
+        {returnPercentage.toFixed(2)}% Return
       </span>
     </div>
   </div>
 
-  <div class="equity-chart-root w-full" style="height: 256px;">
+  <div
+    class="equity-chart-root w-full"
+    style="height: 256px;"
+    data-final-balance={finalBalance}
+    data-initial-balance={initialBalance}
+  >
     <div class="equity-chart w-full h-full"></div>
     <script
       type="application/json"
       class="equity-chart-data"
       set:html={JSON.stringify(points)}
-    ></script>
+    ></script> 
   </div>
 </div>
 
 <script>
-  import { createChart, AreaSeries, ColorType } from "lightweight-charts";
+  import { createChart, BaselineSeries, ColorType } from "lightweight-charts";
+
+  
 
   function initEquityCharts() {
     const roots = document.querySelectorAll<HTMLElement>(".equity-chart-root");
 
     roots.forEach((root) => {
-      if (root.dataset.initialized === "true") return;
+      if (root.dataset.initialized === "true") return; //Evitamos crear el gráfico si ya se ha inicializado
 
       const container = root.querySelector<HTMLElement>(".equity-chart");
-      const dataTag = root.querySelector<HTMLScriptElement>(".equity-chart-data");
 
-      if (!container || !dataTag) return;
+      const dataTag =
+        root.querySelector<HTMLScriptElement>(".equity-chart-data"); // Obtenemos el elemento <script> que contiene los datos
 
-      const points = JSON.parse(dataTag.textContent || "[]");
+      if (!container || !dataTag) return; // Si no encontramos el contenedor o el elemento de datos, salimos de la función
+
+      const points = JSON.parse(dataTag.textContent || "[]"); // Parseamos los datos del elemento <script> a un arreglo de puntos
 
       requestAnimationFrame(() => {
+        const tradeNumber = new Map<number, number>(
+          points.slice(1).map((point: { time: number }, index: number) => {
+            return [Number(point.time), index + 1];
+          }),
+        );
+
         const chart = createChart(container, {
           autoSize: true,
           layout: {
@@ -82,29 +113,62 @@ const { title = "Curva de Equidad (Equity Curve)", moneyTotal = 1424592, porcent
             horzLines: { color: "rgba(148, 163, 184, 0.10)" },
           },
           rightPriceScale: {
-            visible: false,
+            visible: true,
             borderVisible: false,
           },
           leftPriceScale: {
             visible: false,
           },
           timeScale: {
-            visible: false,
+            visible: true,
             borderVisible: false,
+            ticksVisible: true,
+              tickMarkMaxCharacterLength: 5,
+            tickMarkFormatter: (time: number) => {
+              const numericTime = Number(time);
+              const tradeN = tradeNumber.get(numericTime);
+
+              if (tradeN === undefined) {
+                return "#0";
+              }
+
+              return `#${tradeN}`;
+            },
           },
-          handleScroll: false,
-          handleScale: false,
+          localization: {
+            priceFormatter: (money: number) => {
+              return `$${money.toLocaleString()} USD`;
+            },
+          },
+
+          handleScroll: true,
+          handleScale: true,
         });
 
-        const series = chart.addSeries(AreaSeries, {
-          lineColor: "#4edea3",
-          topColor: "rgba(78, 222, 163, 0.30)",
-          bottomColor: "rgba(78, 222, 163, 0.03)",
+        const initialBalance = Number(root.dataset.initialBalance);
+
+        const series = chart.addSeries(BaselineSeries, {
+          baseValue: {
+            type: "price",
+            price: initialBalance,
+          },
+
+          topLineColor: "#4edea3",
+          topFillColor1: "rgba(78, 222, 163, 0.30)",
+          topFillColor2: "rgba(78, 222, 163, 0.03)",
+
+          bottomLineColor: "#ef4444",
+          bottomFillColor1: "rgba(239, 68, 68, 0.03)",
+          bottomFillColor2: "rgba(239, 68, 68, 0.30)",
+
           lineWidth: 3,
           priceLineVisible: false,
           lastValueVisible: false,
           crosshairMarkerVisible: false,
         });
+       
+
+        
 
         series.setData(points);
         chart.timeScale().fitContent();

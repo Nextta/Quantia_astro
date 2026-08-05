@@ -1,28 +1,149 @@
 ---
+import { getDayAverage } from "../../utils/functionsGeneral";
+import type { WeekAverage } from "../../utils/functionsGeneral";
+import type { Trade } from "../../interfaces/trades";
+
 interface Props {
   title?: string;
+  trades: Trade[];
+  initialBalance: number;
 }
 
-const { title = "Rendimiento por Día" } = Astro.props as Props;
+const {
+  title = "Rendimiento por día",
+  trades,
+  initialBalance,
+} = Astro.props as Props;
+
+const daysAverages = getDayAverage(trades, initialBalance);
+
+function getCellClass(value: number | null): string {
+  const base =
+    "w-full rounded-t-sm relative group transition-all duration-300";
+
+  // No existen datos
+  if (value === null) {
+    return `${base} bg-transparent border-2 border-dashed border-gray-300`;
+  }
+
+  // Existen datos, pero el rendimiento fue 0%
+  if (value === 0) {
+    return `${base} bg-gray-500`;
+  }
+
+  // Rendimiento negativo
+  if (value < 0) {
+    return `${base} bg-red-500`;
+  }
+
+  // Rendimiento positivo
+  return `${base} bg-green-500`;
+}
+
+
+function getMax(weekAverages: WeekAverage[]): number {
+  let actualMax = 0;
+
+  for (const item of weekAverages) {
+    const currentAverage = Math.abs(item.average ?? 0);
+
+    if (currentAverage > actualMax) {
+      actualMax = currentAverage;
+    }
+  }
+
+  return actualMax;
+}
+
+const maxAverage = getMax(daysAverages);
+
+const dayLabels = ["LUN", "MAR", "MIE", "JUE", "VIE"];
+
+const chartDays = daysAverages.map((item) => {
+  const absoluteAverage = Math.abs(item.average ?? 0);
+
+  const height =
+    maxAverage > 0
+      ? (absoluteAverage / maxAverage) * 100
+      : 0;
+
+  return {
+    ...item,
+    height,
+    label: dayLabels[item.day - 1],
+  };
+});
 ---
 
 <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">
-  <h4 class="text-sm font-bold mb-6">{title}</h4>
+  <h4 class="text-sm font-bold mb-6">
+    {title}
+  </h4>
+
   <div class="flex-1 flex items-end gap-2 px-2">
-    <div
-      class="flex-1 bg-surface-container-highest h-[40%] rounded-t-sm relative group"
-    >
-    </div>
-    <div class="flex-1 bg-secondary h-[75%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-secondary h-[95%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-secondary h-[60%] rounded-t-sm relative group"></div>
-    <div class="flex-1 bg-tertiary h-[30%] rounded-t-sm relative group"></div>
-  </div>
+  {
+    chartDays.map((item) => (
+      <div class="flex-1 h-full flex items-end relative group">
+        <div
+          class={getCellClass(item.average)}
+          style={`height: ${item.height}%; min-height: 4px;`}
+        >
+          <div
+            class="
+              absolute
+              left-1/2
+              bottom-full
+              -translate-x-1/2
+              mb-2
+              z-20
+              whitespace-nowrap
+              rounded-md
+              bg-surface-container-highest
+              px-3
+              py-2
+              text-xs
+              text-on-surface
+              shadow-lg
+              opacity-0
+              pointer-events-none
+              transition-opacity
+              duration-200
+              group-hover:opacity-100
+            "
+          >
+            {
+              item.average === null ? (
+                <>
+                  <div class="font-bold">{item.label}: sin datos</div>
+                  <div>{item.observations} observaciones</div>
+                </>
+              ) : (
+                <>
+                  <div class="font-bold">
+                    {item.label}: {item.average.toFixed(2)}%
+                  </div>
+
+                  <div>
+                    {item.observations} observaciones
+                  </div>
+                </>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
   <div
-    class="flex justify-between text-[10px] text-on-surface-variant mt-4 font-bold uppercase tracking-widest"
+    class="grid grid-cols-5 gap-2 px-2 text-[10px] text-on-surface-variant mt-4 font-bold uppercase tracking-widest text-center"
   >
-    <span>Lun</span><span>Mar</span><span>Mie</span><span>Jue</span><span
-      >Vie</span
-    >
+    {
+      chartDays.map((item) => (
+        <span>{item.label}</span>
+      ))
+    }
   </div>
 </div>
+

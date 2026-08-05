@@ -1,0 +1,108 @@
+---
+import LayoutNodes from "../../layouts/LayoutNodes.astro"
+import SideBar from "../../components/MainDesing/SideBar.astro"
+
+
+
+---
+<LayoutNodes Hidding={true}>
+<div
+  class="grid grid-cols-[250px_1fr] h-screen bg-background text-on-background font-body selection:bg-primary/30 
+   border-2
+  "
+>
+  <!-- Sidebar Navigation Shell -->
+   <!-- border-slate-800/50 -->
+  <aside
+    class="w-64 bg-slate-900 flex flex-col p-4 border-2 border-amber-500 h-full"
+  >
+    <div class="mb-6">
+      <h2 class="text-lg font-black text-white font-headline">
+        Strategy Library
+      </h2>
+      <p class="text-xs text-slate-500 font-label">Alpha-v1 Builder</p>
+    </div>
+    <div class="relative mb-6">
+      <span
+        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"
+        >search</span
+      >
+      <input
+        class="w-full bg-surface-container-lowest border-none text-sm py-2 pl-10 pr-4 rounded-md focus:ring-1 focus:ring-primary/40 placeholder:text-slate-600"
+        placeholder="Search modules..."
+        type="text"
+      />
+    </div>
+    <div class="flex flex-col gap-1 overflow-y-auto flex-1">
+      <div class="group">
+        <button
+          class="w-full flex items-center justify-between p-2 text-slate-300 hover:bg-slate-800 rounded-md transition-colors"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-emerald-400"
+              >database</span
+            >
+            <span class="text-sm font-medium">Market Data</span>
+          </div>
+          <span class="material-symbols-outlined text-xs">expand_more</span>
+        </button>
+      </div>
+      <div class="mt-2 flex flex-col gap-1">
+        <div
+          class="flex items-center gap-3 p-2 text-emerald-400 font-bold bg-emerald-500/10 rounded-md cursor-pointer"
+        >
+          <span class="material-symbols-outlined" data-icon="account_tree"
+            >account_tree</span
+          >
+          <span class="text-sm">Nodes</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="show_chart"
+            >show_chart</span
+          >
+          <span class="text-sm">Indicators</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span
+            class="material-symbols-outlined"
+            data-icon="settings_input_component">settings_input_component</span
+          >
+          <span class="text-sm">Logic</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+          <span class="text-sm">Actions</span>
+        </div>
+        <div
+          class="flex items-center gap-3 p-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer rounded-md"
+        >
+          <span class="material-symbols-outlined" data-icon="history"
+            >history</span
+          >
+          <span class="text-sm">History</span>
+        </div>
+      </div>
+    </div>
+    <button
+      class="mt-4 w-full py-3 bg-primary/10 text-primary border border-primary/20 font-bold text-sm rounded-md hover:bg-primary/20 transition-all flex items-center justify-center gap-2"
+    >
+      <span class="material-symbols-outlined text-sm">add</span>
+      New Node
+    </button>
+  </aside>
+  <!-- Main Workspace Canvas -->
+  <main
+    class="ml-0 mt-0 canvas-grid bg-background overflow-hidden border-2 border-red-400"
+  >
+    <!-- <ReteFirst /> -->
+    <!-- Toolbar Overlay (Floating) -->
+    
+  </main>
+</div>
+</LayoutNodes>

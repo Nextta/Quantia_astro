@@ -1,12 +1,34 @@
 ---
+import { dataFrame } from "../../datos/dataFrame";
+// import strategies from "../../datos/strategies.json";
+
+import type { StrategyIndicator } from "../../interfaces/strategyIndicator";
+import type { Strategy } from "../../interfaces/strategy";
+import type { StrategyAction } from "../../interfaces/strategyAction";
+import type { StrategyOptions } from "../../interfaces/strategyOptions";
+import type { StopLoss } from "../../interfaces/stopLoss";
+import type { TakeProfit } from "../../interfaces/takeProfit";
+import { TradingDirection } from "../../enums/tradingDirection";
+import { Action } from "../../enums/action";
+
+type EmaPoint = LineData<UTCTimestamp>;
+
+type EmaConfig = {
+  name: string;
+  color: string;
+  data: EmaPoint[];
+};
+type EmaInput = EmaConfig | EmaConfig[];
+
+import type {
+  LineData,
+  UTCTimestamp,
+  CandlestickData,
+} from "lightweight-charts";
+import { undefined } from "astro:schema";
+
 interface Props {
-  candles?: {
-    time: { year: number; month: number; day: number };
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-  }[];
+  candles?: CandlePoint[];
   markers?: {
     time: { year: number; month: number; day: number };
     position: string;
@@ -17,30 +39,218 @@ interface Props {
   height?: number;
   upColor?: string;
   downColor?: string;
+
+  dataEMABefore?: EmaInput;
+  // dataEMA200Before: Ema200Point[];
 }
 
 const {
-  candles,
+  candles = [],
   markers = [],
+  // dataEMA200Before,
+  dataEMABefore,
   height = 450,
   upColor = "#26a69a",
   downColor = "#ef5350",
-} = Astro.props;
+} = Astro.props as Props;
+
+
+
+let data = dataFrame[0];
+
+let indicator: StrategyIndicator[] = [
+  {
+    id: 1,
+    nombre: "ema_50",
+    parametros: '{"timeperiod":50}',
+    strategy_id: 1,
+    tipo: "EMA",
+  },
+  {
+    id: 2,
+    nombre: "ema_200",
+    parametros: '{"timeperiod":200}',
+    strategy_id: 1,
+    tipo: "EMA",
+  },
+  {
+    id: 3,
+    nombre: "atr",
+    parametros: '{"timeperiod":14, "multiplier":2.5}',
+    strategy_id: 1,
+    tipo: "ATR",
+  },
+  {
+    id: 4,
+    nombre: "atr_tp",
+    parametros: '{"timeperiod":14, "multiplier":6}',
+    strategy_id: 1,
+    tipo: "ATR",
+  },
+];
+
+
+let acciones: StrategyAction[] = [
+  {
+    id: 1,
+    parametro: "{}",
+    strategy_id: 1,
+    tipo: Action.Buy,
+    tipo_signal: "Entry",
+  },
+  {
+    id: 2,
+    parametro: "{}",
+    strategy_id: 1,
+    tipo: Action.Sell,
+    tipo_signal: "Entry",
+  },
+];
+
+let TP: TakeProfit = {
+  tipo: "atr",
+  nombre_col: "atr_tp",
+  shift: 0,
+  valor: 0.0,
+};
+let SL: StopLoss = { tipo: "atr", nombre_col: "atr", shift: 0, valor: 0.0 };
+
+let options: StrategyOptions = {
+  activar_cierre_numero_velas: false,
+  cerrar_fin_de_dia: false,
+  cerrar_fin_rango_operativo: false,
+  cerrar_viernes: false,
+  cierre_limite_hora: false,
+  id: 1,
+  multiples_trades: false,
+  numero_velas_cierre: 0,
+  operar_finde: false,
+  parametros_stoploss: SL,
+  parametros_takeprofit: TP,
+  rango_operativo: false,
+  strategy_id: 1,
+  trading_direccion: TradingDirection.Both,
+};
+
+let strategy: Strategy = {
+  activa: true,
+  creada_en: "2020/05/20",
+  descripcion: "Esto es una prueba para el tets unitario.",
+  id: 1,
+  id_user: 1,
+  nombre: "Cruce de medias",
+  indicadores: [
+    {
+      id: 1,
+      nombre: "ema_50",
+      parametros: '{"timeperiod":50}',
+      strategy_id: 1,
+      tipo: "EMA",
+    },
+    {
+      id: 2,
+      nombre: "ema_200",
+      parametros: '{"timeperiod":200}',
+      strategy_id: 1,
+      tipo: "EMA",
+    },
+    {
+      id: 3,
+      nombre: "atr",
+      parametros: '{"timeperiod":14, "multiplier":2.5}',
+      strategy_id: 1,
+      tipo: "ATR",
+    },
+    {
+      id: 4,
+      nombre: "atr_tp",
+      parametros: '{"timeperiod":14, "multiplier":6}',
+      strategy_id: 1,
+      tipo: "ATR",
+    },
+  ],
+  acciones: acciones,
+  opciones: options,
+};
+// let dataEma = [];
+
+var b;
+
+function get_values_indicator(name: string){
+  return[{
+    time: Math.floor(1548054000000 / 1000),
+    value:1282.2613176347684
+}]
+}
+
+
+for(let i=0; i<indicator.length; i++){
+
+switch (indicator[i]?.tipo) {
+  case "EMA":
+
+ //fffdfd
+
+
+    // dataEma = get_values_indicator(indicator[i]?.nombre)
+
+
+
+    // const resultado = texto.match(/\d+/)
+    break;
+
+  case "ATR":
+
+    break;
+
+  default:
+    break;
+}
+}
+
+
+
+// type Ema200Point = LineData<UTCTimestamp>;
+type CandlePoint = CandlestickData<UTCTimestamp>;
+
+//Para la ema--------:
+
+//Velas
+
+const toChartTime = (timestamp: number): UTCTimestamp => {
+  return (
+    timestamp > 9999999999 ? Math.floor(timestamp / 1000) : timestamp
+  ) as UTCTimestamp;
+};
+
+const candlesFromDF: CandlePoint[] = dataFrame.map((dt) => ({
+  time: toChartTime(dt.timestamp),
+  open: dt.open,
+  high: dt.high,
+  low: dt.low,
+  close: dt.close,
+}));
+
+
+
+// const chartCandles = candles && candles.length > 0 ? candles : candlesFromDF;
+const chartCandles = candlesFromDF;
 ---
 
 <section
   class="bg-surface-container-low rounded-xl overflow-hidden border-t border-white/5 shadow-2xl"
 >
-  
   <div
     id="trade-chart"
     class="w-full"
     style={`height: ${height}px`}
-    data-candles={JSON.stringify(candles)}
+    data-candles={JSON.stringify(chartCandles)}
     data-markers={JSON.stringify(markers)}
+    
     data-up-color={upColor}
     data-down-color={downColor}
   >
+  <!-- data-ema={JSON.stringify(dataEma)} -->
   </div>
 </section>
 
@@ -48,16 +258,46 @@ const {
   import {
     createChart,
     CandlestickSeries,
+    LineSeries,
     createSeriesMarkers,
     ColorType,
+    type UTCTimestamp,
+    type LineData,
+    type CandlestickData,
   } from "lightweight-charts";
+  type ChartTime = {
+    year: number;
+    month: number;
+    day: number;
+  };
+  
+  type Candle = CandlestickData<UTCTimestamp>;
 
+  // type Ema50Point = LineData<UTCTimestamp>;
+  // type Ema200Point = LineData<UTCTimestamp>;
+  type EmaConfig = {
+    name: string;
+    color: string;
+    data: LineData<UTCTimestamp>[];
+  };
 
   const container = document.getElementById("trade-chart");
   if (container) {
     // Leer los datos del data-
-    const candles = JSON.parse(container.dataset.candles || "[]");
+    // const candles = JSON.parse(container.dataset.candles || "[]") as Candle[];
     const markers = JSON.parse(container.dataset.markers || "[]");
+    // const rawEma = JSON.parse(container.dataset.ema || "[]") as Ema50Point[];
+    const rawEma = JSON.parse(container.dataset.ema || "[]") as EmaConfig[];
+
+    // const rawEma200 = JSON.parse(container.dataset.ema200 || "[]") as Ema200Point[];
+
+    //Candles ----
+    // type Candle = CandlestickData<UTCTimestamp>;
+
+    const candles = JSON.parse(container.dataset.candles || "[]") as Candle[];
+
+    //Candles
+
     const upColor = container.dataset.upColor || "#26a69a";
     const downColor = container.dataset.downColor || "#ef5350";
 
@@ -79,12 +319,40 @@ const {
     const series = chart.addSeries(CandlestickSeries, {
       upColor,
       downColor,
-      borderVisible: false,
+      borderVisible: true,
       wickUpColor: upColor,
       wickDownColor: downColor,
     });
 
     series.setData(candles);
+
+  
+
+    // if (rawEma.length > 0) {
+    //   const emaSeries = chart.addSeries(LineSeries, {
+    //     color: "#facc15",
+    //     lineWidth: 2,
+    //   });
+    //   emaSeries.setData(rawEma);
+    // }
+ 
+    rawEma.forEach((ema) => {
+      if (ema.data.length > 0) {
+        const emaSeries = chart.addSeries(LineSeries, {
+          color: ema.color,
+          lineWidth: 2,
+        });
+
+        emaSeries.setData(ema.data);
+      }
+    });
+    // if (rawEma200.length > 0) {
+    //   const emaSeries = chart.addSeries(LineSeries, {
+    //     color: "#ff0000",
+    //     lineWidth: 2,
+    //   });
+    //   emaSeries.setData(rawEma200);
+    // }
 
     if (markers.length > 0) {
       createSeriesMarkers(series, markers);
@@ -101,4 +369,3 @@ const {
     resizeObserver.observe(container);
   }
 </script>
-

@@ -1,33 +1,37 @@
 ---
 import MiniTVChart from "./DetailsComponentsStr/MiniTVChart.astro";
+import type { Activo } from "../enums/activo";
+import type { PointInterface } from "../interfaces/pointInterface";
 
 interface Props {
-  title?: string;
-  market?: string;
-  percent?: number;
-  image?: string;
-  parameter1?: string;
-  parameter2?: string;
-  profitFactor?: number;
-  drawdown?: number;
   id?: number;
-  symbol?: string;
-  points: Point[];
+  ranking?: number;
+  titulo?: string;
+  tipo: Activo;
+  points: PointInterface[];
+  returnPercent: number;
+  profitFactor:number;
+  drawDown:number;
 }
 
-interface Point {
-  time: number;
-  value: number;
-}
+const {
+  id = 1,
+  titulo = "nombre",
+  points,
+  returnPercent,
+  profitFactor,
+  drawDown
+} = Astro.props as Props;
 
-const { title, market, percent, image, parameter1="PROFIT FACTOR", parameter2="DRAWDOWN", profitFactor, drawdown, points } =
-  Astro.props as Props;
+const formatTwoDecimals = (value: number): string => {
+  return value.toFixed(2);
+};
 
-const id = 1;
+// const id = 1;
 ---
 
 <article
-  class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0"
+  class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0 border-0"
 >
 <!-- First -->
   <div
@@ -40,15 +44,17 @@ const id = 1;
   >
     <div class="min-w-0 lg:max-w-[65%]">
       <h3
+        data-id={id}
         class="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-on-surface font-headline wrap-break-word"
       >
-        {title}
+        {titulo}
       </h3>
 
       <span
+       
         class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
       >
-        {market}
+        #{id}
       </span>
     </div>
 
@@ -61,7 +67,13 @@ const id = 1;
       >
         trending_up
       </span>
-      <span>{percent}</span>
+      {
+        <span >
+          {returnPercent > 0 ? "+" : ""}
+          {formatTwoDecimals(returnPercent)}%<!-- porcentaje -->
+        </span>
+      }
+      
     </div>
   </div>
 <!-- First -->
@@ -72,30 +84,30 @@ const id = 1;
   </div>
 
   <div class="flex flex-col min-[400px]:flex-row gap-3 min-[400px]:items-end min-[400px]:justify-between">
-    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end">
+    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end border-0 pr-2">
       <div class="min-w-0">
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          {parameter1}
+           Profit factor
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface leading-none"
         >
-          {profitFactor}
-        </p>
+         {formatTwoDecimals(profitFactor)}
+        </p> 
       </div>
 
-      <div class="min-w-0">
+      <div class="min-w-0 border-0">
         <p
-          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
+          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight pl-2"
         >
-          {parameter2}
+         Drawdown
         </p>
         <p
-          class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none"
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none pr-6 "
         >
-          {drawdown}
+          {formatTwoDecimals(drawDown)}%
         </p>
       </div>
     </div>

@@ -1,0 +1,90 @@
+---
+import "../styles/global.css";
+import BarraNavegacion from "./BarraNavegacion.astro";
+import TopBar from "../components/MainDesing/TopBar.astro";
+import SideBar from "../components/MainDesing/SideBar.astro";
+
+interface Props {
+  title?: string;
+  showSidebar?: boolean;
+  showTopBar?: boolean;
+  Hidding?: boolean;
+}
+
+const { title = "Quantia", showSidebar = true, showTopBar = true, Hidding = false } = Astro.props as Props;
+
+
+---
+
+<!doctype html>
+<html class="dark h-screen overflow-hidden" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* The "No-Line" Rule - Tonal background shifts instead of borders */
+      body {
+        background-color: #0b1326;
+      }
+    </style>
+  </head>
+  <body
+    class="h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary/30"
+  >
+    <!-- Grid principal -->
+    <div
+      class:list={[
+        "grid h-screen ",
+        "max-[700px]:grid-cols-[47px_minmax(0,1fr)]",
+        Hidding 
+        ? "grid-cols-[55px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)]" 
+
+        : "grid-cols-[250px_minmax(0,1fr)] grid-rows-[28px_43px_minmax(0,1fr)]",
+      ]}
+      
+    >   <!-- Grid principal -->
+      <div class="border-0 border-red-500 col-span-2">  
+        <!-- vacio por el momento -->
+        <BarraNavegacion title={title} url="/" />
+      </div>
+      {showSidebar && (<aside class="row-span-2 border-0 border-pink-500">
+        <SideBar wid={true} hiddenQuantia={true}/>
+      </aside>)}
+      
+      {showTopBar && (<div class="border-0 border-orange-500" >
+                <TopBar />
+      </div>)}
+
+      <main
+        class="min-w-0 overflow-y-auto overflow-x-auto no-scrollbar p-5 border-0 border-green-600"
+      >
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
