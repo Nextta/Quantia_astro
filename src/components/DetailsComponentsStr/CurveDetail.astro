@@ -20,8 +20,6 @@ const {
 
 const equityR = buildEquityCurve(trades, initialBalance);
 
-console.log(equityR);
-
 const { points, finalBalance, netProfit, tradeCount } = equityR;
 
 const returnPercentage =
@@ -93,13 +91,6 @@ const returnPercentage =
       if (!container || !dataTag) return; // Si no encontramos el contenedor o el elemento de datos, salimos de la función
 
       const points = JSON.parse(dataTag.textContent || "[]"); // Parseamos los datos del elemento <script> a un arreglo de puntos
-
-      console.log("¿Es un arreglo?", Array.isArray(points));
-      console.log("Cantidad de puntos:", points.length);
-      console.log("Primer punto:", points[0]);
-      console.table(points);
-
-      // console.log("Total:", total);
 
       requestAnimationFrame(() => {
         const tradeNumber = new Map<number, number>(

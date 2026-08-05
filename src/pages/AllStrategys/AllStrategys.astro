@@ -6,30 +6,47 @@ import { strategy1Points } from "../main/Home.astro";
 import type { Strategy } from "../../interfaces/strategy";
 import type { Props } from "astro/components/ClientRouter.astro";
 
-import { getBacktest } from "../../utils/functionsGeneral";
+import { getRankedBacktests } from "../../utils/functionsGeneral";
 
-const backtests = await getBacktest();
-
-
+const rankedBacktests = await getRankedBacktests();
 ---
 
-<Layout>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<Layout title="Quantia">
+  
     <div
       id="strategy-grid"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      class="
+        grid
+        grid-cols-1
+        sm:grid-cols-[repeat(auto-fill,minmax(25rem,30rem))]
+        justify-start
+        items-stretch
+        gap-6
+
+      "
     >
       {
-        backtests.map((bt) => (
+        rankedBacktests.map((backtest, index) => (
           <StrategyCard
-            id={bt.id}
-            titulo={bt.titulo}
-            pointsP={strategy1Points}
-            balance={bt.balance}
+            id={backtest.id}
+            ranking={index + 1}
+            titulo={backtest.titulo}
+            tipo={backtest.tipo}
+            returnPercent={backtest.returnPercent}
+            profitFactor={backtest.profitFactor}
+            drawDown={backtest.drawDown}
+            points={backtest.points}
           />
         ))
       }
-    </div>
-  </div>
-</Layout>
 
+      {
+        rankedBacktests.length === 0 && (
+          <p class="col-span-full py-10 text-on-surface-variant">
+            No hay backtests disponibles.
+          </p>
+        )
+      }
+    </div>
+
+</Layout>

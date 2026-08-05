@@ -30,6 +30,75 @@ if (!Number.isInteger(idActual) || idActual <= 0) {
 const results = await getResults(idActual);
 const trades: Trade[] = await getTrades(idActual);
 const backtest: Backtest = await getOneBacktest(idActual);
+
+
+let totalReturnV;
+let bestMonthV;
+let worstMonthV;
+let marketTimeV;
+
+let maxDrawDownV;
+let ulcerIndexV;
+let riskOfRuin1V;
+let volatilidadAnualV;
+
+let skewRatioV;
+let kurtosisRatioV;
+let riskOfRuin2V;
+let kellyCriterionV;
+
+let numeroDeTradesV;
+let winV;
+let avgWinLossV;
+let rExpectancyV;
+
+const arrProps = results.flatMap((rt) => {
+  
+  totalReturnV = Math.round(rt.retorno * 100) / 100 + " USD";
+  bestMonthV = Math.round(rt.best_month * 100) / 100 + " USD";
+  worstMonthV = Math.round(rt.worst_month * 100) / 100 + " USD";
+  marketTimeV = Math.round(rt.time_in_market * 100) / 100 + " %";
+
+  maxDrawDownV = Math.round(rt.max_drawdown * 100) / 100 + " %"; //Rojo en negativo, siempre rojo
+  ulcerIndexV = Math.round(rt.ulcer_index * 100) / 100 + " %";
+  riskOfRuin1V = Math.round(rt.risk_of_ruin * 100) / 100 + " %";
+  volatilidadAnualV = Math.round(rt.volatility_ann * 100) / 100 + " %";
+
+  skewRatioV = Math.round(rt.skew_ratio * 100) / 100 + " %";
+  kurtosisRatioV = Math.round(rt.kurtosis_ratio * 100) / 100 + " %";
+  riskOfRuin2V = Math.round(rt.risk_of_ruin * 100) / 100 + " %";
+  kellyCriterionV = Math.round(rt.kelly_criterion * 100) / 100 + " %";
+
+  numeroDeTradesV = Math.round(rt.n_trades) + "";
+  winV = Math.round(rt.wins_percentage * 100) / 100 + " %";
+  avgWinLossV = Math.round(rt.avg_win_loss_ratio * 100) / 100 + "";
+  rExpectancyV = Math.round(rt.r_expectancy * 100) / 100 + " R";
+
+  return {
+    totalReturnV,
+    bestMonthV,
+    worstMonthV,
+    marketTimeV,
+
+    maxDrawDownV,
+    ulcerIndexV,
+    riskOfRuin1V,
+    volatilidadAnualV,
+
+    skewRatioV,
+    kurtosisRatioV,
+    riskOfRuin2V,
+    kellyCriterionV,
+
+    numeroDeTradesV,
+    winV,
+    avgWinLossV,
+    rExpectancyV,
+  };
+});
+
+
+
 ---
 
 <Layout>
@@ -90,7 +159,7 @@ const backtest: Backtest = await getOneBacktest(idActual);
           />
         
       
-       
+      
           <InfoBoxDetail
             title={"Sharpe Ratio"}
             value={Math.round(rt?.sharpe_ratio * 100) / 100}
@@ -98,10 +167,10 @@ const backtest: Backtest = await getOneBacktest(idActual);
         
       
       
-        
+        //Colocar porcentaje en maxDrawDown
           <InfoBoxDetail
             title={"MAX DRAWDOWN"}
-            value={Math.round(rt?.max_drawdown * 100) / 100}
+            value={Math.round(rt?.max_drawdown * 100) / 100 }
             ratioLabel="Pico a Valle"
           />
       ))}
@@ -111,67 +180,61 @@ const backtest: Backtest = await getOneBacktest(idActual);
   <!-- Detailed Metrics Grids -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
     {
-      results.map((rt) => (
+      arrProps.map((rt) => (
         <FourMetrics
           parametro1="Total return"
           parametro2="Best Month"
           parametro3="Worst Month"
           parametro4="Market time"
           title="Overall returns"
-          parametro1Value={Math.round(rt?.retorno * 100) / 100}
-          parametro2Value={Math.round(rt?.best_month * 100) / 100}
-          parametro3Value={Math.round(rt?.worst_month * 100) / 100}
-          parametro4Value={Math.round(rt?.time_in_market * 100) / 100}
+          parametro1Value={rt.totalReturnV}
+          parametro2Value={rt.bestMonthV}
+          parametro3Value={rt.worstMonthV}
+          parametro4Value={rt.marketTimeV}
         />
-      
-    
-    
-     
+
         <FourMetrics
           parametro1="Max. Drawdown"
           parametro2="Ulcer Index"
           parametro3="Risk of ruin"
           parametro4="Volatilidad anual"
-          title="Overall returns"
-          parametro1Value={Math.round(rt?.max_drawdown * 100) / 100}
-          parametro2Value={Math.round(rt?.ulcer_index * 100) / 100}
-          parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
-          parametro4Value={Math.round(rt?.volatility_ann * 100) / 100}
+          title="Risk metrics"
+          parametro1Value={rt.maxDrawDownV}
+          parametro2Value={rt.ulcerIndexV}
+          parametro3Value={rt.riskOfRuin1V}
+          parametro4Value={rt.volatilidadAnualV}
         />
-      
-    
-    
-      
+
         <FourMetrics
           parametro1="Skew ratio"
           parametro2="Kurtosis ratio"
           parametro3="Risk of ruin"
           parametro4="Kelly Criterion"
-          title="Overall returns"
-          parametro1Value={Math.round(rt?.skew_ratio * 100) / 100}
-          parametro2Value={Math.round(rt?.kurtosis_ratio * 100) / 100}
-          parametro3Value={Math.round(rt?.risk_of_ruin * 100) / 100}
-          parametro4Value={Math.round(rt?.kelly_criterion * 100) / 100}
+          title="Statistical metrics"
+          parametro1Value={rt.skewRatioV}
+          parametro2Value={rt.kurtosisRatioV}
+          parametro3Value={rt.riskOfRuin2V}
+          parametro4Value={rt.kellyCriterionV}
         />
- 
-      
+
         <FourMetrics
           parametro1="Número de trades"
           parametro2="Win %"
           parametro3="Avg Win/Loss"
-          parametro4="R_expectancy"
-          title="Overall returns"
-          parametro1Value={Math.round(rt?.n_trades * 100) / 100}
-          parametro2Value={Math.round(rt?.wins_percentage * 100) / 100}
-          parametro3Value={Math.round(rt?.avg_win_loss_ratio * 100) / 100}
-          parametro4Value={Math.round(rt?.r_expectancy * 100) / 100}
+          parametro4="R expectancy"
+          title="Trading metrics"
+          parametro1Value={rt.numeroDeTradesV}
+          parametro2Value={rt.winV}
+          parametro3Value={rt.avgWinLossV}
+          parametro4Value={rt.rExpectancyV}
         />
+      
       ))
     }
   </div>
   <!-- Heatmap Section -->
 
-  {console.log(backtest.balance)}
+  
   <HeatMap trades={trades} initialBalance={backtest.balance} />
 
   <!-- Comparative Charts & Histograms -->

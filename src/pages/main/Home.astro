@@ -6,18 +6,14 @@ import strategys from "../../datos/strategies.json";
 // import { seek } from "../../utils/prueba";
 import type { Backtest } from "../../interfaces/backtest";
 import type { Strategy } from "../../interfaces/strategy";
-
 import type { resultados } from "../../interfaces/resultados";
-import { getResults } from "../../utils/functionsGeneral";
+import { Activo } from "../../enums/activo";
 
+import { getRankedBacktests } from "../../utils/functionsGeneral";
 
-const { id, id_user, nombre, descripcion } = Astro.props as Strategy;
+import { getBacktest } from "../../utils/functionsGeneral";
 
-type CardItem = {
-  titulo: string;
-  balance: number;
-  tipo: string;
-};
+const topBacktests = await getRankedBacktests(3);
 
 export const strategy1Points = [
   { time: 1717200000, value: 100000 },
@@ -30,17 +26,13 @@ export const strategy1Points = [
   { time: 1717804800, value: 107900 },
 ];
 
-let initialBalance = 10000;
+// const { id, id_user, nombre, descripcion } = Astro.props as Strategy;
 
-// export let cardsArray : CardItem[] = [
-//   {titulo: "Estrategia NVIDIA", balance: 2000, tipo: "Acciones"},
-//   {titulo: "Estrategia NASDAQ", balance: 2000, tipo: "INDICES"},
-//   {titulo: "Estrategia USDJPY", balance: 2000, tipo: "forex"},
-//   {titulo: "Estrategia Retail", balance: 2000, tipo: "forex"},
-//   {titulo: "Estrategia EURUSD", balance: 2000, tipo: "forex"},
-// ]
-
-// const id = 1;
+// type CardItem = {
+//   titulo: string;
+//   balance: number;
+//   tipo: string;
+// };
 ---
 
 <Layout title="Quantia">
@@ -69,18 +61,26 @@ let initialBalance = 10000;
         class="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1367px]:grid-cols-3 gap-6 max-w-sm mx-auto lg:max-w-none"
       >
         {
-          cuenta_data.slice(0, 3).map((card) => {
-            const backtest = backT_data.find((item) => item.id === card.id);
+          topBacktests.map((backtest, index) => (
+            <StrategyCard
+              id={backtest.id}
+              ranking={index + 1}
+              titulo={backtest.titulo}
+              tipo={backtest.tipo}
+              returnPercent={backtest.returnPercent}
+              profitFactor={backtest.profitFactor}
+              drawDown={backtest.drawDown}
+              points={backtest.points}
+            />
+          ))
+        }
 
-            return (
-              <StrategyCard
-                nombre={card.nombre}
-                id={card.id}
-                pointsP={strategy1Points}
-                balance={backtest?.balance ?? 0}
-              />
-            );
-          })
+        {
+          topBacktests.length === 0 && (
+            <p class="col-span-full py-10 text-center text-on-surface-variant">
+              No hay backtests disponibles.
+            </p>
+          )
         }
       </div>
     </section>

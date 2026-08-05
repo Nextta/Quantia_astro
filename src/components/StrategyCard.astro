@@ -1,39 +1,37 @@
 ---
 import MiniTVChart from "./DetailsComponentsStr/MiniTVChart.astro";
-import type { Strategy} from "../interfaces/strategy";
-import { strategy1Points } from "../pages/main/Home.astro";
-import type { Backtest } from "../interfaces/backtest"
+import type { Activo } from "../enums/activo";
+import type { PointInterface } from "../interfaces/pointInterface";
 
-interface Point {
-  time: number;
-  value: number;
-}
-// interface Props extends Strategy, Backtest {
-//   pointsP: Point[];
-// }
 interface Props {
-  id: number;
-  titulo: string;
-  balance: number;
-  pointsP: Point[];
+  id?: number;
+  ranking?: number;
+  titulo?: string;
+  tipo: Activo;
+  points: PointInterface[];
+  returnPercent: number;
+  profitFactor:number;
+  drawDown:number;
 }
 
 const {
-  id,
-  titulo,
-  pointsP,
-  balance
+  id = 1,
+  titulo = "nombre",
+  points,
+  returnPercent,
+  profitFactor,
+  drawDown
 } = Astro.props as Props;
 
-// type TestId = StrategyProps["id"];
-
-
+const formatTwoDecimals = (value: number): string => {
+  return value.toFixed(2);
+};
 
 // const id = 1;
 ---
 
 <article
-  class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0"
+  class="bg-surface-container-high rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:bg-surface-container-highest min-w-0 border-0"
 >
 <!-- First -->
   <div
@@ -49,14 +47,14 @@ const {
         data-id={id}
         class="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-on-surface font-headline wrap-break-word"
       >
-        #{id}
+        {titulo}
       </h3>
 
       <span
        
         class="inline-block mt-3 text-[11px] px-3 py-1 rounded bg-surface-container-lowest text-on-surface-variant font-semibold uppercase tracking-wide"
       >
-        {titulo}
+        #{id}
       </span>
     </div>
 
@@ -69,43 +67,47 @@ const {
       >
         trending_up
       </span>
-      <span >
-        {balance}%<!-- porcentaje -->
-      </span>
+      {
+        <span >
+          {returnPercent > 0 ? "+" : ""}
+          {formatTwoDecimals(returnPercent)}%<!-- porcentaje -->
+        </span>
+      }
+      
     </div>
   </div>
 <!-- First -->
   <div class="bg-surface-container-lowest rounded-xl p-3 sm:p-4 mb-6">
     <div class="rounded-2xl overflow-hidden bg-[#061020]">
-      <MiniTVChart points={pointsP} height={110} />
+      <MiniTVChart points={points} height={110} />
     </div>
   </div>
 
   <div class="flex flex-col min-[400px]:flex-row gap-3 min-[400px]:items-end min-[400px]:justify-between">
-    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end">
+    <div class="grid grid-cols-2 gap-4 sm:gap-6 flex-1 min-w-0 text-left items-end border-0 pr-2">
       <div class="min-w-0">
         <p
           class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
         >
-          parameter1
+           Profit factor
         </p>
         <p
           class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface leading-none"
         >
-         1.56 <!-- profitFactor    -->
-        </p>
+         {formatTwoDecimals(profitFactor)}
+        </p> 
       </div>
 
-      <div class="min-w-0">
+      <div class="min-w-0 border-0">
         <p
-          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight"
+          class="text-[10px] uppercase text-on-surface-variant tracking-wide mb-1 leading-tight pl-2"
         >
-         2 <!-- parameter2 -->
+         Drawdown
         </p>
         <p
-          class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none"
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-tertiary leading-none pr-6 "
         >
-          0.55<!-- drawdown -->
+          {formatTwoDecimals(drawDown)}%
         </p>
       </div>
     </div>

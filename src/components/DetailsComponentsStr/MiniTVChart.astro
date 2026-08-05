@@ -1,15 +1,14 @@
 ---
-interface Point {
-  time: number;
-  value: number;
-}
+import type{ PointInterface } from "../../interfaces/pointInterface"
 
 interface Props {
-  points: Point[];
+  points: PointInterface[];
   height?: number;
 }
 
 const { points, height = 220 } = Astro.props as Props;
+
+
 ---
 
 <div class="mini-equity-root">
@@ -83,7 +82,7 @@ const { points, height = 220 } = Astro.props as Props;
         },
       },
       handleScroll: false,
-      handleScale: false,
+      handleScale: true,
     });
 
     const series = chart.addSeries(LineSeries, {

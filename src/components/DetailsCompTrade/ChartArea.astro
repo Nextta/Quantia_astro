@@ -54,10 +54,9 @@ const {
   downColor = "#ef5350",
 } = Astro.props as Props;
 
-// console.log(dataEMABefore);
+
 
 let data = dataFrame[0];
-// console.log(data);
 
 let indicator: StrategyIndicator[] = [
   {
@@ -89,7 +88,7 @@ let indicator: StrategyIndicator[] = [
     tipo: "ATR",
   },
 ];
-// console.log(indicator[0]);
+
 
 let acciones: StrategyAction[] = [
   {
@@ -186,7 +185,7 @@ function get_values_indicator(name: string){
 
 
 for(let i=0; i<indicator.length; i++){
-  // console.log("iterando indicador: "+indicator[i])
+
 switch (indicator[i]?.tipo) {
   case "EMA":
 
@@ -232,7 +231,7 @@ const candlesFromDF: CandlePoint[] = dataFrame.map((dt) => ({
   close: dt.close,
 }));
 
-// console.log(candlesFromDF);
+
 
 // const chartCandles = candles && candles.length > 0 ? candles : candlesFromDF;
 const chartCandles = candlesFromDF;
@@ -289,7 +288,7 @@ const chartCandles = candlesFromDF;
     const markers = JSON.parse(container.dataset.markers || "[]");
     // const rawEma = JSON.parse(container.dataset.ema || "[]") as Ema50Point[];
     const rawEma = JSON.parse(container.dataset.ema || "[]") as EmaConfig[];
-    // console.log(rawEma);
+
     // const rawEma200 = JSON.parse(container.dataset.ema200 || "[]") as Ema200Point[];
 
     //Candles ----
@@ -327,8 +326,7 @@ const chartCandles = candlesFromDF;
 
     series.setData(candles);
 
-    // console.log(rawEma);
-    // // console.log(rawEma200);
+  
 
     // if (rawEma.length > 0) {
     //   const emaSeries = chart.addSeries(LineSeries, {
@@ -344,7 +342,7 @@ const chartCandles = candlesFromDF;
           color: ema.color,
           lineWidth: 2,
         });
-        // console.log(ema.data.length);
+
         emaSeries.setData(ema.data);
       }
     });

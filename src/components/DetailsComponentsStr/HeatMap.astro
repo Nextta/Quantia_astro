@@ -1,6 +1,6 @@
 ---
 import type { Trade } from "../../interfaces/trades";
-import { calculateAverageMonthlyPerformance, calculateMonthlyPerformance } from "../../utils/functionsGeneral";
+import { calculateMonthlyPerformance } from "../../utils/functionsGeneral";
 
 
 interface Props {
@@ -47,20 +47,12 @@ const monthNames = [
 let sequenceYearsPerformance = calculateMonthlyPerformance(trades, initialBalance);
 
 
-console.log(sequenceYearsPerformance);
+
 
 
 const yearRows = [...sequenceYearsPerformance].reverse();
 
-const ytdValues = sequenceYearsPerformance.map((row) => row.ytd);
 
-const averageYtd =
-  ytdValues.length > 0
-    ? ytdValues.reduce(
-        (accumulator, value) => accumulator + value,
-        0,
-      ) / ytdValues.length
-    : null;
 
 function formatPL(value: number | null): string {
   if (value === null) {

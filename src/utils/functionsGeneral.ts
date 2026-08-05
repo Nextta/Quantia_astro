@@ -1,10 +1,12 @@
 import type { Backtest } from "../interfaces/backtest";
 import type { resultados } from "../interfaces/resultados";
 import type { Trade } from "../interfaces/trades";
+import type { PointInterface } from "../interfaces/pointInterface";
 
 // const cuenta_data_all, Strategy = cuenta_data
 import Database from "better-sqlite3";
 import { get_alls_backtests } from "./testing/testing";
+import type { Activo } from "../enums/activo";
 
 const db = new Database(import.meta.env.URL_DATABASE);
 
@@ -59,7 +61,7 @@ export function calculateMonthlyPerformance(
 
   const monthlyTotals = new Map<string, number>(); //El number es el PL, la clave es año y mes
   const years = new Set<number>();
-  console.log(trades);
+ 
   for (const trade of trades) {
     if (!trade.t0) continue;
 
@@ -80,11 +82,11 @@ export function calculateMonthlyPerformance(
     const currentTotal = monthlyTotals.get(key) ?? 0;
 
     monthlyTotals.set(key, currentTotal + tradePL);
-      
+
   }
 
   let runningBalance = validInitialBalance;
-  console.log(runningBalance);
+
 
   const sortedYears = Array.from(years).sort((a, b) => a - b);
   const yearsRows: YearRow[] = sortedYears.map((year) => {
@@ -185,19 +187,12 @@ export function getDayAverage(
     dayTotals.set(key, currentTotal + tradePL); //Aqui hacemos la suma por dia
     //Aqui ya tenemos la suma de cada fecha, esto es  lo que hace todo el for
 
-    // console.log(year);
 
-    // const dateUTC = Date.UTC(year,month-1,day);
-    // const newDateF = new Date(dateUTC);
-
-    // const weekDay = newDateF.getUTCDay();
   }
 
   const allEntrys = dayTotals.entries(); //Obtenemos todos los datos anteriormente obtenidos con el for
 
   const arrDaysTotals = Array.from(allEntrys); //Aqui convertimos el iterador en array
-
-  console.log("Todas las entradas: ", arrDaysTotals);
 
   const sortedDaysTotals = arrDaysTotals.sort((a, b) => {
     const dateA = a[0]; //a[0] es la fechav a[1] es el PL
@@ -212,12 +207,10 @@ export function getDayAverage(
 
   let runningBalance = validInitialBalance;
 
-  console.log("Balance al principio del día:", runningBalance);
-
   const percentWeekDay = new Map<number, number[]>();
 
   for (const [dateKey, dayPL] of sortedDaysTotals) {
-    console.log("Balance al principio del día:", runningBalance);
+   
     const [year, month, day] = dateKey.split("-").map(Number);
 
     const dailyPercent = (dayPL / runningBalance) * 100;
@@ -226,10 +219,6 @@ export function getDayAverage(
     const weekDay = new Date(dateUTC).getUTCDay();
 
     const currentPercentages = percentWeekDay.get(weekDay) ?? [];
-    console.log(dateKey, "-", weekDay);
-
-    console.log("Fecha:", dateUTC);
-    console.log("Pl diario:", dayPL, dailyPercent);
 
     //aumentar running balance
 
@@ -239,11 +228,10 @@ export function getDayAverage(
 
     percentWeekDay.set(weekDay, currentPercentages);
 
-    console.log("Balance después del día:", runningBalance);
+   
   }
 
-  console.log("Días ordenados:", sortedDaysTotals);
-  console.log("Porcentajes agrupados:", percentWeekDay);
+
 
   const daysToShow: TradingWeekDay[] = [1, 2, 3, 4, 5];
 
@@ -257,15 +245,13 @@ export function getDayAverage(
 
     const prom = percentages.length > 0 ? sum / percentages.length : null;
 
-    console.log(weekDay, percentages);
-    console.log("Día:", weekDay, "Suma:", sum);
     return {
       day: weekDay,
       average: prom,
       observations: percentages.length,
     };
   });
-  console.log("Promedios semanales:", weekAvgs);
+ 
   return weekAvgs;
 }
 
@@ -287,8 +273,7 @@ export function buildEquityCurve(
     orderedTrades.length > 0
       ? orderedTrades[0].time - 1
       : Math.floor(Date.now() / 1000);
-console.log(orderedTrades[0]);
-console.log(orderedTrades[0].time);
+
 
   let previousTime = initialTime;
 
@@ -336,4 +321,83 @@ function parseTradeTime(time: string): number {
   }
 
   return Math.floor(milliseconds / 1000); //Quitamos posibles decimales con math floor
+}
+
+//------------------------Para StrategyCard
+
+
+export type RankedBacktest = {
+  id: number;
+  titulo: string;
+  tipo: Activo;
+  returnPercent: number;
+  profitFactor: number;
+  drawDown: number;
+  points: PointInterface[];
+};
+
+type RankedBacktestRow = {
+  id: number;
+  titulo: string;
+  balance: number;
+  tipo: Activo;
+  returnPercent: number;
+  profitFactor: number;
+  drawDown: number;
+};
+
+export async function getRankedBacktests(
+  limit?: number,
+): Promise<RankedBacktest[]> {
+  const query = `
+    SELECT
+      b.id,
+      b.titulo,
+      b.balance,
+      b.tipo,
+      r.return_percent AS "returnPercent",
+      r.profit_factor AS "profitFactor",
+      r.max_drawdown AS "drawDown"
+    FROM backtest AS b
+    INNER JOIN resultados AS r
+      ON r.id_backtest = b.id
+    ORDER BY
+      r.return_percent DESC,
+      b.id ASC
+  `;
+
+  const rows =
+    typeof limit === "number"
+      ? db
+          .prepare(`${query} LIMIT ?`)
+          .all(Math.max(0, Math.trunc(limit)))
+      : db.prepare(query).all();
+
+  const typedRows = rows as RankedBacktestRow[];
+
+  return Promise.all(
+    typedRows.map(
+      async (row): Promise<RankedBacktest> => {
+        const id = Number(row.id);
+        const initialBalance = Number(row.balance);
+
+        const trades = await getTrades(id);
+
+        const equityCurve = buildEquityCurve(
+          trades,
+          initialBalance,
+        );
+
+        return {
+          id,
+          titulo: row.titulo,
+          tipo: row.tipo,
+          returnPercent: Number(row.returnPercent),
+          profitFactor: Number(row.profitFactor),
+          drawDown: Number(row.drawDown),
+          points: equityCurve.points,
+        };
+      },
+    ),
+  );
 }

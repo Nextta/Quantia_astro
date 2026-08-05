@@ -13,7 +13,7 @@ export interface Backtest {
     tipo: Activo; // Tipo de activo ej: Forex, Crypto, Futuros...etc - Enum
     gestion_strategy: GestionStrategy,
     parametros_gestion: GestionParams,
-    trades: Trade[],
-    datos: DataSymbol,
-    estrategia: Strategy,
+    trades?: Trade[],
+    datos?: DataSymbol,
+    estrategia?: Strategy,
 }
