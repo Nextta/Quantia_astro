@@ -1,23 +1,25 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import node from "@astrojs/node";
+import react from "@astrojs/react";
 
-import tailwindcss from '@tailwindcss/vite';
-
-import node from '@astrojs/node';
-
-import react from '@astrojs/react';
-
-// https://astro.build/config
 export default defineConfig({
-  output:'server',
+  output: "server",
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        "@tauri-apps/api/window",
+        "lightweight-charts",
+      ],
+    },
   },
 
   adapter: node({
-    mode: 'standalone'
+    mode: "standalone",
   }),
 
-  integrations: [react()]
+  integrations: [react()],
 });
