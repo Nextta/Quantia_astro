@@ -162,19 +162,23 @@ const arrProps = results.flatMap((rt) => {
       
           <InfoBoxDetail
             title={"Sharpe Ratio"}
-            value={Math.round(rt?.sharpe_ratio * 100) / 100}
+            value={String(Math.round(rt?.sharpe_ratio * 100) / 100)}
           />
         
       
       
         //Colocar porcentaje en maxDrawDown
+          
+      ))}
+      {
+        arrProps.map((rt) => (
           <InfoBoxDetail
             title={"MAX DRAWDOWN"}
-            value={Math.round(rt?.max_drawdown * 100) / 100 }
+            value={rt.maxDrawDownV}
             ratioLabel="Pico a Valle"
           />
-      ))}
-      
+        ))
+      }
     </div>
   </div>
   <!-- Detailed Metrics Grids -->
@@ -208,12 +212,10 @@ const arrProps = results.flatMap((rt) => {
         <FourMetrics
           parametro1="Skew ratio"
           parametro2="Kurtosis ratio"
-          parametro3="Risk of ruin"
           parametro4="Kelly Criterion"
           title="Statistical metrics"
           parametro1Value={rt.skewRatioV}
           parametro2Value={rt.kurtosisRatioV}
-          parametro3Value={rt.riskOfRuin2V}
           parametro4Value={rt.kellyCriterionV}
         />
 

@@ -45,8 +45,6 @@ const yearRows = calculateMonthlyPerformance(
 const monthlyAverages =
   calculateAverageMonthlyPerformance(yearRows);
 
-
-  console.table(monthlyAverages);
 const monthlyAveragesNames = monthlyAverages.map((result) => ({
   month: result.month,
   name:
@@ -68,8 +66,7 @@ const maxAbsoluteAverage = Math.max(
   ),
 );
 
-console.log("Promedio mensual usado en las barras:", maxAbsoluteAverage);
-console.table(monthlyAveragesNames);
+
 ---
 
 
@@ -89,7 +86,7 @@ console.table(monthlyAveragesNames);
       {
         monthlyAveragesNames.map((avg) => {
           const value = avg.average ?? 0;
-            console.log("Promedio value:", value);
+            
           const height = Math.min(
             (Math.abs(value) / maxAbsoluteAverage) * 100,
             100,

@@ -33,14 +33,6 @@ const {
   Ver = "Ver"
 } = Astro.props as Props;
 
-
-let InitialBalance = 10000;
-let balanceActual = 0;
-
-var amountTrade: number;
-
-
-
 const idActual = Number(id);
 
 const tradesArray = await getTrades(idActual);
