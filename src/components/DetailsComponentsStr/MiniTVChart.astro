@@ -1,17 +1,16 @@
 ---
-import type{ PointInterface } from "../../interfaces/pointInterface"
+import type { PointInterface } from "../../interfaces/pointInterface";
 
 interface Props {
   points: PointInterface[];
   height?: number;
+  initialBalance: number;
 }
 
-const { points, height = 220 } = Astro.props as Props;
-
-
+const { points, height = 220, initialBalance } = Astro.props as Props;
 ---
 
-<div class="mini-equity-root">
+<div class="mini-equity-root" data-initial-balance={initialBalance}>
   <div class="mini-equity-chart" style={`height:${height}px; width:100%;`}>
   </div>
   <script
@@ -28,85 +27,118 @@ const { points, height = 220 } = Astro.props as Props;
   };
   import {
     createChart,
-    LineSeries,
+    BaselineSeries,
+    ColorType,
     type UTCTimestamp,
   } from "lightweight-charts";
 
-  const roots = document.querySelectorAll(".mini-equity-root");
+  function initEquityCharts() {
+    const roots = document.querySelectorAll<HTMLElement>(".mini-equity-root");
 
-  roots.forEach((root) => {
-    const container = root.querySelector(".mini-equity-chart");
-    const dataScript = root.querySelector(".mini-equity-data");
+    roots.forEach((root) => {
+      if (root.dataset.initialized === "true") return;
 
-    if (
-      !(container instanceof HTMLDivElement) ||
-      !(dataScript instanceof HTMLScriptElement)
-    ) {
-      return;
-    }
+      const initialBalance = Number(root.dataset.initialBalance);
+      if (!Number.isFinite(initialBalance)) return;
 
-    const rawPoints = dataScript.textContent ?? "[]";
-    const parsedPoints: ChartPoint[] = JSON.parse(rawPoints);
+      const container = root.querySelector(".mini-equity-chart");
+      const dataScript = root.querySelector(".mini-equity-data");
 
-    const chart = createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
-      layout: {
-        background: { color: "transparent" },
-        textColor: "#94a3b8",
-      },
-      grid: {
-        vertLines: { color: "transparent" },
-        horzLines: { color: "transparent" },
-      },
-      rightPriceScale: {
-        visible: false,
-        borderVisible: false,
-      },
-      leftPriceScale: {
-        visible: false,
-        borderVisible: false,
-      },
-      timeScale: {
-        visible: false,
-        borderVisible: false,
-      },
-      crosshair: {
-        vertLine: {
-          visible: false,
-          labelVisible: false,
-        },
-        horzLine: {
-          visible: false,
-          labelVisible: false,
-        },
-      },
-      handleScroll: false,
-      handleScale: true,
-    });
+      if (
+        !(container instanceof HTMLDivElement) ||
+        !(dataScript instanceof HTMLScriptElement)
+      ) {
+        return;
+      }
 
-    const series = chart.addSeries(LineSeries, {
-      color: "#22d3ee",
-      lineWidth: 2,
-      priceLineVisible: false,
-      lastValueVisible: false,
-      crosshairMarkerVisible: false,
-    });
+      const rawPoints = dataScript.textContent ?? "[]";
+      const parsedPoints: ChartPoint[] = JSON.parse(rawPoints);
 
-    series.setData(
-      parsedPoints.map((point) => ({
-        time: point.time as UTCTimestamp,
-        value: point.value,
-      })),
-    );
+      requestAnimationFrame(() => {
+        const chart = createChart(container, {
+          autoSize: true,
 
-    const resizeObserver = new ResizeObserver(() => {
-      chart.applyOptions({
-        width: container.clientWidth,
-        height: container.clientHeight,
+          layout: {
+            background: {
+              type: ColorType.Solid,
+              color: "transparent",
+            },
+            textColor: "#94a3b8",
+          },
+          grid: {
+            vertLines: { color: "transparent" },
+            horzLines: { color: "transparent" },
+          },
+          rightPriceScale: {
+            visible: false,
+            borderVisible: false,
+            autoScale: true,
+            scaleMargins: {
+              top: 0.05,
+              bottom: 0.05,
+            },
+          },
+          leftPriceScale: {
+            visible: false,
+            borderVisible: false,
+          },
+          timeScale: {
+            visible: false,
+            borderVisible: false,
+            fixLeftEdge: true,
+            fixRightEdge: true,
+            lockVisibleTimeRangeOnResize: true,
+          },
+          crosshair: {
+            vertLine: {
+              visible: false,
+              labelVisible: false,
+            },
+            horzLine: {
+              visible: false,
+              labelVisible: false,
+            },
+          },
+          handleScroll: false,
+          handleScale: false,
+          kineticScroll: {
+            mouse: false,
+            touch: false,
+          },
+        });
+
+        const series = chart.addSeries(BaselineSeries, {
+          baseValue: {
+            type: "price",
+            price: initialBalance,
+          },
+
+          topLineColor: "#4edea3",
+          topFillColor1: "rgba(78, 222, 163, 0.30)",
+          topFillColor2: "rgba(78, 222, 163, 0.03)",
+
+          bottomLineColor: "#ef4444",
+          bottomFillColor1: "rgba(239, 68, 68, 0.03)",
+          bottomFillColor2: "rgba(239, 68, 68, 0.30)",
+
+          lineWidth: 3,
+          priceLineVisible: false,
+          lastValueVisible: false,
+          crosshairMarkerVisible: false,
+        });
+
+        series.setData(
+          parsedPoints.map((point) => ({
+            time: point.time as UTCTimestamp,
+            value: point.value,
+          })),
+        );
+
+        chart.timeScale().fitContent();
+        root.dataset.initialized = "true";
       });
     });
-
-    resizeObserver.observe(container);
-  });
+  }
+  initEquityCharts();
+  document.addEventListener("astro:page-load", initEquityCharts);
 </script>

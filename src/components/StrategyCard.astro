@@ -8,6 +8,7 @@ interface Props {
   ranking?: number;
   titulo?: string;
   tipo: Activo;
+  initialBalance: number;
   points: PointInterface[];
   returnPercent: number;
   profitFactor:number;
@@ -17,6 +18,7 @@ interface Props {
 const {
   id = 1,
   titulo = "nombre",
+  initialBalance,
   points,
   returnPercent,
   profitFactor,
@@ -77,9 +79,9 @@ const formatTwoDecimals = (value: number): string => {
     </div>
   </div>
 <!-- First -->
-  <div class="bg-surface-container-lowest rounded-xl p-3 sm:p-4 mb-6">
+  <div class="bg-surface-container-lowest rounded-xl p-2 mb-6">
     <div class="rounded-2xl overflow-hidden bg-[#061020]">
-      <MiniTVChart points={points} height={110} />
+      <MiniTVChart points={points} initialBalance={initialBalance} height={110} />
     </div>
   </div>
 
