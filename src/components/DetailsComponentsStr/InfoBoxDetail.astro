@@ -3,12 +3,12 @@
 import type { resultados } from "../../interfaces/resultados"; 
 
 interface Props {
-  title?:  string;
-  value?: string;
+  title:  string;
+  value: string;
   ratioLabel?: string;
 }
 
-const { title = "Risk of ruin--", value = 1.82, ratioLabel = "Excepcional" } = Astro.props as Props;
+const { title = "Risk of ruin--", value = 1.82, ratioLabel } = Astro.props as Props;
 
 
 ---
