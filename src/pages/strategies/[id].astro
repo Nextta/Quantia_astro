@@ -145,7 +145,11 @@ const arrProps = results.flatMap((rt) => {
   <!-- Hero Section: Bento Grid -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
     <!-- Equity Curve - Gráfica TV -->
-    <CurveDetail trades={trades} initialBalance={backtest.balance} />
+     {
+        results.map((rt) => (
+    <CurveDetail trades={trades} initialBalance={backtest.balance} returnUSD={Math.round(rt.retorno * 100) / 100}/>
+     ))
+     }
 
     <!-- Key Ratios -->
     <div class="md:col-span-4 flex flex-col gap-6 border-0">

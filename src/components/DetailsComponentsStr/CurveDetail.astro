@@ -6,7 +6,7 @@ interface Props {
   title?: string;
   initialBalance: number;
   trades: Trade[];
-  porcentaje?: number;
+  returnUSD: number;
   CAGR?: string;
 }
 
@@ -14,7 +14,7 @@ const {
   title = "Curva de Equidad (Equity Curve)",
   initialBalance,
   trades,
-  porcentaje = 24.5,
+  returnUSD,
   CAGR = "CAGR",
 } = Astro.props as Props;
 
@@ -35,7 +35,7 @@ const returnPercentage =
         {title}
       </h3>
       <p class="text-2xl font-bold font-headline text-slate-50 tracking-tight">
-        ${finalBalance.toLocaleString()}
+        ${returnUSD}
       </p>
     </div>
 
