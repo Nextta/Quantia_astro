@@ -1,6 +1,4 @@
 ---
-import type { resultados } from "../../interfaces/resultados";
-//--
 interface Props {
   parametro1?: string;
   parametro2?: string;
@@ -54,16 +52,16 @@ const metrics = [
 ---
 
 <!-- Returns Analytics -->
-<div class="bg-surface-container-low rounded-xl pt-4 px-3 pb-4 h-[200px] border-y-teal-800
-grid grid-rows-[auto_minmax(0,1fr)] gap-1
+<div class="bg-surface-container-low rounded-xl py-4 px-3
+grid gap-4 self-start 
 ">
   <h4
-    class="text-primary text-xs font-black uppercase tracking-widest  pb-4"
+    class="text-primary text-xs font-black uppercase tracking-widest pb-2"
   >
     {title}
   </h4>
 
-  <div class="flex flex-1 flex-col justify-between gap-3">
+  <div class="grid gap-3">
     {
       metrics.map(({ label, value, valueClass }) => (
         <div class="flex items-center justify-between gap-3">
