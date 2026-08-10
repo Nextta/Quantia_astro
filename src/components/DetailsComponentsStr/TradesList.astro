@@ -1,8 +1,9 @@
 ---
 
-import { getBacktest, getTrades, getOneBacktest} from "../../utils/functionsGeneral";
+import { getTrades, getOneBacktest} from "../../utils/functionsGeneral";
 import { EntryDirection } from "../../enums/EntryDirection";
 import type { Trade } from "../../interfaces/trades";
+import type { Backtest } from "../../interfaces/backtest";
 
 interface Props {
   id: number;
@@ -16,6 +17,8 @@ interface Props {
   ResultadoMoney?: string;
   Duración?: string;
   Ver?: string;
+  trades: Trade[];
+  backtest: Backtest;
 }
 
 
@@ -30,20 +33,17 @@ const {
   ResultadoPercent = "Resultado (%)",
   ResultadoMoney = "Resultado ($)",
   Duración = "Duración",
-  Ver = "Ver"
+  Ver = "Ver",
+  trades,
+  backtest
 } = Astro.props as Props;
-
-const idActual = Number(id);
-
-const tradesArray = await getTrades(idActual);
-const backtestArray = await getOneBacktest(idActual);
 
 function getPages() {
   const pageSize = Math.max(1, Number(tradesPerPage) || 10); //Total de trades por pagina, minimo 1
-  const totalTrades = tradesArray.length; //Total de trades en el array
+  const totalTrades = trades.length; //Total de trades en el array
   const endIndex = Math.min(pageSize, totalTrades); //Total de trades a mostrar en la pagina actual, no puede ser mayor al total de trades
 
-  const tradesToShow = tradesArray.slice(0, endIndex); //Los trades a mostrar en la pagina actual, desde el inicio hasta el endIndex, donde el endIndex es el total de trades a mostrar en la pagina actual, no puede ser mayor al total de trades
+  const tradesToShow = trades.slice(0, endIndex); //Los trades a mostrar en la pagina actual, desde el inicio hasta el endIndex, donde el endIndex es el total de trades a mostrar en la pagina actual, no puede ser mayor al total de trades
 
   return {
     pageSize,
@@ -54,9 +54,6 @@ function getPages() {
 }
 
 const pages = getPages();
-
-
-
 
 ---
 
@@ -88,7 +85,7 @@ const pages = getPages();
 
       <tbody class="divide-y divide-surface-container">
         {
-        tradesArray.map((tr, index)=> (
+        trades.map((tr, index)=> (
             <tr 
             data-trade-row
             // data-index={index}
@@ -119,7 +116,7 @@ const pages = getPages();
               <td
                 class={`px-6 py-4 text-center font-bold ${tr.pl >= 0 ? "text-secondary" : "text-tertiary" }`}
               >
-                {((tr.pl * 100) / backtestArray.balance).toFixed(2)}%
+                {((tr.pl * 100) / backtest.balance).toFixed(2)}%
               </td>
              
               <td
@@ -154,9 +151,9 @@ const pages = getPages();
     >
       <span class="text-xs text-on-surface-variant">
         <span class="font-bold text-on-surface" id="rangeTrades">
-          {tradesArray.length === 0 ? "0" : `1-${pages.endIndex}`}
+          {trades.length === 0 ? "0" : `1-${pages.endIndex}`}
         </span> de <span
-          class="font-bold text-on-surface">{tradesArray.length}</span
+          class="font-bold text-on-surface">{trades.length}</span
         > trades
       </span>
       <div class="flex items-center gap-1">

@@ -13,11 +13,6 @@ interface Props {
   finalParameter?: string;
 }
 //--
-interface YearRow {
-  year: number;
-  months: Array<number | null>;
-  ytd: number;
-}
 
 const {
   trades,
@@ -46,13 +41,7 @@ const monthNames = [
 
 let sequenceYearsPerformance = calculateMonthlyPerformance(trades, initialBalance);
 
-
-
-
-
 const yearRows = [...sequenceYearsPerformance].reverse();
-
-
 
 function formatPL(value: number | null): string {
   if (value === null) {

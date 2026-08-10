@@ -269,7 +269,9 @@ const arrProps = results.flatMap((rt) => {
     }
   </div>
   <!-- Recent Activity Log Table -->
-  <TradesList tradesPerPage={12} id={idActual} />
+  <TradesList tradesPerPage={12} id={idActual} 
+  trades={trades} backtest={backtest}
+  />
 
   <!-- System Footer -->
   <footer
