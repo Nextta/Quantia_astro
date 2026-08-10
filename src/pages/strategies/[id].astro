@@ -147,7 +147,7 @@ const arrProps = results.flatMap((rt) => {
     <!-- Equity Curve - Gráfica TV -->
      {
         results.map((rt) => (
-    <CurveDetail trades={trades} initialBalance={backtest.balance} returnUSD={Math.round(rt.retorno * 100) / 100}/>
+    <CurveDetail trades={trades} initialBalance={backtest.balance} returnUSD={Math.round(rt.retorno * 100) / 100} returnPercent={Math.round(rt.return_percent * 100) / 100}/>
      ))
      }
 

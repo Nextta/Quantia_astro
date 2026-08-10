@@ -7,6 +7,7 @@ interface Props {
   initialBalance: number;
   trades: Trade[];
   returnUSD: number;
+  returnPercent: number;
   CAGR?: string;
 }
 
@@ -15,6 +16,7 @@ const {
   initialBalance,
   trades,
   returnUSD,
+  returnPercent,
   CAGR = "CAGR",
 } = Astro.props as Props;
 
@@ -22,8 +24,8 @@ const equityR = buildEquityCurve(trades, initialBalance);
 
 const { points, finalBalance, netProfit, tradeCount } = equityR;
 
-const returnPercentage =
-  initialBalance > 0 ? (netProfit / initialBalance) * 100 : 0;
+// const returnPercentage =
+//   initialBalance > 0 ? (netProfit / initialBalance) * 100 : 0;
 ---
 
 <div
@@ -44,15 +46,15 @@ const returnPercentage =
         class:list={[
           "px-2 py-1 rounded text-[10px] font-bold",
 
-          returnPercentage > 0 && "bg-secondary/10 text-secondary",
+          returnPercent > 0 && "bg-secondary/10 text-secondary",
 
-          returnPercentage < 0 && "bg-red-500/10 text-red-500",
+          returnPercent < 0 && "bg-red-500/10 text-red-500",
 
-          returnPercentage === 0 && "bg-gray-500/10 text-gray-400",
+          returnPercent === 0 && "bg-gray-500/10 text-gray-400",
         ]}
       >
-        {returnPercentage > 0 ? "+" : ""}
-        {returnPercentage.toFixed(2)}% Return
+        {returnPercent > 0 ? "+" : ""}
+        {returnPercent}% Return
       </span>
     </div>
   </div>
