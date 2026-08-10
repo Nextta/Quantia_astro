@@ -330,6 +330,7 @@ export type RankedBacktest = {
   id: number;
   titulo: string;
   tipo: Activo;
+  initialBalance:number;
   returnPercent: number;
   profitFactor: number;
   drawDown: number;
@@ -392,6 +393,7 @@ export async function getRankedBacktests(
           id,
           titulo: row.titulo,
           tipo: row.tipo,
+          initialBalance,
           returnPercent: Number(row.returnPercent),
           profitFactor: Number(row.profitFactor),
           drawDown: Number(row.drawDown),
@@ -401,3 +403,5 @@ export async function getRankedBacktests(
     ),
   );
 }
+
+
