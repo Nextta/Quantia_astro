@@ -49,19 +49,30 @@ const metrics = [
   return label !== undefined && value !== undefined;
 });
 
+
+const hasThreeMetrics = metrics.length === 3;
 ---
 
 <!-- Returns Analytics -->
-<div class="bg-surface-container-low rounded-xl py-4 px-3
-grid gap-4 self-start 
-">
+<div 
+class="bg-surface-container-low rounded-xl pt-4 pb-5 px-3
+grid gap-4 self-start h-[200px] 
+
+"
+
+>
   <h4
     class="text-primary text-xs font-black uppercase tracking-widest pb-2"
   >
     {title}
   </h4>
-
-  <div class="grid gap-3">
+<!-- class="grid gap-3" -->
+  <div 
+    class:list={[
+    "grid gap-3",
+    metrics.length === 3 ? "pb-4" : "",
+  ]}
+  >
     {
       metrics.map(({ label, value, valueClass }) => (
         <div class="flex items-center justify-between gap-3">
