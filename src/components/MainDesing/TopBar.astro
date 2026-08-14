@@ -1,8 +1,5 @@
 ---
 
-
-
-
 ---
 
 <header
@@ -15,18 +12,31 @@
     class="block flex-1 min-w-0 w-full border-0 basis-0 grow-3 max-[530px]:hidden"
     role="search"
   >
-  
-    
     <div class="relative group">
       <span
         class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm"
         >search</span
       >
       <input
+        id="global-search"
         class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 pr-4 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-[#7bd0ff]/40 transition-all font-body"
         placeholder="Buscar estrategias, carteras o activos..."
-        type="text"
+        type="search"
+        autocomplete="off"
+        role="combobox"
+        aria-label="Búsqueda global"
+        aria-autocomplete="list"
+        aria-controls="global-search-results"
+        aria-expanded="false"
       />
+      <div
+        id="global-search-results"
+        class="hidden absolute z-50 top-full left-0 right-0 mt-2
+           rounded-lg border border-slate-700 bg-slate-900 shadow-xl"
+        role="listbox"
+        aria-label="Resultados de búsqueda"
+      >
+      </div>
     </div>
   </form>
   <!-- Search - mobile -->
@@ -51,13 +61,138 @@
       class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-sky-400 basis-0 grow-0"
       >settings</span
     >
-    
-      <img
-        alt="User Profile Avatar"
-        class="w-8 h-8 rounded-full border border-primary/20"
-        data-alt="Professional portrait of a financial analyst in dark studio lighting with blue accents"
-        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNkzEjBRRR_UwE82X5DH1DQYJaIHBPGT5sTJEK4ZV_aSPAUxNOJyuiUVTiNXRCf9RGXY1jmjbs0vr1JPYkkpDrodGATVLh9t2ImLZ6ATkKJ52GxwgCJOcciRM_mCzNdOQv6JNhGVJOuuEYDe4LaRQgGslqQmQNa7o-VlF8aKoN2xqlMWO4ElDyTEsBqOIe285hrAHk1G9XowOqWIhDfsffZf7TXkzfo01kb_QvHHP5UpdV9LsSZoGbiEmodrjX3aVSz3INNRq7YHZ"
-      />
-   
+
+    <img
+      alt="User Profile Avatar"
+      class="w-8 h-8 rounded-full border border-primary/20"
+      data-alt="Professional portrait of a financial analyst in dark studio lighting with blue accents"
+      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNkzEjBRRR_UwE82X5DH1DQYJaIHBPGT5sTJEK4ZV_aSPAUxNOJyuiUVTiNXRCf9RGXY1jmjbs0vr1JPYkkpDrodGATVLh9t2ImLZ6ATkKJ52GxwgCJOcciRM_mCzNdOQv6JNhGVJOuuEYDe4LaRQgGslqQmQNa7o-VlF8aKoN2xqlMWO4ElDyTEsBqOIe285hrAHk1G9XowOqWIhDfsffZf7TXkzfo01kb_QvHHP5UpdV9LsSZoGbiEmodrjX3aVSz3INNRq7YHZ"
+    />
   </div>
 </header>
+
+<script>
+  type SearchResult = {
+    id: number;
+    name: string;
+    type: "strategy" | "portfolio";
+    href: string;
+  };
+
+  type SearchResponse = {
+    query: string;
+    results: SearchResult[];
+  };
+
+  const searchInput =
+    document.querySelector<HTMLInputElement>("#global-search")!;
+
+  const resultsContainer = document.querySelector<HTMLElement>(
+    "#global-search-results",
+  )!;
+
+  if (
+    searchInput &&
+    resultsContainer &&
+    searchInput.dataset.searchInitialized !== "true"
+  ) {
+    searchInput.dataset.searchInitialized = "true";
+
+    let debounceTimer: number | undefined;
+    let activeRequest: AbortController | null = null;
+
+    function closeResults() {
+      resultsContainer.replaceChildren();
+      resultsContainer.classList.add("hidden");
+      searchInput.setAttribute("aria-expanded", "false");
+    }
+
+    function renderResults(results: SearchResult[]) {
+      resultsContainer.replaceChildren();
+
+      if (results.length === 0) {
+        const emptyMessage = document.createElement("p");
+
+        emptyMessage.className = "px-4 py-3 text-sm text-slate-400";
+
+        emptyMessage.textContent = "No se encontraron resultados";
+
+        resultsContainer.append(emptyMessage);
+      } else {
+        const fragment = document.createDocumentFragment();
+
+        for (const result of results) {
+          const link = document.createElement("a");
+
+          link.href = result.href;
+          link.role = "option";
+          link.className =
+            "flex items-center justify-between gap-4 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:text-sky-300 transition-colors";
+
+          const name = document.createElement("span");
+          name.className = "truncate";
+          name.textContent = result.name;
+
+          const metadata = document.createElement("span");
+          metadata.className = "shrink-0 text-xs text-slate-500";
+
+          metadata.textContent = `${result.type === "strategy" ? "Estrategia" : "Cartera"} · ID ${result.id}`;
+
+          link.append(name, metadata);
+          fragment.append(link);
+        }
+
+        resultsContainer.append(fragment);
+      }
+
+      resultsContainer.classList.remove("hidden");
+      searchInput.setAttribute("aria-expanded", "true");
+    }
+
+    searchInput.closest("form")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+
+    searchInput.addEventListener("input", () => {
+      window.clearTimeout(debounceTimer);
+      activeRequest?.abort();
+
+      const query = searchInput.value.trim();
+
+      if (!query) {
+        closeResults();
+        return;
+      }
+
+      debounceTimer = window.setTimeout(async () => {
+        activeRequest = new AbortController();
+
+        try {
+          const response = await fetch(
+            `/api/search?q=${encodeURIComponent(query)}`,
+            { signal: activeRequest.signal },
+          );
+
+          if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+          }
+
+          const data = (await response.json()) as SearchResponse;
+
+          if (searchInput.value.trim() !== query) {
+            return;
+          }
+
+          renderResults(data.results);
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") {
+            return;
+          }
+
+          console.error("Error durante la búsqueda:", error);
+          closeResults();
+        }
+      }, 300);
+    });
+  }
+</script>

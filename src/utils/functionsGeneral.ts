@@ -459,3 +459,72 @@ export function createChartDays(
     };
   });
 }
+
+//------Busqueda ---------->>
+
+export interface StrategySearchResult {
+  id: number;
+  name: string;
+  type: "strategy";
+  href: string;
+}
+
+type StrategySearchRow = {
+  id: number;
+  name: string;
+};
+
+export function searchStrategies(
+  searchText: string,
+  limit: number = 8,
+): StrategySearchResult[] {
+  const query = searchText.trim();
+
+  if (!query) {
+    return [];
+  }
+
+  const numericId = /^\d+$/.test(query)
+    ? Number(query)
+    : null;
+
+  const safeLimit = Math.min(
+    Math.max(Math.trunc(limit), 1),
+    10,
+  );
+
+  const rows = db
+    .prepare(`
+      SELECT
+        id,
+        titulo AS name
+      FROM backtest
+      WHERE
+        (? IS NOT NULL AND id = ?)
+        OR LOWER(titulo) LIKE LOWER(?) 
+      ORDER BY
+        CASE
+          WHEN (? IS NOT NULL AND id = ?) THEN 0
+          WHEN LOWER(titulo) = LOWER(?) THEN 1
+          ELSE 2
+        END,
+        titulo ASC
+      LIMIT ?
+    `)
+    .all(
+      numericId,
+      numericId,
+      `%${query}%`,
+      numericId,
+      numericId,
+      query,
+      safeLimit,
+    ) as StrategySearchRow[];
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    name: row.name,
+    type: "strategy",
+    href: `/strategies/${row.id}`,
+  }));
+}
