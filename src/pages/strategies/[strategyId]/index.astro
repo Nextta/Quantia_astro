@@ -1,27 +1,27 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import CurveDetail from "../../components/DetailsComponentsStr/CurveDetail.astro";
-import InfoBoxDetail from "../../components/DetailsComponentsStr/InfoBoxDetail.astro";
-import FactorBox from "../../components/DetailsComponentsStr/FactorBox.astro";
-import FourMetrics from "../../components/DetailsComponentsStr/FourMetrics.astro";
-import HeatMap from "../../components/DetailsComponentsStr/HeatMap.astro";
-import BarGraph from "../../components/DetailsComponentsStr/BarGraph.astro";
-import ReturnDistribution from "../../components/DetailsComponentsStr/ReturnDistribution.astro";
-import StrVSBench from "../../components/DetailsComponentsStr/StrVSBench.astro";
-import TradesList from "../../components/DetailsComponentsStr/TradesList.astro";
-import GlosaryDetail from "../../components/DetailsComponentsStr/GlosaryDetail.astro";
+import Layout from "../../../layouts/Layout.astro";
+import CurveDetail from "../../../components/DetailsComponentsStr/CurveDetail.astro";
+import InfoBoxDetail from "../../../components/DetailsComponentsStr/InfoBoxDetail.astro";
+import FactorBox from "../../../components/DetailsComponentsStr/FactorBox.astro";
+import FourMetrics from "../../../components/DetailsComponentsStr/FourMetrics.astro";
+import HeatMap from "../../../components/DetailsComponentsStr/HeatMap.astro";
+import BarGraph from "../../../components/DetailsComponentsStr/BarGraph.astro";
+import ReturnDistribution from "../../../components/DetailsComponentsStr/ReturnDistribution.astro";
+import StrVSBench from "../../../components/DetailsComponentsStr/StrVSBench.astro";
+import TradesList from "../../../components/DetailsComponentsStr/TradesList.astro";
+import GlosaryDetail from "../../../components/DetailsComponentsStr/GlosaryDetail.astro";
 
-import type { Trade } from "../../interfaces/trades";
+import type { Trade } from "../../../interfaces/trades";
 
 import {
   getOneBacktest,
   getResults,
   getTrades,
-} from "../../utils/functionsGeneral";
-import type { Backtest } from "../../interfaces/backtest";
-const { id } = Astro.params;
+} from "../../../utils/functionsGeneral";
+import type { Backtest } from "../../../interfaces/backtest";
+const { strategyId } = Astro.params;
 
-const idActual = Number(id);
+const idActual = Number(strategyId);
 
 if (!Number.isInteger(idActual) || idActual <= 0) {
   return Astro.redirect("/strategies");

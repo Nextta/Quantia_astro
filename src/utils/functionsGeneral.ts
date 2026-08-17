@@ -37,6 +37,23 @@ export async function getTrades(idBacktest: number): Promise<Trade[]> {
     .all() as Trade[];
 }
 
+export async function getTrade(
+  idBacktest: number,
+  idTrade: number,
+): Promise<Trade | undefined> {
+  const trade = db
+    .prepare(`
+      SELECT *
+      FROM trades
+      WHERE id_backtest = ?
+        AND id = ?
+      LIMIT 1
+    `)
+    .get(idBacktest, idTrade) as Trade | undefined;
+
+  return trade;
+}
+
 //---------------------------------------
 //---------------------------------------
 //Llamadas para la sección de trades:

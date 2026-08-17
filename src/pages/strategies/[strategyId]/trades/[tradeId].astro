@@ -1,11 +1,11 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import MnPer from "../../components/DetailsCompTrade/MnPer.astro";
-import ChartArea from "../../components/DetailsCompTrade/ChartArea.astro";
-import ExecutionTiming from "../../components/DetailsCompTrade/ExecutionTiming.astro";
-import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
-import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
-import { getTrades } from "../../utils/functionsGeneral";
+import Layout from "../../../../layouts/Layout.astro";
+import MnPer from "../../../../components/DetailsCompTrade/MnPer.astro";
+import ChartArea from "../../../../components/DetailsCompTrade/ChartArea.astro";
+import ExecutionTiming from "../../../../components/DetailsCompTrade/ExecutionTiming.astro";
+import Metrics from "../../../../components/DetailsCompTrade/Metrics.astro";
+import PositionDt from "../../../../components/DetailsCompTrade/PositionDt.astro";
+import { getTrade, getOneBacktest } from "../../../../utils/functionsGeneral";
 //R
 import type {
   BusinessDay,
@@ -744,10 +744,14 @@ const markers = [
   },
 ];
 
-const { id } = Astro.params;
+const { strategyId, tradeId } = Astro.params;
 
-const trade = await getTrades(59);
-const pl = trade[402].pl;
+const strategyIdActual = Number(strategyId);
+const tradeIdActual = Number(tradeId);
+
+const trade = await getTrade(strategyIdActual, tradeIdActual);
+const backtest = await getOneBacktest(strategyIdActual);
+const pl = 5;
 // console.log(trade[401].pl);
 
 const colorWinLoss =
@@ -767,7 +771,7 @@ const colorWinLoss =
         };
 ---
 
-<Layout title={`Trade Detail - Trade #${id}`}>
+<Layout title={`Trade Detail - Trade #${tradeIdActual}`}>
   <!-- px-1 py-2 min-[470px]:p-6 -->
   <div class="space-y-6">
     <!-- Trade Header / Summary Bento -->
@@ -789,7 +793,9 @@ const colorWinLoss =
           >
         </h3>
         <p class="text-on-surface-variant mt-1 font-medium">
-          Strategy: Neural Momentum v4 • BTC-USD-PERP • Oct 14, 2023
+          Strategy: {backtest.titulo} • Timeframe: {
+            backtest.datos?.timeframe ?? "unavailable"
+          } • Symbol: {trade?.symbol ?? "unavailable"}
         </p>
       </div>
       <MnPer />
