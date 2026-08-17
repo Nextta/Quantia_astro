@@ -5,13 +5,16 @@ import ChartArea from "../../components/DetailsCompTrade/ChartArea.astro";
 import ExecutionTiming from "../../components/DetailsCompTrade/ExecutionTiming.astro";
 import Metrics from "../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../components/DetailsCompTrade/PositionDt.astro";
+import { getTrades } from "../../utils/functionsGeneral";
 
-import type { BusinessDay, CandlestickData, SeriesMarker } from "lightweight-charts";
+import type {
+  BusinessDay,
+  CandlestickData,
+  SeriesMarker,
+} from "lightweight-charts";
 
 type CandlePoint = CandlestickData<BusinessDay>;
 type MarkerPoint = SeriesMarker<BusinessDay>;
-
-
 
 const candles = [
   {
@@ -724,7 +727,6 @@ const candles = [
   // ...
 ];
 
-//
 const markers = [
   {
     time: { year: 2018, month: 9, day: 22 },
@@ -743,11 +745,31 @@ const markers = [
 ];
 
 const { id } = Astro.params;
+
+const trade = await getTrades(59);
+const pl = trade[402].pl;
+// console.log(trade[401].pl);
+
+const colorWinLoss =
+  pl > 0
+    ? {
+        text: "Win",
+        class: "bg-secondary/10 text-secondary border-secondary/20",
+      }
+    : pl < 0
+      ? {
+          text: "Loss",
+          class: "bg-tertiary/10 text-tertiary border-tertiary/20",
+        }
+      : {
+          text: "Break Even",
+          class: "bg-gray-500/10 text-gray-400 border-gray-500/20",
+        };
 ---
 
 <Layout title={`Trade Detail - Trade #${id}`}>
- <!-- px-1 py-2 min-[470px]:p-6 -->
-    <div class=" space-y-6 ">
+  <!-- px-1 py-2 min-[470px]:p-6 -->
+  <div class="space-y-6">
     <!-- Trade Header / Summary Bento -->
     <div class="grid grid-cols-12 gap-6">
       <div
@@ -756,13 +778,14 @@ const { id } = Astro.params;
                text-center min-[470px]:text-left"
       >
         <h3
-          class="text-2xl min-[470px]:text-3xl font-headline font-black text-white tracking-tight
-                 flex flex-col min-[470px]:flex-row items-center gap-2 min-[470px]:gap-3"
+          class="text-2xl min-[470px]:text-3xl font-headline font-black text-white tracking-tight flex flex-col min-[470px]:flex-row items-center gap-2 min-[470px]:gap-3"
         >
           Trade #429 Detail
           <span
-            class="text-xs bg-secondary/10 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mr-1.5"
-            >Closed/Win</span
+            class:list={[
+              "text-xs  px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mr-1.5",
+              colorWinLoss.class,
+            ]}>{colorWinLoss.text}</span
           >
         </h3>
         <p class="text-on-surface-variant mt-1 font-medium">
@@ -772,17 +795,18 @@ const { id } = Astro.params;
       <MnPer />
     </div>
     <!-- Candlestick Chart Area -->
-     <!-- candles={} -->
+    <!-- candles={} -->
     <ChartArea
-      
       markers={markers}
       height={450}
       upColor="#26a69a"
       downColor="#ef5350"
     />
     <!-- Statistics Panel Bento Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6
-            px-4 min-[470px]:px-0">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6
+            px-4 min-[470px]:px-0"
+    >
       <!-- Execution Details -->
 
       <ExecutionTiming />
