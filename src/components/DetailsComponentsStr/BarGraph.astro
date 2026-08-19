@@ -1,7 +1,9 @@
 ---
-import { getDayAverage } from "../../utils/functionsGeneral";
-import type { WeekAverage } from "../../utils/functionsGeneral";
+import { getDayAverage, createChartDays } from "../../utils/functionsGeneral";
 import type { Trade } from "../../interfaces/trades";
+import type { WeekAverage } from "../../utils/functionsGeneral";
+// import { buildChartDays as buildChartDaysUtil} from "../../utils/functionsGeneral";
+// import type { ChartDay } from "../../utils/functionsGeneral";
 
 interface Props {
   title?: string;
@@ -31,7 +33,7 @@ function getCellClass(value: number | null): string {
     return `${base} bg-gray-500`;
   }
 
-  // Rendimiento negativo
+  // Rendimiento negativo 
   if (value < 0) {
     return `${base} bg-red-500`;
   }
@@ -40,39 +42,8 @@ function getCellClass(value: number | null): string {
   return `${base} bg-green-500`;
 }
 
+const chartDays = createChartDays(daysAverages);
 
-function getMax(weekAverages: WeekAverage[]): number {
-  let actualMax = 0;
-
-  for (const item of weekAverages) {
-    const currentAverage = Math.abs(item.average ?? 0);
-
-    if (currentAverage > actualMax) {
-      actualMax = currentAverage;
-    }
-  }
-
-  return actualMax;
-}
-
-const maxAverage = getMax(daysAverages);
-
-const dayLabels = ["LUN", "MAR", "MIE", "JUE", "VIE"];
-
-const chartDays = daysAverages.map((item) => {
-  const absoluteAverage = Math.abs(item.average ?? 0);
-
-  const height =
-    maxAverage > 0
-      ? (absoluteAverage / maxAverage) * 100
-      : 0;
-
-  return {
-    ...item,
-    height,
-    label: dayLabels[item.day - 1],
-  };
-});
 ---
 
 <div class="bg-surface-container-low rounded-xl p-6 h-80 flex flex-col">

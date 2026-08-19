@@ -7,7 +7,6 @@ import type { PointInterface } from "../interfaces/pointInterface";
 import Database from "better-sqlite3";
 import { get_alls_backtests } from "./testing/testing";
 import type { Activo } from "../enums/activo";
-
 const db = new Database(import.meta.env.URL_DATABASE);
 
 export async function getBacktest(): Promise<Backtest[]> {
@@ -38,7 +37,30 @@ export async function getTrades(idBacktest: number): Promise<Trade[]> {
     .all() as Trade[];
 }
 
+export async function getTrade(
+  idBacktest: number,
+  idTrade: number,
+): Promise<Trade | undefined> {
+  const trade = db
+    .prepare(`
+      SELECT *
+      FROM trades
+      WHERE id_backtest = ?
+        AND id = ?
+      LIMIT 1
+    `)
+    .get(idBacktest, idTrade) as Trade | undefined;
+
+  return trade;
+}
+
 //---------------------------------------
+//---------------------------------------
+//Llamadas para la sección de trades:
+
+// export const tradesArray = await getTrades(idActualTradeList);
+// export const backtestArray = await getOneBacktest(idActualTradeList);
+
 //---------------------------------------
 
 export interface YearRow {
@@ -404,4 +426,122 @@ export async function getRankedBacktests(
   );
 }
 
+//---Para BarGraph
 
+const DEFAULT_DAY_LABELS = [
+  "LUN",
+  "MAR",
+  "MIE",
+  "JUE",
+  "VIE",
+];
+
+export interface ChartDay extends WeekAverage {
+  height: number;
+  label: string;
+}
+
+function getMax(weekAverages: WeekAverage[]): number {
+  let actualMax = 0;
+
+  for (const item of weekAverages) {
+    const currentAverage = Math.abs(item.average ?? 0);
+
+    if (currentAverage > actualMax) {
+      actualMax = currentAverage;
+    }
+  }
+
+  return actualMax;
+}
+
+export function createChartDays(
+  weekAverages: WeekAverage[],
+  dayLabels: string[] = DEFAULT_DAY_LABELS,
+): ChartDay[] {
+  const maxAverage = getMax(weekAverages);
+
+  return weekAverages.map((item): ChartDay => {
+    const absoluteAverage = Math.abs(item.average ?? 0);
+
+    const height =
+      maxAverage > 0
+        ? (absoluteAverage / maxAverage) * 100
+        : 0;
+
+    return {
+      ...item,
+      height,
+      label: dayLabels[item.day - 1] ?? "",
+    };
+  });
+}
+
+//------Busqueda ---------->>
+
+export interface StrategySearchResult {
+  id: number;
+  name: string;
+  type: "strategy";
+  href: string;
+}
+
+type StrategySearchRow = {
+  id: number;
+  name: string;
+};
+
+export function searchStrategies(
+  searchText: string,
+  limit: number = 8,
+): StrategySearchResult[] {
+  const query = searchText.trim();
+
+  if (!query) {
+    return [];
+  }
+
+  const numericId = /^\d+$/.test(query)
+    ? Number(query)
+    : null;
+
+  const safeLimit = Math.min(
+    Math.max(Math.trunc(limit), 1),
+    10,
+  );
+
+  const rows = db
+    .prepare(`
+      SELECT
+        id,
+        titulo AS name
+      FROM backtest
+      WHERE
+        (? IS NOT NULL AND id = ?)
+        OR LOWER(titulo) LIKE LOWER(?) 
+      ORDER BY
+        CASE
+          WHEN (? IS NOT NULL AND id = ?) THEN 0
+          WHEN LOWER(titulo) = LOWER(?) THEN 1
+          ELSE 2
+        END,
+        titulo ASC
+      LIMIT ?
+    `)
+    .all(
+      numericId,
+      numericId,
+      `%${query}%`,
+      numericId,
+      numericId,
+      query,
+      safeLimit,
+    ) as StrategySearchRow[];
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    name: row.name,
+    type: "strategy",
+    href: `/strategies/${row.id}`,
+  }));
+}
