@@ -758,28 +758,35 @@ const tradeIdActual = Number(tradeId);
 
 const trade = await getTrade(strategyIdActual, tradeIdActual);
 const backtest = await getOneBacktest(strategyIdActual);
-const pl = 5;
-// console.log(trade[401].pl);
 
-const colorWinLoss =
-  pl > 0
-    ? {
-        text: "Win",
-        class: "bg-secondary/10 text-secondary border-secondary/20",
-      }
-    : pl < 0
-      ? {
-          text: "Loss",
-          class: "bg-tertiary/10 text-tertiary border-tertiary/20",
-        }
-      : {
-          text: "Break Even",
-          class: "bg-gray-500/10 text-gray-400 border-gray-500/20",
-        };
 
-//MnPer props
-const initialBalance = Number(backtest?.balance ?? 0);
-const percentTradePl = percentPl(trade?.pl ?? 0, initialBalance);
+function getTradeWinLossColor(pl: number) {
+  
+  const value = Number(pl);
+
+  if (!Number.isFinite(value) || value === 0) {
+    return {
+      text: "Break Even",
+      classes: "border-gray-500/20 bg-gray-500/10 text-gray-400",
+    };
+  }
+
+  if (value > 0) {
+    return {
+      text: "Win",
+      classes:
+        "border-secondary/20 bg-secondary/10 text-secondary",
+    };
+  }
+
+  return {
+    text: "Loss",
+    classes:
+      "border-tertiary/20 bg-tertiary/10 text-tertiary",
+  };
+}
+
+const tradeWinLoss = getTradeWinLossColor(trade?.pl ?? 0);
 ---
 
 <Layout title={`Trade Detail - Trade #${tradeIdActual}`}>
@@ -799,8 +806,8 @@ const percentTradePl = percentPl(trade?.pl ?? 0, initialBalance);
           <span
             class:list={[
               "text-xs  px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mr-1.5",
-              colorWinLoss.class,
-            ]}>{colorWinLoss.text}</span
+              tradeWinLoss.classes,
+            ]}>{tradeWinLoss.text}</span
           >
         </h3>
         <p class="text-on-surface-variant mt-1 font-medium">
