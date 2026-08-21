@@ -1,15 +1,41 @@
 ---
 interface Props {
-  totalPNL?: number;
-  returnPercent?: number;
+  totalPNL: string;
+  returnPercent: string;
 }
 
-const { totalPNL = 1429.5, returnPercent = 4.25 } = Astro.props;
+const { totalPNL, returnPercent} = Astro.props;
 
-const decimalesPNL = totalPNL.toLocaleString("en-US", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+// const decimalesPNL = totalPNL.toLocaleString("en-US", {
+//   minimumFractionDigits: 2,
+//   maximumFractionDigits: 2,
+// });
+
+const pnlNumber = Number(totalPNL);
+const returnNumber = Number(returnPercent);
+
+const pnlFormatted = Math.abs(pnlNumber).toFixed(2);
+
+const pnlSign =
+  pnlNumber < 0
+    ? "-"
+    : pnlNumber > 0
+      ? "+"
+      : "";
+
+const pnlColor =
+  pnlNumber < 0
+    ? "text-red-500"
+    : pnlNumber > 0
+      ? "text-secondary"
+      : "text-gray-400";
+
+const returnColor =
+  returnNumber < 0
+    ? "text-red-500"
+    : returnNumber > 0
+      ? "text-secondary"
+      : "text-gray-400";
 ---
 
 <div
@@ -28,9 +54,9 @@ const decimalesPNL = totalPNL.toLocaleString("en-US", {
       Total PnL
     </p>
     <h4
-      class="text-xl sm:text-2xl font-headline font-black text-secondary tabular-nums whitespace-nowrap"
+    class:list={["text-xl sm:text-2xl font-headline font-black tabular-nums whitespace-nowrap", pnlColor]}
     >
-      +${decimalesPNL}
+      {pnlSign}${pnlFormatted}
     </h4>
   </div>
   <div class="text-left xl:text-right min-w-0">
@@ -40,9 +66,9 @@ const decimalesPNL = totalPNL.toLocaleString("en-US", {
       Return (%)
     </p>
     <h4
-      class="text-xl sm:text-2xl font-headline font-black text-secondary tabular-nums whitespace-nowrap"
+    class:list={["text-xl sm:text-2xl font-headline font-black tabular-nums whitespace-nowrap", returnColor]}
     >
-      +{returnPercent?.toFixed(2)}%
+      {returnPercent}%
     </h4>
   </div>
 </div>

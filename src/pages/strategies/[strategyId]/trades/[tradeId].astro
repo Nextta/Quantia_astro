@@ -5,7 +5,14 @@ import ChartArea from "../../../../components/DetailsCompTrade/ChartArea.astro";
 import ExecutionTiming from "../../../../components/DetailsCompTrade/ExecutionTiming.astro";
 import Metrics from "../../../../components/DetailsCompTrade/Metrics.astro";
 import PositionDt from "../../../../components/DetailsCompTrade/PositionDt.astro";
-import { getTrade, getOneBacktest } from "../../../../utils/functionsGeneral";
+import {
+  getTrade,
+  getOneBacktest,
+  percentPl,
+  percentFavorable,
+  percentUnFavorable,
+} from "../../../../utils/functionsGeneral";
+
 //R
 import type {
   BusinessDay,
@@ -780,6 +787,8 @@ function getTradeWinLossColor(pl: number) {
 }
 
 const tradeWinLoss = getTradeWinLossColor(trade?.pl ?? 0);
+const initialBalance = Number(backtest?.balance ?? 0);
+const percentTradePl = percentPl(trade?.pl ?? 0, initialBalance);
 ---
 
 <Layout title={`Trade Detail - Trade #${tradeIdActual}`}>
@@ -795,7 +804,7 @@ const tradeWinLoss = getTradeWinLossColor(trade?.pl ?? 0);
         <h3
           class="text-2xl min-[470px]:text-3xl font-headline font-black text-white tracking-tight flex flex-col min-[470px]:flex-row items-center gap-2 min-[470px]:gap-3"
         >
-          Trade #429 Detail
+          Trade #{trade?.id} Detail
           <span
             class:list={[
               "text-xs  px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mr-1.5",
@@ -809,7 +818,10 @@ const tradeWinLoss = getTradeWinLossColor(trade?.pl ?? 0);
           } • Symbol: {trade?.symbol ?? "unavailable"}
         </p>
       </div>
-      <MnPer />
+      <MnPer
+        totalPNL={percentTradePl.totalPNL}
+        returnPercent={percentTradePl.percentReturn}
+      />
     </div>
     <!-- Candlestick Chart Area -->
     <!-- candles={} -->
@@ -826,10 +838,30 @@ const tradeWinLoss = getTradeWinLossColor(trade?.pl ?? 0);
     >
       <!-- Execution Details -->
 
-      <ExecutionTiming />
+      <ExecutionTiming
+        entryTimestamp={trade?.t0 ?? ""}
+        exitTimestamp={trade?.t1 ?? ""}
+        entryPrice={trade?.precio_entrada ?? 0}
+        exitPrice={trade?.precio_cierre ?? 0}
+        durationDays={Number(trade?.duracion_dias ?? 0)}
+        durationHours={Number(trade?.duracion_horas ?? 0)}
+        durationMinutes={Number(trade?.duracion_minutos ?? 0)}
+        durationSeconds={Number(trade?.duracion_segundos ?? 0)}
+      />
 
       <!-- Metrics & Excursion -->
-      <Metrics />
+      <Metrics
+        valueMFE={trade?.precio_maximo}
+        valueMAE={trade?.precio_minimo}
+        valueMFEPercent={percentFavorable(
+          trade?.precio_entrada ?? 0,
+          trade?.precio_maximo ?? 0,
+        )}
+        valueMAEPercent={percentFavorable(
+          trade?.precio_entrada ?? 0,
+          trade?.precio_minimo ?? 0,
+        )}
+      />
       <!-- Position & Costs -->
       <!-- <PositionDt /> -->
       <!-- Placeholder for Future Expansion -->

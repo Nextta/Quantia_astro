@@ -5,7 +5,10 @@ interface Props {
   exitTimestamp?: string;
   entryPrice?: number;
   exitPrice?: number;
-  tradeDuration?: string;
+  durationDays?: number;
+  durationHours?: number;
+  durationMinutes?: number;
+  durationSeconds?: number;
 }
 
 const {
@@ -14,7 +17,10 @@ const {
   exitTimestamp = "2023-10-14 14:45:12",
   entryPrice = 27450,
   exitPrice = 28620.5,
-  tradeDuration = "6h 15m 12s",
+  durationDays = 0,
+  durationHours = 0,
+  durationMinutes = 0,
+  durationSeconds = 0,
 } = Astro.props;
 
 // Dividir el timestamp en fecha y hora
@@ -82,7 +88,7 @@ const [exitDate, exitTime] = exitTimestamp.split(" ");
         Entry Price
       </p>
       <p class="text-sm font-bold text-on-surface">
-        ${
+        {
           entryPrice.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -97,7 +103,7 @@ const [exitDate, exitTime] = exitTimestamp.split(" ");
         Exit Price
       </p>
       <p class="text-sm font-bold text-on-surface">
-        ${
+        {
           exitPrice.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -118,7 +124,15 @@ const [exitDate, exitTime] = exitTimestamp.split(" ");
       >
         Trade Duration
       </span>
-      <span class="text-primary font-bold">{tradeDuration}</span>
+      <div
+    class="flex flex-wrap justify-center gap-x-3 gap-y-1
+           text-primary font-bold tabular-nums"
+  >
+    <span>{durationDays}d</span>
+    <span>{durationHours}h</span>
+    <span>{durationMinutes}m</span>
+    <span>{durationSeconds}s</span>
+  </div>
     </div>
   </div>
 </div>

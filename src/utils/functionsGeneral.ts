@@ -23,9 +23,7 @@ export async function getOneBacktest(idBacktest: number): Promise<Backtest> {
 
 export async function getResults(idBacktest: number): Promise<resultados[]> {
   return db
-    .prepare(
-      `SELECT * FROM resultados WHERE id_backtest= ${idBacktest}`,
-    )
+    .prepare(`SELECT * FROM resultados WHERE id_backtest= ${idBacktest}`)
     .all() as resultados[];
 }
 
@@ -42,13 +40,15 @@ export async function getTrade(
   idTrade: number,
 ): Promise<Trade | undefined> {
   const trade = db
-    .prepare(`
+    .prepare(
+      `
       SELECT *
       FROM trades
       WHERE id_backtest = ?
         AND id = ?
       LIMIT 1
-    `)
+    `,
+    )
     .get(idBacktest, idTrade) as Trade | undefined;
 
   return trade;
@@ -83,7 +83,7 @@ export function calculateMonthlyPerformance(
 
   const monthlyTotals = new Map<string, number>(); //El number es el PL, la clave es año y mes
   const years = new Set<number>();
- 
+
   for (const trade of trades) {
     if (!trade.t0) continue;
 
@@ -104,11 +104,9 @@ export function calculateMonthlyPerformance(
     const currentTotal = monthlyTotals.get(key) ?? 0;
 
     monthlyTotals.set(key, currentTotal + tradePL);
-
   }
 
   let runningBalance = validInitialBalance;
-
 
   const sortedYears = Array.from(years).sort((a, b) => a - b);
   const yearsRows: YearRow[] = sortedYears.map((year) => {
@@ -208,8 +206,6 @@ export function getDayAverage(
 
     dayTotals.set(key, currentTotal + tradePL); //Aqui hacemos la suma por dia
     //Aqui ya tenemos la suma de cada fecha, esto es  lo que hace todo el for
-
-
   }
 
   const allEntrys = dayTotals.entries(); //Obtenemos todos los datos anteriormente obtenidos con el for
@@ -232,7 +228,6 @@ export function getDayAverage(
   const percentWeekDay = new Map<number, number[]>();
 
   for (const [dateKey, dayPL] of sortedDaysTotals) {
-   
     const [year, month, day] = dateKey.split("-").map(Number);
 
     const dailyPercent = (dayPL / runningBalance) * 100;
@@ -249,11 +244,7 @@ export function getDayAverage(
     currentPercentages.push(dailyPercent);
 
     percentWeekDay.set(weekDay, currentPercentages);
-
-   
   }
-
-
 
   const daysToShow: TradingWeekDay[] = [1, 2, 3, 4, 5];
 
@@ -273,15 +264,11 @@ export function getDayAverage(
       observations: percentages.length,
     };
   });
- 
+
   return weekAvgs;
 }
 
-export function buildEquityCurve(
-  trades: Trade[],
-  initialBalance: number,
-) {
-
+export function buildEquityCurve(trades: Trade[], initialBalance: number) {
   const orderedTrades = trades
     .map((trade) => ({
       trade,
@@ -291,14 +278,12 @@ export function buildEquityCurve(
 
   let currentBalance = initialBalance;
 
-    const initialTime =
+  const initialTime =
     orderedTrades.length > 0
       ? orderedTrades[0].time - 1
       : Math.floor(Date.now() / 1000);
 
-
   let previousTime = initialTime;
-
 
   const points = [
     {
@@ -308,7 +293,6 @@ export function buildEquityCurve(
   ];
 
   for (const item of orderedTrades) {
-
     const { trade } = item;
 
     const uniqueTime = // Aqui nos aseguramos de que el tiempo sea único para cada punto en la curva de equidad
@@ -347,12 +331,11 @@ function parseTradeTime(time: string): number {
 
 //------------------------Para StrategyCard
 
-
 export type RankedBacktest = {
   id: number;
   titulo: string;
   tipo: Activo;
-  initialBalance:number;
+  initialBalance: number;
   returnPercent: number;
   profitFactor: number;
   drawDown: number;
@@ -391,50 +374,37 @@ export async function getRankedBacktests(
 
   const rows =
     typeof limit === "number"
-      ? db
-          .prepare(`${query} LIMIT ?`)
-          .all(Math.max(0, Math.trunc(limit)))
+      ? db.prepare(`${query} LIMIT ?`).all(Math.max(0, Math.trunc(limit)))
       : db.prepare(query).all();
 
   const typedRows = rows as RankedBacktestRow[];
 
   return Promise.all(
-    typedRows.map(
-      async (row): Promise<RankedBacktest> => {
-        const id = Number(row.id);
-        const initialBalance = Number(row.balance);
+    typedRows.map(async (row): Promise<RankedBacktest> => {
+      const id = Number(row.id);
+      const initialBalance = Number(row.balance);
 
-        const trades = await getTrades(id);
+      const trades = await getTrades(id);
 
-        const equityCurve = buildEquityCurve(
-          trades,
-          initialBalance,
-        );
+      const equityCurve = buildEquityCurve(trades, initialBalance);
 
-        return {
-          id,
-          titulo: row.titulo,
-          tipo: row.tipo,
-          initialBalance,
-          returnPercent: Number(row.returnPercent),
-          profitFactor: Number(row.profitFactor),
-          drawDown: Number(row.drawDown),
-          points: equityCurve.points,
-        };
-      },
-    ),
+      return {
+        id,
+        titulo: row.titulo,
+        tipo: row.tipo,
+        initialBalance,
+        returnPercent: Number(row.returnPercent),
+        profitFactor: Number(row.profitFactor),
+        drawDown: Number(row.drawDown),
+        points: equityCurve.points,
+      };
+    }),
   );
 }
 
 //---Para BarGraph
 
-const DEFAULT_DAY_LABELS = [
-  "LUN",
-  "MAR",
-  "MIE",
-  "JUE",
-  "VIE",
-];
+const DEFAULT_DAY_LABELS = ["LUN", "MAR", "MIE", "JUE", "VIE"];
 
 export interface ChartDay extends WeekAverage {
   height: number;
@@ -464,10 +434,7 @@ export function createChartDays(
   return weekAverages.map((item): ChartDay => {
     const absoluteAverage = Math.abs(item.average ?? 0);
 
-    const height =
-      maxAverage > 0
-        ? (absoluteAverage / maxAverage) * 100
-        : 0;
+    const height = maxAverage > 0 ? (absoluteAverage / maxAverage) * 100 : 0;
 
     return {
       ...item,
@@ -501,17 +468,13 @@ export function searchStrategies(
     return [];
   }
 
-  const numericId = /^\d+$/.test(query)
-    ? Number(query)
-    : null;
+  const numericId = /^\d+$/.test(query) ? Number(query) : null;
 
-  const safeLimit = Math.min(
-    Math.max(Math.trunc(limit), 1),
-    10,
-  );
+  const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 10);
 
   const rows = db
-    .prepare(`
+    .prepare(
+      `
       SELECT
         id,
         titulo AS name
@@ -527,7 +490,8 @@ export function searchStrategies(
         END,
         titulo ASC
       LIMIT ?
-    `)
+    `,
+    )
     .all(
       numericId,
       numericId,
@@ -544,4 +508,48 @@ export function searchStrategies(
     type: "strategy",
     href: `/strategies/${row.id}`,
   }));
+}
+
+type PercentPlResult = {
+  percentReturn: string;
+  totalPNL: string;
+};
+
+export function percentPl(pl: number, initialBalance: number): PercentPlResult {
+  const totalPNL = pl.toFixed(2);
+
+  // Evitamos dividir entre cero
+  if (initialBalance === 0) {
+    return {
+      percentReturn: "0.00",
+      totalPNL,
+    };
+  }
+
+  const percentResult = (pl * 100) / initialBalance;
+
+  let percentReturn: string;
+
+  if (percentResult < 0) {
+    percentReturn = percentResult.toFixed(2); // "-5.00"
+  } else if (percentResult > 0) {
+    percentReturn = `+${percentResult.toFixed(2)}`; // "+5.00"
+  } else {
+    percentReturn = "0.00";
+  }
+
+  return {
+    percentReturn,
+    totalPNL,
+  };
+}
+
+export function percentFavorable(entryPrice: number, maxPrice: number): number{
+  const percentMfe = (maxPrice * 100) / entryPrice;
+  return percentMfe; 
+}
+
+export function percentUnFavorable(entryPrice: number, maxPrice: number): number{
+  const percentMae = (maxPrice * 100) / entryPrice;
+  return percentMae; 
 }
