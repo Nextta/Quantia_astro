@@ -12,6 +12,7 @@ import {
   percentFavorable,
   percentUnFavorable,
 } from "../../../../utils/functionsGeneral";
+import { getDataDukasCopy } from "../../../../utils/dukascopy.ts";
 
 //R
 import type {
@@ -759,6 +760,9 @@ const tradeIdActual = Number(tradeId);
 const trade = await getTrade(strategyIdActual, tradeIdActual);
 const backtest = await getOneBacktest(strategyIdActual);
 
+const dataDk = await getDataDukasCopy();
+
+// console.log(dataDk);
 
 function getTradeWinLossColor(pl: number) {
   

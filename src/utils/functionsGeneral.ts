@@ -518,7 +518,7 @@ type PercentPlResult = {
 export function percentPl(pl: number, initialBalance: number): PercentPlResult {
   const totalPNL = pl.toFixed(2);
 
-  // Evitamos dividir entre cero
+  // Evitamos dividir entre cero     
   if (initialBalance === 0) {
     return {
       percentReturn: "0.00",
