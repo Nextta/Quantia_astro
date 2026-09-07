@@ -1,0 +1,236 @@
+---
+import type { PerformanceReportPdf } from "../../utils/generatePDF";
+
+interface Props {
+  report: PerformanceReportPdf;
+}
+
+const { report } = Astro.props as Props;
+
+/*
+ * Evita que un título con "<" pueda cerrar
+ * accidentalmente el script JSON.
+ */
+const serializedReport = JSON.stringify(report).replace(/</g, "\\u003c");
+---
+
+<performance-report-download class="block" data-html2canvas-ignore>
+  <button
+    type="button"
+    class="bg-surface-container-low px-4 py-2 rounded-xl text-left transition-colors hover:bg-surface-container-high disabled:cursor-wait disabled:opacity-60"
+    data-download-button
+    aria-label="Descargar reporte de desempeño en PDF"
+  >
+    <span
+      class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
+    >
+      Descargar
+    </span>
+
+    <span class="mt-1 flex items-center gap-2">
+      <span class="text-sm font-semibold" data-download-label> Reporte </span>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M12 4v12.25L17.25 11l.75.66l-6.5 6.5l-6.5-6.5l.75-.66L11 16.25V4zM3 19h1v2h15v-2h1v3H3z"
+        ></path>
+      </svg>
+    </span>
+  </button>
+
+  <script type="application/json" data-report-pdf set:html={serializedReport} />
+</performance-report-download>
+
+<script>
+  import type { PerformanceReportPdf } from "../../utils/generatePDF";
+
+  const nextFrame = () =>
+    new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+
+  async function waitForDashboardRender(): Promise<void> {
+    /*
+     * Espera a que se carguen las fuentes para evitar
+     * capturar textos con una tipografía provisional.
+     */
+    if (document.fonts?.ready) {
+      await document.fonts.ready;
+    }
+
+    /*
+     * Dos frames permiten que las gráficas terminen
+     * de pintar sus canvas.
+     */
+    await nextFrame();
+    await nextFrame();
+  }
+
+  async function captureDashboardSections(
+    dashboard: HTMLElement,
+    onProgress: (message: string) => void,
+  ): Promise<string[]> {
+    const { default: html2canvas } = await import("html2canvas-pro");
+
+    /*
+     * Cada sección se convertirá en una página diferente.
+     * Si todavía no existen secciones marcadas,
+     * captura todo #pdf-dashboard como una sola imagen.
+     */
+    const markedSections =
+      dashboard.querySelectorAll<HTMLElement>("[data-pdf-section]");
+
+    const sections: HTMLElement[] =
+      markedSections.length > 0 ? Array.from(markedSections) : [dashboard];
+
+    const pages: string[] = [];
+    // let progress: number = 0;
+    for (let index = 0; index < sections.length; index += 1) {
+      const section = sections[index];
+
+      // onProgress(`En progreso ${(progress += 25)} %`);
+
+      /*
+       * Captura solamente esta sección del dashboard.
+       */
+      const canvas = await html2canvas(section, {
+        backgroundColor: "#091223",
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        imageTimeout: 15000,
+
+        /*
+         * Ayuda a capturar correctamente cuando
+         * la página se encuentra desplazada.
+         */
+        scrollX: 0,
+        scrollY: -window.scrollY,
+
+        /*
+         * Respeta el ancho real del elemento.
+         */
+        width: section.scrollWidth,
+        height: section.scrollHeight,
+        windowWidth: Math.max(
+          document.documentElement.clientWidth,
+          section.scrollWidth,
+        ),
+      });
+
+      pages.push(canvas.toDataURL("image/png"));
+      const progress = Math.round(((index + 1) / sections.length) * 100);
+
+      onProgress(`En progreso ${progress} %`);
+    }
+
+    return pages;
+  }
+
+  class PerformanceReportDownload extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.initialized === "true") {
+        return;
+      }
+
+      this.dataset.initialized = "true"; // Esto asegura que el componente no se inicialice más de una vez, evitando la duplicación de eventos y otros problemas relacionados con la inicialización múltiple.
+
+      const button = this.querySelector<HTMLButtonElement>(
+        "[data-download-button]",
+      );
+
+      const label = this.querySelector<HTMLElement>("[data-download-label]"); // Esto es para el texto "Reporte" dentro del botón, que se actualizará durante el proceso de descarga.
+
+      const data = this.querySelector<HTMLScriptElement>("[data-report-pdf]"); // Esto es para el script que contiene los datos del reporte en formato JSON.
+
+      if (!button || !data) {
+        return;
+      }
+
+      const setProgress = (message: string) => {
+        if (label) {
+          label.textContent = message;
+        }
+      };
+
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        setProgress("Preparando…");
+
+        let dashboardPages: string[] = [];
+
+        try {
+          const report = JSON.parse(
+            data.textContent || "{}",
+          ) as PerformanceReportPdf;
+          try {
+            const dashboard =
+              document.querySelector<HTMLElement>("#pdf-dashboard");
+
+            if (!dashboard) {
+              throw new Error("No se encontró el elemento #pdf-dashboard");
+            }
+
+            await waitForDashboardRender();
+
+            dashboardPages = await captureDashboardSections(
+              dashboard,
+              setProgress,
+            );
+          } catch (error) {
+            console.warn(
+              "Falló la captura. Se intentará generar el PDF sin imágenes.",
+              error,
+            );
+          }
+          setProgress("Creando PDF…");
+
+          /*
+           * Carga jsPDF solamente cuando el usuario
+           * realmente solicita la descarga.
+           */
+          const { generatePerformancePdf } =
+            await import("../../utils/generatePDF");
+
+          generatePerformancePdf({
+            ...report,
+            dashboardPages,
+          });
+
+          if (dashboardPages.length === 0) {
+            window.alert(
+              "El PDF se generó sin las capturas del dashboard. Incluye la portada y la tabla completa de trades.",
+            );
+          }
+        } catch (error) {
+          console.error("No se pudo generar el reporte PDF", error);
+
+          window.alert(
+            "No fue posible generar el reporte. Inténtalo nuevamente.",
+          );
+        } finally {
+          button.disabled = false;
+
+          if (label) {
+            label.textContent = "Reporte";
+          }
+        }
+      });
+    }
+  }
+
+  if (!customElements.get("performance-report-download")) {
+    customElements.define(
+      "performance-report-download",
+      PerformanceReportDownload,
+    );
+  }
+</script>
