@@ -9,7 +9,7 @@ const { report } = Astro.props as Props;
 
 /*
  * Evita que un título con "<" pueda cerrar
- * accidentalmente el script JSON.
+ * accidentalmente el script JSON..
  */
 const serializedReport = JSON.stringify(report).replace(/</g, "\\u003c");
 ---
