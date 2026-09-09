@@ -211,12 +211,15 @@ const serializedReport = JSON.stringify(report).replace(/</g, "\\u003c");
             window.alert(
               "El PDF se generó sin las capturas del dashboard. Incluye la portada y la tabla completa de trades.",
             );
+            console.log(
+              "El PDF se generó sin las capturas del dashboard. Incluye la portada y la tabla completa de trades.",
+            );
           }
         } catch (error) {
           console.error("No se pudo generar el reporte PDF", error);
 
           window.alert(
-            "No fue posible generar el reporte. Inténtalo nuevamente.",
+            "No se pudo generar el reporte PDF",
           );
         } finally {
           button.disabled = false;

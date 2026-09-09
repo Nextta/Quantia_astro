@@ -290,7 +290,7 @@ if (!isTauri()) {
 }
 
 // Estos plugins solamente se cargan dentro de Tauri.
-const [{ save }, { writeFile }] = await Promise.all([
+  const [{ save }, { writeFile }] = await Promise.all([
   import("@tauri-apps/plugin-dialog"),
   import("@tauri-apps/plugin-fs"),
 ]);
