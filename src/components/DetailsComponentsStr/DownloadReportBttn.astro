@@ -200,11 +200,13 @@ const serializedReport = JSON.stringify(report).replace(/</g, "\\u003c");
           const { generatePerformancePdf } =
             await import("../../utils/generatePDF");
 
-          generatePerformancePdf({
+          const continuity = await generatePerformancePdf({
             ...report,
             dashboardPages,
           });
-
+          if (!continuity) {
+            return;
+          }
           if (dashboardPages.length === 0) {
             window.alert(
               "El PDF se generó sin las capturas del dashboard. Incluye la portada y la tabla completa de trades.",

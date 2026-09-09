@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
+import { isTauri } from "@tauri-apps/api/core";
 
 export interface PerformanceReportPdfTrade {
   t0: string;
@@ -53,7 +54,7 @@ function safeFileName(value: string) {
     .toLowerCase();
 }
 
-export function generatePerformancePdf(report: PerformanceReportPdf): void {
+export async function generatePerformancePdf(report: PerformanceReportPdf): Promise<boolean> {
   const doc = new jsPDF({
     orientation: "landscape",
     unit: "mm",
@@ -277,6 +278,35 @@ export function generatePerformancePdf(report: PerformanceReportPdf): void {
     );
   }
 
-  const filename = safeFileName(report.title) || "reporte";
-  doc.save(`${filename}-desempeno.pdf`);
+  // const filename = safeFileName(report.title) || "reporte";
+  // doc.save(`${filename}-desempeno.pdf`);
+
+  const filename = `${safeFileName(report.title) || "reporte"}-performance.pdf`;
+
+// En el navegador conservamos la descarga actual.
+if (!isTauri()) {
+  doc.save(filename);
+  return true;
+}
+
+// Estos plugins solamente se cargan dentro de Tauri.
+const [{ save }, { writeFile }] = await Promise.all([
+  import("@tauri-apps/plugin-dialog"),
+  import("@tauri-apps/plugin-fs"),
+]);
+
+const path = await save({
+  title: "Guardar reporte de trading window",
+  defaultPath: filename,
+  filters: [{ name: "Documento PDF", extensions: ["pdf"] }],
+});
+
+if (path === null) {
+  console.info("Se canceló el guardado del reporte PDF. || null");
+  return false;
+}
+
+await writeFile(path, new Uint8Array(doc.output("arraybuffer")));
+
+return true;
 }
