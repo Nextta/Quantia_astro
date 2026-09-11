@@ -10,9 +10,12 @@ import ReturnDistribution from "../../../components/DetailsComponentsStr/ReturnD
 import StrVSBench from "../../../components/DetailsComponentsStr/StrVSBench.astro";
 import TradesList from "../../../components/DetailsComponentsStr/TradesList.astro";
 import GlosaryDetail from "../../../components/DetailsComponentsStr/GlosaryDetail.astro";
-
+//Save
 import type { Trade } from "../../../interfaces/trades";
-
+//Downloander------------------------------------------------------------------------------------------->>>>>>>
+import DownloadReportBttn from "../../../components/DetailsComponentsStr/DownloadReportBttn.astro";
+import type { PerformanceReportPdf } from "../../../utils/generatePDF";
+//Downloander-------------------------------------------------------------------------------------------<<<<<<<
 import {
   getOneBacktest,
   getResults,
@@ -97,11 +100,25 @@ const arrProps = results.flatMap((rt) => {
   };
 });
 
+const pdfReport: PerformanceReportPdf = {
+  title: String(backtest.titulo ?? ""),
+  initialBalance: Number(backtest.balance ?? 0),
 
+  trades: trades.map((trade) => ({
+    t0: trade.t0,
+    tipo: String(trade.tipo ?? ""),
+    precio_entrada: Number(trade.precio_entrada ?? ""),
+    precio_cierre: Number(trade.precio_cierre ?? ""),
+    pl: Number(trade.pl ?? 0),
+    duracion_horas: String(trade.duracion_horas  ?? "" ),
+  })),
+};
 
 ---
 
 <Layout>
+  <div id="pdf-dashboard">
+    <section data-pdf-section class="flow-root">
   <!-- Main Content -->
   <!-- <main class="pt-24 pb-12 ml-16 md:ml-64 px-8 min-h-screen"> -->
   <!-- Header Info -->
@@ -119,27 +136,8 @@ const arrProps = results.flatMap((rt) => {
       </h1>
     </div>
     <div class="flex gap-4">
-      <div class="bg-surface-container-low px-4 py-2 rounded-xl">
-        <span
-          class="block text-[10px] text-on-surface-variant uppercase tracking-widest font-bold"
-          >Descargar</span
-        >
-        <div class="mt-1 flex items-center gap-2">
-          <span class="text-sm font-semibold">Reporte</span>
-          <div class="flex">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              ><path
-                fill="currentColor"
-                d="M12 4v12.25L17.25 11l.75.66l-6.5 6.5l-6.5-6.5l.75-.66L11 16.25V4zM3 19h1v2h15v-2h1v3H3z"
-              ></path></svg
-            >
-          </div>
-        </div>
-      </div>
+      
+      <DownloadReportBttn report={pdfReport}/>
     </div>
   </div>
   <!-- Hero Section: Bento Grid -->
@@ -147,7 +145,7 @@ const arrProps = results.flatMap((rt) => {
     <!-- Equity Curve - Gráfica TV -->
      {
         results.map((rt) => (
-    <CurveDetail trades={trades} initialBalance={backtest.balance} returnUSD={Math.round(rt.retorno * 100) / 100} returnPercent={Math.round(rt.return_percent * 100) / 100}/>
+    <CurveDetail trades={trades} initialBalance={backtest.balance} returnUSD={Math.round(rt.retorno * 100) / 100} returnPercent={Math.round(rt.return_percent * 100) / 100} />
      ))
      }
 
@@ -184,8 +182,11 @@ const arrProps = results.flatMap((rt) => {
       }
     </div>
   </div>
+  </section>
   <!-- Detailed Metrics Grids -->
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+   <section data-pdf-section class="flow-root">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4
+   gap-6 mb-8">
     {
       arrProps.map((rt) => (
         <FourMetrics
@@ -237,23 +238,23 @@ const arrProps = results.flatMap((rt) => {
       ))
     }
   </div>
+  </section>
   <!-- Heatmap Section -->
 
-  
+  <section data-pdf-section class="flow-root">
   <HeatMap trades={trades} initialBalance={backtest.balance} />
-
+  </section>
   <!-- Comparative Charts & Histograms -->
-
+  <section data-pdf-section class="flow-root">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    {
-      results.map((rt) => (
+    
         <BarGraph
           title="Rendimiento por día"
           trades={trades}
           initialBalance={backtest.balance}
         />
-      ))
-    }
+     
+    
     <ReturnDistribution trades={trades} initialBalance={backtest.balance} />
     
     {
@@ -267,6 +268,8 @@ const arrProps = results.flatMap((rt) => {
         
       ))
     }
+  </div>
+  </section>
   </div>
   <!-- Recent Activity Log Table -->
   <TradesList tradesPerPage={12} id={idActual} 

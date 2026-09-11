@@ -553,3 +553,5 @@ export function percentUnFavorable(entryPrice: number, maxPrice: number): number
   const percentMae = (maxPrice * 100) / entryPrice;
   return percentMae; 
 }
+
+
