@@ -1,6 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
 
+if (!isAuthenticated) {
+  return redirectToSignIn();
+}
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
 
 ---
 

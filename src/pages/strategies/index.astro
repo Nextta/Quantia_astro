@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
+if (!isAuthenticated) return redirectToSignIn();
 ---
 
 <Layout title="Estrategias">

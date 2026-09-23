@@ -10,8 +10,10 @@ import type { resultados } from "../../interfaces/resultados";
 import { Activo } from "../../enums/activo";
 
 import { getRankedBacktests } from "../../utils/functionsGeneral";
-
-
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
+if (!isAuthenticated) return redirectToSignIn();
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
 
 const topBacktests = await getRankedBacktests(3);
 

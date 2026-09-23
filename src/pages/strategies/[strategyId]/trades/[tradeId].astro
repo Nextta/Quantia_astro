@@ -13,6 +13,13 @@ import {
   percentUnFavorable,
 } from "../../../../utils/functionsGeneral";
 import { getDataDukasCopy } from "../../../../utils/dukascopy.ts";
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
+
+if (!isAuthenticated) {
+  return redirectToSignIn();
+}
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
 
 //R
 import type {

@@ -2,20 +2,12 @@
 import Layout from "../../layouts/Layout.astro";
 import LayoutOnlyBar from "../../layouts/LayoutOnlyBar.astro";
 import "../../styles/global.css";
-
 import ClerkLayout from '../../layouts/ClerkLayout.astro'
-import { Show } from '@clerk/astro/components'
+import { SignIn } from "@clerk/astro/components";
+
 
 ---
 
-
-
-
-<ClerkLayout title="Clerk + Astro">
-  <Show when="signed-out">
-    <!--Aquí en caso de desloguear redireccionar al loguin-->
-  </Show>
-  <Show when="signed-in">
-    <!--Aqui redireccionar al dashboard-->
-  </Show>
+<ClerkLayout title="Iniciar sesión | Quantia">
+  <SignIn routing="hash" signUpUrl="/sign_up/SignUp" />
 </ClerkLayout>
