@@ -1,13 +1,12 @@
 ---
-import Layout from "../../layouts/Layout.astro";
 import LayoutOnlyBar from "../../layouts/LayoutOnlyBar.astro";
 import "../../styles/global.css";
-import ClerkLayout from '../../layouts/ClerkLayout.astro'
+import ClerkLayout from "../../layouts/ClerkLayout.astro";
 import { SignIn } from "@clerk/astro/components";
-
-
 ---
 
-<ClerkLayout title="Iniciar sesión | Quantia">
-  <SignIn routing="hash" signUpUrl="/sign_up/SignUp" />
-</ClerkLayout>
+<LayoutOnlyBar>
+  <ClerkLayout title="Iniciar sesión | Quantia">
+    <SignIn routing="hash" signUpUrl="/sign_up/SignUp" />
+  </ClerkLayout>
+</LayoutOnlyBar>
