@@ -1,4 +1,4 @@
-interface User {
+export interface User{
   id_clerk: string;            // ID del usuario en Clerk (clave primaria)
   nombre: string;
   apellidos: string;
