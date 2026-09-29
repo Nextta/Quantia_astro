@@ -16,6 +16,11 @@ import type { Trade } from "../../../interfaces/trades";
 import DownloadReportBttn from "../../../components/DetailsComponentsStr/DownloadReportBttn.astro";
 import type { PerformanceReportPdf } from "../../../utils/generatePDF";
 //Downloander-------------------------------------------------------------------------------------------<<<<<<<
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
+if (!isAuthenticated) return redirectToSignIn();
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+
 import {
   getOneBacktest,
   getResults,

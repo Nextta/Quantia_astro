@@ -5,6 +5,13 @@ import StrategyCard from "../components/StrategyCard.astro";
 import CarteraCard from "../components/CarteraCard.astro";
 import Home from "./main/Home.astro";
 import LoginPage from "./login/LoginPage.astro";
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+return Astro.redirect(
+  Astro.locals.auth().isAuthenticated
+    ? "/main/Home"
+    : "/login/LoginPage"
+);
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
 
 const strategy1Points = [
   { time: 1717200000, value: 100000 },
@@ -20,5 +27,5 @@ const strategy1Points = [
 const id = 1;
 
 
-return Astro.redirect(`/login/LoginPage/`);
+
 ---

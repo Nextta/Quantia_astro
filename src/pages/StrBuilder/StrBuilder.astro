@@ -1,6 +1,10 @@
 ---
 import LayoutNodes from "../../layouts/LayoutNodes.astro"
 import SideBar from "../../components/MainDesing/SideBar.astro"
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
+const { isAuthenticated, redirectToSignIn } = Astro.locals.auth();
+if (!isAuthenticated) return redirectToSignIn();
+//Auth---------------------------------------------------------------------------------------------------->>>>>>>
 
 
 
